@@ -1,0 +1,657 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?7087845a301293ae16f515623150d1a9";
+      var s = document.getElementsByTagName("script")[0]; 
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+    <title>CS231n:Neural Networks Part 1: Setting up the Architecture | Heiming Xu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="heimingx">
+    
+
+    
+    <meta name="description" content="从这一节开始，课程重点：神经网络来了，本节主要讲一些神经网络中常用的损失函数，激活函数以及层次结构等。
+Modeling one neuron很多人都知道神经网络中基本单元是受人脑中的神经元的启发而设计的，所以，本节一开始通过人脑中的基本神经元-突触来揭示了其工作原理，以及到神经网络中基本单元的类比。
+然后，介绍了几个基本的线性分类器 Binary Softmax classifier 和 Bin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CS231n:Neural Networks Part 1: Setting up the Architecture">
+<meta property="og:url" content="http://heimignx.cn/2016/08/17/cs231n-neural-networks-part -1-setting-up-the-architecture/index.html">
+<meta property="og:site_name" content="Heiming Xu">
+<meta property="og:description" content="从这一节开始，课程重点：神经网络来了，本节主要讲一些神经网络中常用的损失函数，激活函数以及层次结构等。
+Modeling one neuron很多人都知道神经网络中基本单元是受人脑中的神经元的启发而设计的，所以，本节一开始通过人脑中的基本神经元-突触来揭示了其工作原理，以及到神经网络中基本单元的类比。
+然后，介绍了几个基本的线性分类器 Binary Softmax classifier 和 Bin">
+<meta property="og:image" content="http://heimignx.cn/img/blog/deeplearning/relu.jpg">
+<meta property="og:image" content="http://heimignx.cn/img/blog/deeplearning/leaky_relu.png">
+<meta property="og:image" content="http://heimignx.cn/img/blog/deeplearning/neural_net2.jpeg">
+<meta property="og:updated_time" content="2016-10-15T14:06:53.920Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CS231n:Neural Networks Part 1: Setting up the Architecture">
+<meta name="twitter:description" content="从这一节开始，课程重点：神经网络来了，本节主要讲一些神经网络中常用的损失函数，激活函数以及层次结构等。
+Modeling one neuron很多人都知道神经网络中基本单元是受人脑中的神经元的启发而设计的，所以，本节一开始通过人脑中的基本神经元-突触来揭示了其工作原理，以及到神经网络中基本单元的类比。
+然后，介绍了几个基本的线性分类器 Binary Softmax classifier 和 Bin">
+<meta name="twitter:image" content="http://heimignx.cn/img/blog/deeplearning/relu.jpg">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Heiming Xu" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/titanicCats.ico">
+    
+    
+    <link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+  <body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Heiming Xu">Heiming Xu</a></h1>
+				<h2 class="blog-motto">Optimize Life</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/reference">Reference</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:heimignx.cn">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/08/17/cs231n-neural-networks-part -1-setting-up-the-architecture/" title="CS231n:Neural Networks Part 1: Setting up the Architecture" itemprop="url">CS231n:Neural Networks Part 1: Setting up the Architecture</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
+		
+  <p class="article-time">
+    <time datetime="2016-08-17T13:22:45.000Z" itemprop="datePublished"> 发表于 2016-08-17</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Modeling-one-neuron"><span class="toc-number">1.</span> <span class="toc-text">Modeling one neuron</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Neural-Network-architectures"><span class="toc-number">2.</span> <span class="toc-text">Neural Network architectures</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#references"><span class="toc-number">3.</span> <span class="toc-text">references</span></a></li></ol>
+		
+		</div>
+		
+		<p>从这一节开始，课程重点：神经网络来了，本节主要讲一些神经网络中常用的损失函数，激活函数以及层次结构等。</p>
+<h1 id="Modeling-one-neuron"><a href="#Modeling-one-neuron" class="headerlink" title="Modeling one neuron"></a>Modeling one neuron</h1><p>很多人都知道神经网络中基本单元是受人脑中的神经元的启发而设计的，所以，本节一开始通过人脑中的基本神经元-突触来揭示了其工作原理，以及到神经网络中基本单元的类比。</p>
+<p>然后，介绍了几个基本的线性分类器 <strong>Binary Softmax classifier</strong> 和 <strong>Binary SVM classifier</strong></p>
+<p>常用的激活函数：</p>
+<p><strong>sigmoid</strong>:<br>函数形式： $$\sigma(x)=\frac{1}{1+e^{-x}}$$<br>函数图像可见<a href="http://heimingx.cn/2016/05/03/sigmoid-function-and-sigmoid-kernel/" target="_blank" rel="external">sigmoid function 和 sigmoid kernel
+</a><br><em>优点</em>：<br>对于神经元的激活频率有着良好的解释：从完全不激活（0）到在求和后的最大频率处的完全饱和的激活（1）<br><em>缺点</em>：</p>
+<ol>
+<li>饱和会使得梯度消失 </li>
+<li>输出不是零中心的</li>
+</ol>
+<p><strong>tanh</strong><br>函数形式： $$\tanh(x)=\tanh(\alpha x^T y+c) = 2\sigma(2x)-1$$<br>具有与sigmoid一样的性能，不过也有梯度会消失的缺点</p>
+<p><strong>ReLU (Rectified Linear Unit)</strong><br>函数形式:<br>$$f(x) = \max(0, x)$$<br>函数图像：<br><img src="/img/blog/deeplearning/relu.jpg" alt="ReLU"><br>根据函数图像易知，当 $x &lt;= 0$ 时，函数值为0；当 $x &gt; 0$时，函数斜率为1.</p>
+<p><em>优点</em>：</p>
+<ol>
+<li>对随机梯度下降的收敛有巨大的作用</li>
+<li>计算资源耗费少<br><em>缺点</em>：<br>在训练时，比较脆弱，并且可能“死掉”（<strong>这里有疑问，为什么会死掉？</strong>）</li>
+</ol>
+<p><strong>Leaky ReLU</strong><br>函数形式：</p>
+<p>$$f(x)=\mathbb{I}(x&lt;0) (\alpha x) + \mathbb{I}(x\geq 0) (x)$$</p>
+<p>函数图像：<br><img src="/img/blog/deeplearning/leaky_relu.png" alt="Leaky ReLU"><br>根据函数图像，可以看出Leaky ReLU是对ReLU的一个改进，当 $x&lt;=0$ 时，函数给出一个很小的负数梯度量</p>
+<p><strong>PReLU</strong> (Delving Deep into Rectifiers, Kaiming He, 2015)<br>把负区间上的斜率当作每个神经元中的一个参数来学习</p>
+<p><strong>Maxout</strong><br>函数形式：<br>$$f(x) = \max(W_1^T x + b_1, W^T_2 x + b_2)$$</p>
+<p>该方法是对ReLU和Leaky ReLU的一般化归纳<br>当 $W_1 = 0, b_1 = 0$ 时，就变成了ReLU<br><em>优点</em>：<br>拥有ReLU的优点（线性操作&amp;不饱和），而没有他的缺点（死亡的ReLU单元）<br><em>缺点</em>：<br>每个神经元的参数数量增加了一倍，导致整体参数的数量激增。</p>
+<h1 id="Neural-Network-architectures"><a href="#Neural-Network-architectures" class="headerlink" title="Neural Network architectures"></a>Neural Network architectures</h1><ol>
+<li><p>层的结构<br>神经网络模型是通过层状无环结构组成，比如全连接层结构。<br>其次，通常所说的几层神经网络是不连输入层的，比如下图为3层神经网络。<br><img src="/img/blog/deeplearning/neural_net2.jpeg" alt="3-layer NN"></p>
+</li>
+<li><p>前向传播<br>一般是先进行一个矩阵乘法，然后加上偏置并运用激活函数来实现。</p>
+</li>
+<li><p>表达能力<br>给出任意连续函数 $f(x)$ 和任意 $\epsilon &gt; 0$,均存在一个至少含1个隐层的神经网络 $g(x)$ (并且网络中有合理选择的非线性激活函数，比如Sigmoid)，对于 $\forall x$，使得 $|f(x) - g(x)| &lt; \epsilon$.</p>
+</li>
+<li><p>设置层的数量和尺寸<br>隐层单元越多，网络的表达能力越强<br>当出现Overfit时，应选择规则化而不是减少层数和单元数</p>
+</li>
+</ol>
+<h1 id="references"><a href="#references" class="headerlink" title="references"></a>references</h1><ol>
+<li><a href="http://cs231n.github.io/neural-networks-1/" target="_blank" rel="external">CS231n:Neural Networks Part 1: Setting up the Architecture</a></li>
+<li><a href="http://www.jianshu.com/p/004c99623104" target="_blank" rel="external">CS231n (winter 2016) : Assignment1</a> 这个作者自己总结的还是挺好的，值得参考，感谢博主！</li>
+<li><a href="https://zhuanlan.zhihu.com/p/21462488?refer=intelligentunit" target="_blank" rel="external">知乎：CS231n课程笔记翻译：神经网络笔记1上</a><br><a href="https://zhuanlan.zhihu.com/p/21513367?refer=intelligentunit" target="_blank" rel="external">知乎：CS231n课程笔记翻译：神经网络笔记1下</a></li>
+</ol>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Machine-Learning/">Machine Learning</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Machine-Learning/">Machine Learning</a><a href="/tags/CS231n笔记/">CS231n笔记</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://heimignx.cn/2016/08/17/cs231n-neural-networks-part -1-setting-up-the-architecture/" data-title="CS231n:Neural Networks Part 1: Setting up the Architecture | Heiming Xu" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/08/18/cs231n-neural-networks-part-2-setting-up-the-Data-and-the-loss/" title="CS231n:Neural Networks Part 2: Setting up the Data and the Loss">
+  <strong>上一篇：</strong><br/>
+  <span>
+  CS231n:Neural Networks Part 2: Setting up the Data and the Loss</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/08/16/cs231n-backpropagation-intuitions/"  title="CS231n:Backpropagation, Intuitions">
+ <strong>下一篇：</strong><br/> 
+ <span>CS231n:Backpropagation, Intuitions
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/08/17/cs231n-neural-networks-part -1-setting-up-the-architecture/" data-title="CS231n:Neural Networks Part 1: Setting up the Architecture" data-url="http://heimignx.cn/2016/08/17/cs231n-neural-networks-part -1-setting-up-the-architecture/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Modeling-one-neuron"><span class="toc-number">1.</span> <span class="toc-text">Modeling one neuron</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Neural-Network-architectures"><span class="toc-number">2.</span> <span class="toc-text">Neural Network architectures</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#references"><span class="toc-number">3.</span> <span class="toc-text">references</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Hexo/" title="Hexo">Hexo<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Latex/" title="Latex">Latex<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Lintcode/" title="Lintcode">Lintcode<sup>16</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/MATLAB/" title="MATLAB">MATLAB<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Machine-Learning/" title="Machine Learning">Machine Learning<sup>14</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Mathematics/" title="Mathematics">Mathematics<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Optimization/" title="Optimization">Optimization<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Python/" title="Python">Python<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Tattle/" title="Tattle">Tattle<sup>3</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/algorithm/" title="algorithm">algorithm<sup>16</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/lintcode/" title="lintcode">lintcode<sup>16</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Machine-Learning/" title="Machine Learning">Machine Learning<sup>10</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/python/" title="python">python<sup>10</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c/" title="c++">c++<sup>9</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/CS231n笔记/" title="CS231n笔记">CS231n笔记<sup>7</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/matlab/" title="matlab">matlab<sup>6</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/machine-learning/" title="machine learning">machine learning<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Hexo/" title="Hexo">Hexo<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mathematics/" title="mathematics">mathematics<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/tattle/" title="tattle">tattle<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/code-optimize/" title="code optimize">code optimize<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Optimization/" title="Optimization">Optimization<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Tattle/" title="Tattle">Tattle<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Latex/" title="Latex">Latex<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www.lifuhao.cn/" target="_blank" title="李狗蛋师兄">李狗蛋师兄</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://zhikaizhang.cn/" target="_blank" title="张致恺博客">张致恺博客</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/heimingx" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:heimingx@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="heimingx">heimingx</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+        getSize();
+        if (myWidth >= 1024) {
+          c.click();
+        }
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"ming"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End --><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="custom_mathjax_source">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+  </body>
+</html>

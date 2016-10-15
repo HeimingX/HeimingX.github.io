@@ -1,0 +1,1353 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Heiming Xu</title>
+  <subtitle>Optimize Life</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://heimignx.cn/"/>
+  <updated>2016-10-15T14:06:53.922Z</updated>
+  <id>http://heimignx.cn/</id>
+  
+  <author>
+    <name>heimingx</name>
+    <email>heimingx@gmail.com</email>
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Indefinite Kernel SVMs</title>
+    <link href="http://heimignx.cn/2016/09/29/indefinite-kernel-svms/"/>
+    <id>http://heimignx.cn/2016/09/29/indefinite-kernel-svms/</id>
+    <published>2016-09-29T11:37:24.000Z</published>
+    <updated>2016-10-15T14:06:53.922Z</updated>
+    
+    <content type="html"><![CDATA[<p>研究生一年级主要都在做不定核SVM的优化，在这一领域大概从2003年开始就有学者不断的提出各种idea来做这个问题，这里做个简要的总结，方便后续的研究。</p>
+<p>首先，对于不定核的研究主要可以分为两大类：</p>
+<ol>
+<li>spectrum approximation</li>
+<li>directly focus on the indefinite kernel</li>
+</ol>
+<h1 id="Spectrum-Approximation"><a href="#Spectrum-Approximation" class="headerlink" title="Spectrum Approximation"></a>Spectrum Approximation</h1><p>这里主要有两种思想，一种是直接改变手动改变谱，另一种是学习出一个正定的核矩阵</p>
+<h2 id="Spectrum-Transformation"><a href="#Spectrum-Transformation" class="headerlink" title="Spectrum Transformation"></a>Spectrum Transformation</h2><p>谱变换，直接去手动改变不定核矩阵，转换成正定核矩阵之后再用经典的SVM来解决相应的问题。</p>
+<ol>
+<li>Denoise：$f(\lambda)=\max(0,\lambda)$</li>
+<li>Flip: $f(\lambda)=|\lambda|$</li>
+<li>Diffusion: $f(\lambda)=e^{\beta \lambda}$</li>
+<li>shift: $f(\lambda)=\lambda + \eta$</li>
+</ol>
+<p>这些方法都是认为负特征值为noise，显然，这一方法太粗暴了，而且现实中很多应用产生的就是一个不定的相似矩阵，此时就不能简单的认为复特征值都是noise了。</p>
+<h2 id="Kernel-Approximation"><a href="#Kernel-Approximation" class="headerlink" title="Kernel Approximation"></a>Kernel Approximation</h2><p>这个方法的主旨思想是：将对偶形式SVM的求解与正定核的近似放到同一个式子里面去优化。</p>
+<p>\begin{align}<br>\max_{\alpha\in \mathbb R^d} \min_{K\in \mathbb R^{d \cdot d}} &amp; \quad \alpha^T e - \frac{1}{2}\alpha^T YKY\alpha + \rho ||K-K_0||^2_F \\<br>s.t. &amp; \quad \alpha^T y = 0 \\<br>&amp; \quad 0\leq \alpha \leq C \\<br>&amp; \quad K \geq 0<br>\end{align}</p>
+<p>其中，$K_0$是已知的不定核矩阵，$K$是要求解的近似矩阵（半正定）。</p>
+<p>这一模型是由Luss在Support vector machine classification with indefinite kernels_nips’07中提出，后续有很多学者基于此进行了优化方面的改进。比如Ye老师的Training SVM with indefintie kernels_ICML’08,以及Yihua Chen et al. 的Learning Kernels from Indefinite Similarities.其中，后者是从原问题出发（运用表示定理引入核函数）来求解的，文章中也说明了原问题与对偶问题求解的等价性。</p>
+<p>然后基于这一思想，Gu and Guo又提出了一个很新颖的方法，将kernel PCA成功的引入到了kernel approximation里面，将不定核降维到一个低维空间中，使得此时对应矩阵变为正定的，然后在此空间中进行训练分类器。（这个方法的巧妙之处在于，用核函数就是一个升维的过程，企图在一个高维空间中能够找到一个线性可分的分类器，但是不巧的是升维之后，我们面临的核矩阵是不定的了，因此常用的凸优化方法就失效了，然后，这个方法就运用kernel PCA方法来对这个高维空间进行降维处理，尝试在降维后的空间中找到一个低维正定的表示）<br>具体的模型：<br>\begin{align} \\<br>\min_{W,w,b,\xi} &amp; \quad \frac{1}{2}w^Tw+C\sum_i \xi_i+\rho |\phi - WW^T\phi|_F^2 \\<br>s.t. &amp; \quad y_i(w^TW^T\phi(:,i)+b)\geq1-\xi_i, \xi_i\geq 0 \\<br>&amp; \quad W^TW = I_d<br>\end{align}</p>
+<p>其中，$||\phi - WW^T\phi||_F^2$表示KernelPCA,结合SVM的Lagrange对偶+kernelPCA的变换得到<br>\begin{align} \\<br>\max_\alpha \min_V &amp; \quad \alpha^T e - \frac{1}{2}\alpha^T Y K_0 V V^T K_0 Y \alpha -\rho \cdot tr(V^TK_0K_0V) \\<br>s.t. &amp; \quad \alpha \cdot diag(Y)=0; \\<br>&amp; \quad 0\leq \alpha \leq C \\<br>&amp; \quad V^TK_0 V = I_d \\<br>&amp; \quad K_0 V V^T K_0 \geq 0<br>\end{align}</p>
+<p>其中，最后一条约束表示在低维空间中的核矩阵，为正定的，并且<strong>只要$V$是实值向量</strong>，就能够保证最后一个约束满足。<br>这篇文章：Learning svm classifiers with indefinite kernels发在AAAI’12上，并获得了当年的best paper,赞！但是，在我自己代码实现的过程中也发现了一些弊端：</p>
+<ol>
+<li>要求矩阵K和M的逆，所以他们的特征值不能有0.</li>
+<li>要预先判断K的正特征值个数，所以当K的正特征值很少的时候（接近负定），PCA的降到的维度就会受到相应的影响，那么最终的分类精度也就会受到影响了。</li>
+</ol>
+<h1 id="Directly-Focus-on-the-Indefinite-Kernel"><a href="#Directly-Focus-on-the-Indefinite-Kernel" class="headerlink" title="Directly Focus on the Indefinite Kernel"></a>Directly Focus on the Indefinite Kernel</h1><p>这一大类里面方法还是挺迥异的，主要有SMO-type SVM，1-norm SVM， SVM in krein等一系列方法。</p>
+<h1 id="SMO-type-SVM"><a href="#SMO-type-SVM" class="headerlink" title="SMO-type SVM"></a>SMO-type SVM</h1><p>这一方法提出的比较早，在03年由林轩田和林智仁共同完成。文章主要基于sigmoid核的不同核参数的组合来讨论的，然后对SMO算法进行了稍微的改动以适用于不定核的求解，这一算法已集成到他们开源的软件LibSVM中，只要用’-t 4’的参数设置他就能自动调用相关算法来求解该问题。<br>另外，这一算法主要是基于对偶形式的不定核SVM问题来求解的，因此，由于核矩阵的不定性，在应用Lagrange对偶化时就不能忽略对偶间隔的问题。同时，我们的实验结果也验证了这一想法，SMO-type SVM方法的效果并不理想，与谱分解的结果相近。</p>
+<h1 id="1-norm-SVM"><a href="#1-norm-SVM" class="headerlink" title="1-norm SVM"></a>1-norm SVM</h1><p>这一方法还是挺巧妙的，他避开了在目标函数中产生不定核矩阵的做法，而是直接利用1-norm的形式，并通过强制要求核前面的组合系数大于0,将原来的1-norm svm转换成了一个Linear Programming。</p>
+<p>\begin{align} \\<br>\min_{\lambda, \xi, b} &amp; \quad \sum_j |\lambda_j| + C \sum_{i=1}^m \xi_i \\<br>s.t. &amp; \quad y_i \cdot (b + \sum_j \lambda_j \cdot h_j(x_i)) \geq 1 - \xi_i \\<br>&amp; \quad \xi_i \geq 0<br>\end{align}</p>
+<p>强制规定$\lambda\geq 0$后，得到</p>
+<p>\begin{align} \\<br>\min_{\lambda, \xi, b} &amp; \quad \sum_{i=1}^m ||\lambda_i||_1 + C \sum_{i=1}^m \xi_i \\<br>s.t. &amp; \quad Q \lambda + b y \geq 1 - \xi \\<br>&amp; \quad \lambda, \xi \geq 0<br>\end{align}</p>
+<p>同时，文章中对于这一形式也从相似函数的角度给出了解释，不过并没有很清楚的给出具体的推导化简的公式，是如何从相似函数间隔最大的公式推导到最后的LP问题的。另外，由于他上面对$\lambda$的强制要求，有点与对偶svm中的Lagrange乘子$\alpha$相似，因此，可能存在对偶间隔的问题。在实验过程中，1-norm的效果有点不太稳定，时好时坏，可能跟数据集有关吧。</p>
+<h1 id="SVM-in-Krein"><a href="#SVM-in-Krein" class="headerlink" title="SVM in Krein"></a>SVM in Krein</h1><p>这个方法是从Reproducing Kernel Krein Space(RKKS)出发，不再是求解一个minimization problem,而是求解一个stabilization problem。<br>具体模型：<br>\begin{align}\\<br>stab_{f\in\mathcal K, b\in \mathbb R} &amp; \quad \frac{1}{2}\langle f, f\rangle_{\mathcal K}\\<br>s.t. &amp; \quad \sum_{i=1}^l \max(0, 1-y_i(f(x_i)+b))\leq \tau<br>\end{align}</p>
+<p>根据不定核在krein空间中的性质：$f_{\mathcal K}=f_+ + f_-$, $\langle f, f\rangle_{\mathcal K}= \langle f_+, f_+\rangle_{\mathcal H^+} - \langle f_-, f_-\rangle_{\mathcal H^-}$. 得到</p>
+<p>\begin{align}\\<br>\min_{f_+\in\mathcal H^+, b\in \mathbb R} \max_{f_-\in \mathcal H^-} &amp; \quad \frac{1}{2}\langle f_+, f_+\rangle_{\mathcal H^+} - \frac{1}{2}\langle f_-, f_-\rangle_{\mathcal H^-}\\<br>s.t. &amp; \quad \sum_{i=1}^l \max(0, 1-y_i(f(x_i)+b))\leq \tau<br>\end{align}</p>
+<p>将上面的与max相关的部分转换成min的形式：</p>
+<p>\begin{align}\\<br>\min_{f_+\in\mathcal H^+, f_-\in \mathcal H^-, b\in \mathbb R} &amp; \quad \frac{1}{2}\langle f_+, f_+\rangle_{\mathcal H^+} + \frac{1}{2}\langle f_-, f_-\rangle_{\mathcal H^-}\\<br>s.t. &amp; \quad \sum_{i=1}^l \max(0, 1-y_i(f(x_i)+b))\leq \tau<br>\end{align}</p>
+<p>从$f_+$和$f_-$，可以构造一个正的Hilbert space（$\tilde{\mathcal K}$），有$\tilde f = f_+ + f_-$和$\langle \tilde{f}, \tilde{f} \rangle_{\tilde{\mathcal K}} = \langle f_+, f_+\rangle_{\mathcal H^+} + \langle f_-, f_-\rangle_{\mathcal H^-}$,带到上面的公式有</p>
+<p>\begin{align}\\<br>\min_{\tilde{f} \in \tilde{\mathcal K}, b\in \mathbb R} &amp; \quad \frac{1}{2}\langle \tilde{f}, \tilde{f}\rangle_{\tilde{\mathcal K}}\\<br>s.t. &amp; \quad \sum_{i=1}^l \max(0, 1-y_i(\tilde{f}(x_i)+b))\leq \tau<br>\end{align}</p>
+<p>此时，就将原来的不定核问题转变成了一个凸问题，然后运用Lagrange对偶化得到：<br>\begin{align}<br>\max_{\tilde{\alpha}} &amp; \quad -\frac{1}{2}\tilde{\alpha}^T\tilde{G}\tilde{\alpha} + \tilde{\alpha}^T\textbf{1}\\<br>s.t. &amp; \quad \tilde{\alpha}^T \textbf{y} = 0\\<br>&amp; \quad 0\leq \tilde{\alpha}_i\leq C<br>\end{align}</p>
+<p>到这里，求解上面的这个凸对偶问题就可以得到$\tilde{\alpha}$，然后再设法找到对应的RKKS中的解就可以了。因此，文章中给出了如何将等价的RKHS中的点映射到RKKS中去（第3.3.1节）。具体做法是$\tilde{\alpha} = P \alpha$.</p>
+<p>svm in krein的确是很不错的，从上面的理论推导来看还是很完善的，在我们的实验上来看也是很不错的，在大多数数据集上都能有很好的效果。</p>
+<h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ol>
+<li>Chen, J., and Ye, J. 2008. Training svm with indefinite kernels.In Proceedings of the Twenty-fifth International Conference on Machine Learning, 136–143. Helsinki, Finland: ACM.</li>
+<li>Alabdulmohsin, I. M.; Gao, X.; and Zhang, X. 2014. Support vector machines with indefinite kernels. In Proceedings of the Sixth Asian Conference on Machine Learning, volume 39, 32–47. Nha Trang, Vietnam: JMLR.org.</li>
+<li>Chen, Y.; Gupta, M. R.; and Recht, B. 2009. Learning kernels from indefinite similarities. In Proceedings of the Twenty-sixth International Conference on Machine Learning, 145–152. Montreal, Quebec, Canada: ACM.</li>
+<li>Gu, S., and Guo, Y. 2012. Learning svm classifiers with indefinite kernels. In Proceedings of the Twenty-Sixth AAAI Conference on Artificial Intelligence, 942–948. Toronto, Ontario, Canada.: AAAI Press.</li>
+<li>Lin, H.-T., and Lin, C.-J. 2003. A study on sigmoid kernels for svm and the training of non-psd kernels by smo-type methods. Neural Computation 1–32.</li>
+<li>Loosli, G.; Canu, S.; and Ong, C. S. 2016. Learning svm in kreˇın spaces. IEEE Transactions on Pattern Analysis and Machine Intelligence 38(6):1204–1216.</li>
+<li>Luss, R., and d’Aspremont, A. 2008. Support vector machine classification with indefinite kernels. In The Twenty-First Conference on Neural Information Processing Systems,953–960. Vancouver, British Columbia, Canada.: Curran Associates, Inc.</li>
+<li>Wu, G.; Chang, E. Y.; and Zhang, Z. 2005. An analysis of transformation on non-positive semidefinite similarity matrix for kernel machines. In Proceedings of the Twentysecond International Conference on Machine Learning, volume 8. Citeseer.</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;研究生一年级主要都在做不定核SVM的优化，在这一领域大概从2003年开始就有学者不断的提出各种idea来做这个问题，这里做个简要的总结，方便后续的研究。&lt;/p&gt;
+&lt;p&gt;首先，对于不定核的研究主要可以分为两大类：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;spectrum approxima
+    
+    </summary>
+    
+      <category term="Machine Learning" scheme="http://heimignx.cn/categories/Machine-Learning/"/>
+    
+    
+      <category term="Machine Learning" scheme="http://heimignx.cn/tags/Machine-Learning/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>A Review of Multiple Kernel Learning</title>
+    <link href="http://heimignx.cn/2016/09/29/multiple-kernel-learning-for-visual-object-recognition-a-review/"/>
+    <id>http://heimignx.cn/2016/09/29/multiple-kernel-learning-for-visual-object-recognition-a-review/</id>
+    <published>2016-09-29T05:31:56.000Z</published>
+    <updated>2016-10-15T14:06:53.928Z</updated>
+    
+    <content type="html"><![CDATA[<p>今天花了一整天的时间看了一篇关于Multiple kernel Learning的综述文章，他是以Visual object recognition作为应用背景来分析的。文章：Multiple Kernel Learning for Visual Object Recognition：A Review，发在TPAMI’14.</p>
+<p>文章的出发点是发现在多篇文章中关于MKL的阐述是有冲突的（文章中表1&amp;2）：</p>
+<ol>
+<li>在有些文章中说MKL方法优于平均核权重的MKL方法[8,39,48]，而另一些文章中却给出了相反的结论[13,24,30,31]。</li>
+<li>MKL与single kernel SVM之间的比较</li>
+<li>L1-MKL与Lp-MKL之间的比较</li>
+<li>不同MKL方法在的computational efficiency的比较，由于不同文章中的实验结果评价不一致，比如有些是以迭代步数作为收敛的衡量，而有些是以消耗的时间作为衡量[11,30],有些基于支持向量的个数[8,47]<br>其实，这主要跟相关文章中的实验设置、核函数的数量及数据集有关，在这篇文章的实验部分给出了详细的分析。</li>
+</ol>
+<p>MKL方法围绕两类问题展开：</p>
+<ol>
+<li>利用不同的MKL形式来提高分类精度</li>
+<li>利用不同的优化方法来提升MKL的学习效率</li>
+</ol>
+<h1 id="Overview-of-MKL"><a href="#Overview-of-MKL" class="headerlink" title="Overview of MKL"></a>Overview of MKL</h1><ul>
+<li><p>另一篇关于MKL的综述：[32]M. Gönen and E. Alpaydin, “Multiple kernel learning algorithms,” J. Mach. Learn. Res., vol. 12, pp. 2211–2268, Jul. 2011.</p>
+</li>
+<li><p>MKL的首次提出：[33]G. Lanckriet, N. Cristianini, P. Bartlett, and L. E. Ghaoui, “Learning the kernel matrix with semi-definite programming,” J. Mach. Learn. Res., vol. 5, pp. 27–72, Jan. 2004.</p>
+</li>
+<li><p>SMO for MKL: </p>
+</li>
+</ul>
+<ol>
+<li>[9]S. Vishwanathan, Z. Sun, N. Ampornpunt, and M. Varma, “Multiple kernel learning and the SMO algorithm,” in Proc. NIPS, Nottingham, U.K., 2010, pp. 2361–2369.</li>
+<li>[16]F. R. Bach, G. R. G. Lanckriet, and M. I. Jordan, “Multiple kernel learning, conic duality, and the SMO algorithm,” in Proc. 21st ICML, New York, NY, USA, 2004.</li>
+</ol>
+<ul>
+<li><p>L1-norm MKL: [34]S. Sonnenburg, G. Rätsch, and C. Schäfer, “A general and efficient multiple kernel learning algorithm,” in Proc. NIPS, 2006, pp. 1273–1280.</p>
+</li>
+<li><p>Lp-norm MKL: </p>
+</li>
+</ul>
+<ol>
+<li>[10]M. Kloft, U. Brefeld, S. Sonnenburg, and A. Zien, “lp-Norm multiple kernel learning,” J. Mach. Learn. Res., vol. 12, pp. 953–997, Mar. 2011. </li>
+<li>[31]R. Tomioka and T. Suzuki, “Sparsity-accuracy trade-off in MKL,” in Proc. NIPS Workshop Understanding Multiple Kernel Learning Methods, 2009.</li>
+<li>[40]F. Yan, K. Mikolajczyk, J. Kittler, and A. Tahir, “A comparison of L1 norm and L2 norm multiple kernel SVMs in image and video classification,” in Proc. Int. Workshop CBMI, 2009.</li>
+</ol>
+<ul>
+<li><p>negative entropy based MKL: [30]Z. Xu, R. Jin, S. Zhu, M. Lyu, and I. King, “Smooth optimization for effective multiple kernel learning,” in Proc. AAAI Artif. Intell., 2010.</p>
+</li>
+<li><p>mixed norms MKL: </p>
+</li>
+</ul>
+<ol>
+<li>[35]M. Kowalski, M. Szafranski, and L. Ralaivola, “Multiple indefinite kernel learning with mixed norm regularization,” in Proc. 26th ICML, Montreal, QC, Canada, 2009, pp. 545–552.</li>
+<li>[15]C. Longworth and M. J. Gales, “Multiple kernel learning for speaker verification,” in Proc. ICASSP, Las Vegas, NV, USA, 2008, pp. 1581–1584.</li>
+<li>[72]V. Sindhwani and A. C. Lozano, “Non-parametric group orthogonal matching pursuit for sparse learning with multiple kernels,” in Proc. NIPS, 2011, pp. 414–431.</li>
+</ol>
+<ul>
+<li><p>Bregman divergence: [9]S. Vishwanathan, Z. Sun, N. Ampornpunt, and M. Varma, “Multiple kernel learning and the SMO algorithm,” in Proc. NIPS, Nottingham, U.K., 2010, pp. 2361–2369.</p>
+</li>
+<li><p>theoretical studies show that L1 norm will result in a small generalization error: </p>
+</li>
+</ul>
+<ol>
+<li>[36]C. Cortes, M. Mohri, and A. Rostamizadeh, “Generalization bounds for learning kernels,” in Proc. 27th ICML, Haifa, Israel, 2010.</li>
+<li>[37]Z. Hussain and J. Shawe-Taylor, “A note on improved loss bounds for multiple kernel learning,” CoRR abs/1106.6258, 2011.</li>
+</ol>
+<ul>
+<li>a nonlinear combination of base kernels: <strong>[non-convex optimization problems]</strong></li>
+</ul>
+<ol>
+<li>[12]M. Varma and B. R. Babu, “More generality in efficient multiple kernel learning,” in Proc. 26th ICML, New York, NY, USA, Jun. 2009, pp. 1065–1072. <strong>[polynomial combination]</strong></li>
+<li>[23]J. Saketha Nath et al., “On the algorithmics and applications of a mixed-norm based kernel learning formulation,” in Proc. NIPS, 2009.</li>
+<li>[28]C. Cortes, M. Mohri, and A. Rostamizadeh, “Learning non-linear combinations of kernels,” in Proc. NIPS, 2009, pp. 396–404.<strong>[polynomial combination]</strong></li>
+<li>[44]J. Aflalo, A. Ben-Tal, C. Bhattacharyya, J. S. Nath, and S. Raman, “Variable sparsity kernel learning,” J. Mach. Learn. Res., vol. 12, pp. 565–592, Feb. 2011.</li>
+<li>[45]F. Bach, “Exploring large feature spaces with hierarchical multiple kernel learning,” in Proc. NIPS, 2009.</li>
+<li>[17]D. P. Lewis, T. Jebara, and W. S. Noble, “Nonstationary kernel combination,” in Proc. 23rd ICML, New York, NY, USA, 2006, pp. 553–560.</li>
+</ol>
+<ul>
+<li>an instance-dependent linear combination: <strong>[non-convex optimization problems]</strong></li>
+</ul>
+<ol>
+<li>[6]J. Yang, Y. Li, Y. Tian, L. Duan, and W. Gao, “Group-sensitive multiple kernel learning for object categorization,” in Proc. 12th ICCV, Kyoto, Japan, 2009.</li>
+<li>[46]J. Yang, Y. Li, Y. Tian, L.-Y. Duan, and W. Gao, “Per-Sample multiple kernel approach for visual concept learning,” EURASIP J. Image Video Process., vol. 2010, pp. 1–13, Jan. 2010.</li>
+<li>[47]M. Gönen and E. Alpaydin, “Localized multiple kernel learning,” in Proc. 25th ICML, New York, NY, USA, 2008.</li>
+</ol>
+<ul>
+<li><p>subgradient descent (SD) algorithms: [43]A. Rakotomamonjy, F. Bach, Y. Grandvalet, and S. Canu, “SimpleMKL,” J. Mach. Learn. Res., 9(11), pp. 2491–2521, 2008.</p>
+</li>
+<li><p>semi-infinite linear programming (SILP) based algorithm: [50]S. Sonnenburg, G. Rätsch, C. Schäfer, and B. Schölkopf, “Large scale multiple kernel learning,” J. Mach. Learn. Res., vol. 7, pp. 1531–1565, Jul. 2006. </p>
+</li>
+<li><p>SD优于SILP：</p>
+</li>
+</ul>
+<ol>
+<li>[8]Z. Xu, R. Jin, H. Yang, I. King, and M. R. Lyu, “Simple and efficient multiple kernel learning by group lasso,” in Proc. 27th ICML, Haifa, Israel, 2010</li>
+<li>[41]A. Rakotomamonjy, F. Bach, S. Canu, and Y. Grandvalet, “More efficiency in multiple kernel learning,” in Proc. 24th ICML, Corvallis, OR, USA, 2007.</li>
+<li>[42]Z. Xu, R. Jin, I. King, and M. R. Lyu, “An extended level method for efficient multiple kernel learning,” in Proc. NIPS, 2009, pp. 1825–1832.</li>
+</ol>
+<ul>
+<li>SILP优于SD：[11]M. Kloft et al., “Efficient and accurate lp-norm multiple kernel learning,” in Proc. NIPS, 2009, pp. 997–1005.</li>
+</ul>
+<h1 id="relationship-to-other-approaches"><a href="#relationship-to-other-approaches" class="headerlink" title="relationship to other approaches"></a>relationship to other approaches</h1><ul>
+<li>feature selection: </li>
+</ul>
+<ol>
+<li>[51]H. Liu and L. Yu, “Toward integrating feature selection algorithms for classification and clustering,” IEEE Trans. Knowl. Data Eng., vol. 17, no. 4, pp. 491–502, Apr. 2005.</li>
+<li>[52]F. R. Bach, “Consistency of the group Lasso and multiple kernel learning,” J. Mach. Learn. Res., vol. 9, pp. 1179–1225, Jun. 2008.<strong>[group lasso]</strong></li>
+</ol>
+<ul>
+<li><p>metric learning: [53]T. Hertz, “Learning distance functions: Algorithms and applications,” Ph.D. dissertation, Hebrew Univ. Jerusalem, Jerusalem, Israel, 2006.</p>
+</li>
+<li><p>kernel alignment: [54]N. Cristianini, J. Kandola, A. Elisseeff, and J. Shawe-Taylor, “On kernel-target alignment,” in Proc. NIPS, 2002, pp. 367–373.</p>
+</li>
+<li><p>parametric kernel learning: </p>
+</li>
+</ul>
+<ol>
+<li>[55]O. Chapelle, J. Weston, and B. Schölkopf, “Cluster kernels for semi-supervised learning,” in Proc. NIPS, 2003, pp. 585–592.</li>
+<li>[56]R. I. Kondor and J. Lafferty, “Diffusion kernels on graphs and other discrete structures,” in Proc. ICML, 2002, pp. 315–322.</li>
+</ol>
+<ul>
+<li>non-parametric kernel learning:<strong>[high computational cost]</strong></li>
+</ul>
+<ol>
+<li>[54]</li>
+<li>[57]J. Zhuang, I. W. Tsang, and S. C. H. Hoi, “SimpleNPKL: Simple non-parametric kernel learning,” in Proc. 26th ICML, Montreal, QC, Canada, 2009.</li>
+<li>[58]B. Kulis, M. Sustik, and I. Dhillon, “Learning low-rank kernel matrices,” in Proc. 23rd ICML, Pittsburgh, PA, USA, 2006, pp. 505–512.</li>
+</ol>
+<ul>
+<li>semi-supervised and unsupervised kernel learning:</li>
+</ul>
+<ol>
+<li>[54]</li>
+<li>[56]</li>
+<li>[59]S. C. H. Hoi and R. Jin, “Active kernel learning,” in Proc. 25th ICML, Helsinki, Finland, 2008, pp. 400–407.</li>
+</ol>
+<ul>
+<li>multi-label MKL based on OvA:</li>
+</ul>
+<ol>
+<li>[74]L. Tang, J. Chen, and J. Ye, “On multiple kernel learning with multiple labels,” in Proc. IJCAI, 2009.</li>
+<li>[22]S. Bucak, R. Jin, and A. Jain, “Multi-label multiple kernel learning by stochastic approximation: Application to visual object recognition,” in Proc. NIPS, 2010, pp. 325–333.</li>
+<li>[75]A. Zien and S. Cheng, “Multiclass multiple kernel learning,” in Proc. 24th ICML, Corvallis, OR, USA, 2007.</li>
+<li>[48]S. Ji, L. Sun, R. Jin, and J. Ye, “Multi-label multiple kernel learning,” in Proc. NIPS, 2009.</li>
+</ol>
+<h1 id="MKL-optimization-techniques-two-groups"><a href="#MKL-optimization-techniques-two-groups" class="headerlink" title="MKL optimization techniques: two groups"></a>MKL optimization techniques: two groups</h1><ul>
+<li>group 1: directly solve the primal problem or the dual problem</li>
+</ul>
+<ol>
+<li>[33]</li>
+<li>[16]</li>
+<li>[30]</li>
+<li>[9]</li>
+</ol>
+<ul>
+<li>group 2: solve the convex-concave optimization problem by alternating between two steps: the step for updating the kernel combination weights and the step for solving the SVM classifier for the given combination weights.</li>
+</ul>
+<ol>
+<li>[50] <strong>SILP</strong> problem</li>
+<li>[43] simpleMKL: <strong>Subgradient Descent</strong> approaches for MKL; <strong>MKL-GL</strong></li>
+<li>[12] <strong>MKL-SD</strong></li>
+<li>[39] K. Gai, G. Chen, and C. Zhang, “Learning kernels with radiuses of minimum enclosing balls,” in Proc. NIPS, 2010, pp. 649–657. <strong>[MKL-SD]</strong></li>
+<li>[23] <strong>MKL-MD</strong> (a mirror descent method)</li>
+<li>[42] <strong>MKL-level</strong> (an extended level method)</li>
+<li>[10] <strong>MKL-GL</strong> (group lasso)</li>
+</ol>
+<ul>
+<li>online learning algorithms for MKL: process one training example at each iteration</li>
+</ul>
+<ol>
+<li>[78] R. Jin, S. C. H. Hoi, and T. Yang, “Online multiple kernel learning: Algorithms and mistake bounds,” in Proc. Int. Conf. ALT, Canberra, ACT, Australia, 2010, pp. 390–404.</li>
+<li>[21] L. Jie, F. Orabona, M. Fornoni, B. Caputo, and N. Cesa-Bianchi, “OM-2: An online multi-class multi-kernel learning algorithm,” in Proc. IEEE CVPRW, San Francisco, CA, USA, 2010, pp. 43–50.</li>
+</ol>
+<h1 id="experiments"><a href="#experiments" class="headerlink" title="experiments:"></a>experiments:</h1><p>three datasets: Caltech 101; Pascal VOC 2007; a subset of ImageNet</p>
+<p>AVG： average kernel approach</p>
+<h2 id="classification-performance"><a href="#classification-performance" class="headerlink" title="classification performance"></a>classification performance</h2><ol>
+<li>MKL和AVG都优于单核 SVM</li>
+<li>当训练集样本很小时（每类有10或20个样本），与AVG相比，L1-MKL性能最差，Lp-MKL与AVG相当；当训练集样本量增大到一定程度时（每类有30个样本），L1-MKL的性能明显优于其他方法</li>
+<li>不同的分类算法在迭代过程中的精度变化不一样（文章中图3）<ul>
+<li>simpleMKL迭代很小的步数就收敛了，但是在线性搜索步需要很多迭代，因此总的耗时却很大</li>
+<li>MKL-SILP震荡比较明显，这由于其贪婪的本质，每次总是选择the most violated constraints 来优化<br><img src="/img/blog/mkl/mkl_map_scores.png" alt="mean average precision for MKLs"></li>
+</ul>
+</li>
+</ol>
+<h2 id="Number-of-kernels-vs-classification-accuracy"><a href="#Number-of-kernels-vs-classification-accuracy" class="headerlink" title="Number of kernels vs classification accuracy"></a>Number of kernels vs classification accuracy</h2><p>文章中实验的做法：先用L1-MKL来得到所有kernel的权重并排序，然后通过逐步加入权重有序的核来验证MKL方法的性能。（文章中图4）<br><img src="/img/blog/mkl/map_score_wrt_kernels.png" alt="Change in MAP score with respect to the number of base kernels"><br>上图表明随着核的数量的增加，L2-MKL和AVG方法的精度反而下降了，这表明后面加入的一些week kernels起到的是坏作用，而L1-MKL方法到一定程度之后，就饱和了，精度变化不大了，从另一方面来说，L1-MKL更加的鲁棒。</p>
+<h2 id="computational-efficiency"><a href="#computational-efficiency" class="headerlink" title="computational efficiency"></a>computational efficiency</h2><p>实验结果：<br><img src="/img/blog/mkl/training_time.png" alt="Total Training Time (Secs), Number of Iterations, and Total Time Spent on Combining the Base Kernels (Secs) for Different MKL Algorithms vs Number of Training Examples"><br>上表表明</p>
+<ol>
+<li>与L1-MKL方法相比，Lp-MKL需要很小的步数，主要原因在于Lp-MKL拥有光滑的目标函数，更方便优化。</li>
+<li>大量的时间主要花费在kernel matrix的组合上，而对于不同的L1-MKL方法而言，差异主要体现在他们在迭代过程中的稀疏性的体现。比如MKL-SILP在优化过程中就产生了稀疏解，因此其实最有效的wrapper algorithm，而SimpleMKL就不用有这样的性质了，所以需要更多的时间。</li>
+</ol>
+<h2 id="evaluation-of-sparseness"><a href="#evaluation-of-sparseness" class="headerlink" title="evaluation of sparseness"></a>evaluation of sparseness</h2><p>明显L1-MKL是具有很好的稀疏性的，而AVG和Lp-MKL就不具有稀疏性了。</p>
+<h1 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h1><ol>
+<li>Multiple Kernel Learning for Visual Object Recognition：A Review</li>
+<li>作者的<a href="http://www.cse.msu.edu/~bucakser/" target="_blank" rel="external">个人主页</a>, 里面提供了与本文相关的代码及一些作者的个人信息。</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;今天花了一整天的时间看了一篇关于Multiple kernel Learning的综述文章，他是以Visual object recognition作为应用背景来分析的。文章：Multiple Kernel Learning for Visual Object Recogn
+    
+    </summary>
+    
+      <category term="Machine Learning" scheme="http://heimignx.cn/categories/Machine-Learning/"/>
+    
+    
+      <category term="Machine Learning" scheme="http://heimignx.cn/tags/Machine-Learning/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>研一小结</title>
+    <link href="http://heimignx.cn/2016/09/27/conclusion-for-first-year-of-master/"/>
+    <id>http://heimignx.cn/2016/09/27/conclusion-for-first-year-of-master/</id>
+    <published>2016-09-27T13:17:45.000Z</published>
+    <updated>2016-10-15T14:06:53.919Z</updated>
+    
+    <content type="html"><![CDATA[<p>好久没有更新了，这阵子是大忙+大闲，大忙的时候啥杂活都不想干，大闲的时候是什么正事都不想干，于是一直拖到了九月底终于静下来好好做个总结了。</p>
+<p>大忙是在刚开学那会，赶AAAI的due，初稿其实在暑假刚开始就写好了，不过一直等到了开学才开始修改工作，其实一开始写完自我感觉还可以，不过改完发现已经完全不一样了（囧）。在改论文的过程中，算是经历了各种蛋疼的煎熬的时刻吧，不过在这里得感激我们非常nice的薛老板，往往总是一个下午一个下午的去改论文，非常耐心的去看每一句话，去核对每个单词，有时候我临时遇到不能理解的地方还要打电话打扰老板，老板总是很和蔼的去解答，遇到这样的老板还是感觉挺幸运哒！当然，我也收获了很多，大概能够掌握写这一类的科技文章的套路吧，比如文章一定一定要突出你的核心思想（或者说是文章的贡献吧），所有的语句组织都得围绕这个核心思想，不能有给PC引起歧义的语句出现，然后，就是想方设法的让PC get到你的创新点。可能是我第一次写的缘故吧，反正introduction部分就花了好久的时间去改，一开始就是从其他相关文章里面直接巴拉下来粘上去的，逻辑很零碎，然后，一稿一稿的去改，而且在跟老板交流的过程中，对其他一些相关的对比算法也有了更进一步的理解，算是一种意外的收获吧。然后，对于Latex工具还是很赞的，强大格式编排，可以让你专注于内容的写作，必然是各种写作的首选利刃。论文虽然是投了，中或者是不中就看命吧，今年好像投稿量都接近3k了，而且，现在做svm的也不是很多了，听老板说好像专门做不定核的就我们一篇，还是有点小忐忑的，不过我想这也正常，毕竟现在这deeplearning正火，很多研究都往dl上靠，前期老板还传了一篇deep kernel learning 的文章，瞄了一眼是用高斯过程做的，貌似跟dl木有太大关系吧~然后，我想，其实对于不定核的研究已经有不少很不错的工作了，而且个人觉得svm in krein的框架的确是很牛逼，在各种数据集上的效果都不错，而且他的理论推导及给出的解释也还完善，只是可能他的出发点就是在这个非凸问题上去找一个鞍点，对于传统的凸优化而言，这样的结果显得有些单薄，但是对于不定核的非凸问题是不是给出一个鞍点就已经足够了呢？虽然在我们的文章中，这也是我们认为的缺点之一吧，不过还是持保留意见吧。对了，在论文的最后时刻，找到了一篇将不定核svm用于文本分类的文章，是发在AAAI’16上，他论文里面用的模型直接是Luss最早提出的模型，所以，顿时感觉不定核还是有其用武之地的，只是我们木有发现而已，所以，我想作为小硕还是找些应用场景做做比较好，对于深入的理论研究还是有点吃力的。在论文工作结束之后，紧接着就参加了今年的研究生数模（我会说是由于不要参赛费，而且参加还有补助才参加的么~），我们做的是B题，其实是一种特殊要求的特征选择类问题，一开始我们尝试用分类结果作为依据，用随机森林来做，并根据给出的Feature的Feature importance来选择特征，不过最后发现一方面随机森林的随机性太大了，精度与Feature importance前后差异太大了，另一方面，精度最高才接近60%，这有点不能接受，我折腾了快两天才选择放弃这一想法，心情也low到了极点，不过这个时刻就要感谢团队里的小伙伴了，倩汶在看一篇专门针对基因致病位点的文章里面提到了一系列的方法，于是我就是尝试了一个MDR的方法，它通过暴力搜索的方式，遍历求解每一种位点组合与疾病的关联度，并找到每一类位点组合中的最相关的作为输出，可想而知，对于题目给出的有9k个位点特征的情况下，遍历一个三位点组合就是$C_{9k}^3$了,所以只能作为一种对比算法吧。然后阿发那边一直用他的思路去做，特别是最后一问，他俩合作用multi-label的方法去做，还是很赞的！可能由于我们前三天做的比较安逸吧，最后还的通宵写论文，总之，也是有不少收获吧！然后我想这可能是我最后一次数模了吧，还记得本科刚开始是跟着淼哥和芳芳姐做，然后和老刘一起参加了不少，也从他们身上学到了很多，这些宝贵的经历都记录了我成长的过程，我想这些都会是我美好回忆的一部分吧。关于科研我想还有几点是需要注意的，因为研一刚开始那会，真的是什么都不懂，然后摸索着去看论文，实现代码，debug，调参等等，这些都需要耐心和理性的分析，尤其是对论文的阅读不能有想当然的部分，一定要仔仔细细的看，或许对于有些定理的证明不能一开始掌握的很好，但是多读之后一定会有收获的（满满的鸡汤，但是好像事实又总是这样的！）</p>
+<p>研究生的生活的确跟本科生的生活不一样了，不再像本科生那样一味的学习书本知识，为了一份不错的成绩单，而是有了一个自己的方向，生活中的大部分时间也从宿舍转义到了实验室，实验室就像我们的另一家，于我而言，我们现在的这个家很温馨，很活力，而且发展也很迅速，因为现在两个实验室都快坐不下了！研究生一年级的时候，在师兄师姐的带领下，参加了各种各样的团建活动，学会了打德州，打uno，还有现在我非常迷的狼人杀，生活算是丰富多彩吧，这充分体现了学习好与娱乐多并不冲突，而且从这些娱乐活动中，能够让你学到一些在学术中学不到的东西，比如与人的交流啊，逻辑的推理啊，常识的学习啊等等吧，总之，学习是永无止境的，只是针对学什么而已吧。</p>
+<p>关于感情方面，感觉自己还是不太善于表达吧，貌似内心戏太足了，所以，我想还是应该大胆的去表达吧，喜欢就是喜欢，哪怕只是曾经喜欢，说出来大家都释然了，可以继续寻找适合自己属于自己的那份感情。</p>
+<p>研究生剩下来的时间其实并不多了，到了明年这个时候，我们应该都在忙于寻找下一个落脚的地方，所以，为了能够在明年的这个时候多一些泰然少一些局促，研二这一年真的需要静下心来好好的规划规划了。目下能及的是，发现敲了一年MATLAB之后，发现自己蛋疼的只会写MATLAB了，所以，接下来的一段时间我想好好把C++再重拾起来，做一些算法题，实现一些machinelearning的方法，然后，Python的话也是要不断的练习的，现在的想法也是实现一些ml的方法吧。至于科研，我想首先把多不定核学习的给解决了，然后有可能找到一个应用场景做一下吧。这里只是简单的提一下吧，后面还是需要详细的规划一下的。国庆快要到了，整个暑假基本上都呆在了学校，所以国庆回家多呆几天陪陪爸妈。嗯，就这样吧，国庆快乐！ </p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;好久没有更新了，这阵子是大忙+大闲，大忙的时候啥杂活都不想干，大闲的时候是什么正事都不想干，于是一直拖到了九月底终于静下来好好做个总结了。&lt;/p&gt;
+&lt;p&gt;大忙是在刚开学那会，赶AAAI的due，初稿其实在暑假刚开始就写好了，不过一直等到了开学才开始修改工作，其实一开始写完自
+    
+    </summary>
+    
+      <category term="Tattle" scheme="http://heimignx.cn/categories/Tattle/"/>
+    
+    
+      <category term="Tattle" scheme="http://heimignx.cn/tags/Tattle/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>CS231n:任务1中two-layer net的梯度推导过程</title>
+    <link href="http://heimignx.cn/2016/08/20/cs231n-reassignment-1-two-layer-net/"/>
+    <id>http://heimignx.cn/2016/08/20/cs231n-reassignment-1-two-layer-net/</id>
+    <published>2016-08-20T13:22:45.000Z</published>
+    <updated>2016-10-15T14:06:53.921Z</updated>
+    
+    <content type="html"><![CDATA[<p>在任务1中，要实现的是一个2层网络的训练及预测，两层网络的结构如下：</p>
+<p>Inputs $\to$ fully connected layer $\to$ ReLU $\to$ fully connected layer $\to$ Softmax loss + $L_2$ regularization</p>
+<p>在<a href="http://www.jianshu.com/p/004c99623104" target="_blank" rel="external">博客</a>中给出了一个类似结构的三层网络的推导过程：</p>
+<p><img src="/img/blog/deeplearning/compute_gradient.jpg" alt="compute the gradient"></p>
+<p>其中，对Softmax loss的求导公式如下：</p>
+<p><img src="/img/blog/deeplearning/derivative_of_softmax_loss_function.jpg" alt="Derivative of softmax loss function"></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在任务1中，要实现的是一个2层网络的训练及预测，两层网络的结构如下：&lt;/p&gt;
+&lt;p&gt;Inputs $\to$ fully connected layer $\to$ ReLU $\to$ fully connected layer $\to$ Softmax loss + 
+    
+    </summary>
+    
+      <category term="Machine Learning" scheme="http://heimignx.cn/categories/Machine-Learning/"/>
+    
+    
+      <category term="Machine Learning" scheme="http://heimignx.cn/tags/Machine-Learning/"/>
+    
+      <category term="CS231n笔记" scheme="http://heimignx.cn/tags/CS231n%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>CS231n:Neural Networks Part 3: Learning and Evaluation</title>
+    <link href="http://heimignx.cn/2016/08/19/cs231n-neural-networks-part-3-learning-and-evaluation/"/>
+    <id>http://heimignx.cn/2016/08/19/cs231n-neural-networks-part-3-learning-and-evaluation/</id>
+    <published>2016-08-19T13:22:45.000Z</published>
+    <updated>2016-10-15T14:06:53.920Z</updated>
+    
+    <content type="html"><![CDATA[<p>本节主要讲了一些关于神经网络的学习与评估方面的知识。</p>
+<h1 id="Gradient-checks"><a href="#Gradient-checks" class="headerlink" title="Gradient checks"></a>Gradient checks</h1><ol>
+<li><p>使用中心化公式：<br>$$\frac{df(x)}{dx} = \frac{f(x+h)-f(x-h)}{2h}$$</p>
+</li>
+<li><p>使用相对误差来比较两者的差异：<br>$$relative \ error = \frac{|f’_a-f’_n|}{\max(|f’_a|,|f’_n|)}$$</p>
+</li>
+</ol>
+<p>在实际的计算中，对于relative error（re）的评价，主要分一下几种情况：<br>1） $re &gt; 1e-2$: 出错<br>2） $1e-2 &gt; re &gt; 1e-4$ : 不舒服<br>3） $1e-4 &gt; re$: 当函数有不可导点存在时，这样的精度时OK的；但如果没有不可导点时，这个精度还是太高了<br>4） $1e-7 &gt; re$: OK</p>
+<p>课程中还讲解了很多细节的地方：</p>
+<ol>
+<li>编程时，要使用双精度来作为变量的声明与定义</li>
+<li>目标函数中不可导导致的梯度检查出现问题，需要额外关注，使用少量数据点来解决这一问题</li>
+<li>谨慎设置步长 h</li>
+<li>网络“预热”后再检查</li>
+<li>不让正则化吞没了数据的损失</li>
+<li>在做梯度检查时，记得关闭Dropout和数据扩张(augmentations)</li>
+<li>检查少量的维度</li>
+</ol>
+<h1 id="Before-learning-sanity-checks-Tips-Tricks"><a href="#Before-learning-sanity-checks-Tips-Tricks" class="headerlink" title="Before learning: sanity checks Tips/Tricks"></a>Before learning: sanity checks Tips/Tricks</h1><ol>
+<li><p>寻找特定状况下的正确损失值<br>比如CIFAR-10数据集，对于Softmax分类器，初始的期望损失值为2.302，这是因为一个样本被判定为某个个类别（共10个类别）的概率是0.1，所以 $-\ln(0.1) = 2.302$<br>对于Weston Watkins SVM，假设所有边界都被越多，则损失值为9.</p>
+</li>
+<li><p>提高正则化强度时导致损失值变大</p>
+</li>
+<li>对于小数据子集过拟合</li>
+</ol>
+<h1 id="Babysitting-the-learning-process"><a href="#Babysitting-the-learning-process" class="headerlink" title="Babysitting the learning process"></a>Babysitting the learning process</h1><p>检查整个的学习过程，与<strong>周期</strong>相关的性能指标<br>这里的<strong>周期</strong>衡量了在训练中每个样本数据都被观察过次数的期望，周期与数据的批尺寸有关</p>
+<p>指标有如下一些：</p>
+<ol>
+<li>损失函数： 损失值</li>
+<li>training set和validation set的准确率，可以防止过拟合</li>
+<li><p>权重更新比例： 大概 $1e-3$ 左右<br>code：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#assume parameter vector W and its gradient vector dW</span></div><div class="line">param_scale = np.linalg.norm(W.ravel())</div><div class="line">update = -learning_rate*dW <span class="comment"># simple SGD update</span></div><div class="line">update_scale = np.linalg.norm(update.ravel())</div><div class="line">W += update <span class="comment"># the actual update</span></div><div class="line"><span class="keyword">print</span> update_scale / param_scale <span class="comment"># want ~1e-3</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>检查每层的激活数据及梯度分布    </p>
+</li>
+<li>如果是图像数据，可以将第1层可视化来判断网络的学习情况</li>
+</ol>
+<h1 id="Parameter-updates"><a href="#Parameter-updates" class="headerlink" title="Parameter updates"></a>Parameter updates</h1><ol>
+<li>普通的更新方法(<strong>一阶方法</strong>)： $x += - learning\_rate * dx$</li>
+<li><p><strong>动量更新</strong>(momentum)：<br>解释：损失值可以理解为是山的高度（高度的势能：$U = mgh$）<br>用随机数字初始化参数等同于在某个位置给质点设定初始速度为0，质点的力与梯度的潜在能量有关（$F=-\nabla U$）,质点所受的力就是损失函数的（负）梯度，又$F=ma$，所以（负）梯度与质点加速度成比例<br>更新公式：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Momentum update</span></div><div class="line">v = mu * v - learning_rate * dx <span class="comment"># integrate velocity</span></div><div class="line">x += v <span class="comment"># integrate position</span></div></pre></td></tr></table></figure>
+<p> v 初始化为0，超参mu（一般设为0.9）可以通过交叉验证来确定[0.5, 0.9, 0.95, 0.99]</p>
+</li>
+<li><p><strong>Nesterov 动量</strong><br> Nesterov动量与普通动量有些许不同，最近变得比较流行。在理论上对于凸函数它能得到更好的收敛，在实践中也确实比标准动量表现更好一些。</p>
+<p> Nesterov动量的核心思路是,当参数向量位于某个位置 $x$ 时,观察上面的动量更新公式可以发现,动量部分(忽视带梯度的第二个部分)会通过 mu * v 稍微改变参数向量。因此,如果要计算梯度，那么可以将未来的近似位置 x + mu * v 看做是“向前看”,这个点在我们一会儿要停止的位置附近.因此,计算 x + mu * v 的梯度而不是“旧”位置x的梯度就有意义了.</p>
+<p> 可以通过下图来感受一下：<br><img src="/img/blog/deeplearning/nesterov.jpeg" alt="momentum and Nesterov momentum update"><br> 对应的更新公式为：</p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">x_ahead = x + mu * v</div><div class="line"><span class="comment"># evaluate dx_ahead (the gradient at x_ahead instead of at x)</span></div><div class="line">v = mu * v - learning_rate * dx_ahead	</div><div class="line">x += v</div></pre></td></tr></table></figure>
+<p> 然而在实践中，人们更喜欢和普通SGD或上面的动量方法一样简单的表达式。通过对x_ahead = x + mu * v使用变量变换进行改写是可以做到的，然后用x_ahead而不是x来表示上面的更新。也就是说，实际存储的参数向量总是向前一步的那个版本。x_ahead的公式（将其重新命名为x）就变成了：</p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">v_prev = v <span class="comment"># back this up</span></div><div class="line">v = mu * v - learning_rate * dx <span class="comment"># velocity update stays the same</span></div><div class="line">x += -mu * v_prev + (<span class="number">1</span> + mu) * v <span class="comment"># position update changes form</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>学习率退火<br> 当一个模型的学习率很高时，系统功能过大，参数向量就会无规律地跳动，不能够稳定到损失函数更深更窄的部分去。</p>
+<p> 对于学习率的变化，主要有三种方式：<br> 1）随步数衰变<br> 2）指数衰减  $\alpha = \alpha_0 e^{-k t}$<br> 3) $1/t$衰减：$\alpha = \alpha_0 / (1 + kt)$</p>
+<p> 在实际运用中，通常使用随步数衰减的Dropout</p>
+</li>
+<li><p>二阶方法<br> 牛顿法： $x \leftarrow x - [H f(x)]^{-1} \nabla f(x)$<br>其中 $H f(x)$ 表示损失函数的局部曲率，它能够让最优化过程在曲率小的时候大步前进，曲率小的时候，小步前进</p>
+</li>
+<li><p>逐参数适应学习率方法<br>前面讨论的所有方法都是对学习率进行全局地操作，并且对所有的参数都是一样的。学习率调参是很耗费计算资源的过程，所以很多工作投入到发明能够适应性地对学习率调参的方法，甚至是逐个参数适应学习率调参。很多这些方法依然需要其他的超参数设置，但是其观点是这些方法对于更广范围的超参数比原始的学习率方法有更良好的表现。在本小节我们会介绍一些在实践中可能会遇到的常用适应算法：</p>
+<p> <strong><a href="http://www.jmlr.org/papers/volume12/duchi11a/duchi11a.pdf" target="_blank" rel="external">Adagrad</a></strong></p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Assume the gradient dx and parameter vector x</span></div><div class="line">cache += dx**<span class="number">2</span></div><div class="line">x += - learning_rate * dx / (np.sqrt(cache) + eps)</div></pre></td></tr></table></figure>
+<p> 注意，变量cache的尺寸和梯度矩阵的尺寸是一样的，还跟踪了每个参数的梯度的平方和。这个一会儿将用来归一化参数更新步长，归一化是逐元素进行的。注意，接收到高梯度值的权重更新的效果被减弱，而接收到低梯度值的权重的更新效果将会增强。有趣的是平方根的操作非常重要，如果去掉，算法的表现将会糟糕很多。用于平滑的式子eps（一般设为1e-4到1e-8之间）是防止出现除以0的情况。Adagrad的一个缺点是，在深度学习中单调的学习率被证明通常过于激进且过早停止学习。</p>
+<p> <strong>RMSprop</strong><br> 是一个非常高效，但没有公开发表的适应性学习率方法。有趣的是，每个使用这个方法的人在他们的论文中都引用自Geoff Hinton的Coursera课程的第六课的<a href="http://www.cs.toronto.edu/~tijmen/csc321/slides/lecture_slides_lec6.pdf" target="_blank" rel="external">第29页PPT</a>。这个方法用一种很简单的方式修改了Adagrad方法，让它不那么激进，单调地降低了学习率。具体说来，就是它使用了一个梯度平方的滑动平均：</p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cache =  decay_rate * cache + (<span class="number">1</span> - decay_rate) * dx**<span class="number">2</span></div><div class="line">x += - learning_rate * dx / (np.sqrt(cache) + eps)</div></pre></td></tr></table></figure>
+<p> 在上面的代码中，decay_rate是一个超参数，常用的值是[0.9,0.99,0.999]。其中x+=和Adagrad中是一样的，但是cache变量是不同的。因此，RMSProp仍然是基于梯度的大小来对每个权重的学习率进行修改，这同样效果不错。但是和Adagrad不同，其更新不会让学习率单调变小。</p>
+<p> <strong><a href="http://arxiv.org/pdf/1412.6980v8.pdf" target="_blank" rel="external">Adam</a></strong><br> Adam是最近才提出的一种更新方法，它看起来像是RMSProp的动量版。简化的代码是下面这样：</p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">m = beta1*m + (<span class="number">1</span>-beta1)*dx</div><div class="line">v = beta2*v + (<span class="number">1</span>-beta2)*(dx**<span class="number">2</span>)</div><div class="line">x += - learning_rate * m / (np.sqrt(v) + eps)</div></pre></td></tr></table></figure>
+<p> 注意这个更新方法看起来真的和RMSProp很像，除了使用的是平滑版的梯度m，而不是用的原始梯度向量dx。论文中推荐的参数值eps=1e-8, beta1=0.9, beta2=0.999。在实际操作中，我们推荐Adam作为默认的算法，一般而言跑起来比RMSProp要好一点。但是也可以试试SGD+Nesterov动量。完整的Adam更新算法也包含了一个偏置（bias）矫正机制，因为m,v两个矩阵初始为0，在没有完全热身之前存在偏差，需要采取一些补偿措施。建议读者可以阅读论文查看细节，或者课程的PPT。</p>
+<p> 课程中给出两个动图来显示不同的学习率下优化性能的比较：<br><img src="/img/blog/deeplearning/opt2.gif" alt="Contours of a loss surface and time evolution of different optimization algorithms"><br><img src="/img/blog/deeplearning/opt1.gif" alt="A visualization of a saddle point in the optimization landscape, where the curvature along different dimension has different signs"></p>
+</li>
+</ol>
+<h1 id="Hyperparameter-optimization"><a href="#Hyperparameter-optimization" class="headerlink" title="Hyperparameter optimization"></a>Hyperparameter optimization</h1><ol>
+<li><p>实现<br>一个具体的设计是用仆程序持续地随机设置参数然后进行最优化。在训练过程中，仆程序会对每个周期后验证集的准确率进行监控，然后向文件系统写下一个模型的记录点（记录点中有各种各样的训练统计数据，比如随着时间的损失值变化等），这个文件系统最好是可共享的。在文件名中最好包含验证集的算法表现，这样就能方便地查找和排序了。然后还有一个主程序，它可以启动或者结束计算集群中的仆程序，有时候也可能根据条件查看仆程序写下的记录点，输出它们的训练统计数据等。</p>
+</li>
+<li><p>比起交叉验证最好使用一个验证集</p>
+</li>
+<li><p>超参数范围：<br>学习率 ： learning_rate = 10 ** uniform(-6, 1)</p>
+</li>
+<li><p>随机搜索优于网格搜索<br><a href="http://www.jmlr.org/papers/volume13/bergstra12a/bergstra12a.pdf" target="_blank" rel="external">Random Search for Hyper-Parameter Optimization</a>中说“随机选择比网格化的选择更加有效”，而且在实践中也更容易实现</p>
+</li>
+<li><p>对于边界上的最优值要小心</p>
+</li>
+<li>从粗到细地分阶段搜索</li>
+<li>贝叶斯超参数最优化</li>
+</ol>
+<h1 id="Evaluation"><a href="#Evaluation" class="headerlink" title="Evaluation"></a>Evaluation</h1><p>模型的集成</p>
+<ol>
+<li>同一个模型，不同的初始化</li>
+<li>在交叉验证中发现最好的模型</li>
+<li>一个模型设置多个记录点</li>
+<li>在训练的时候跑参数的平均值<br>模型集成的一个劣势就是在测试数据的时候会花费更多时间。最近Geoff Hinton在<a href="https://www.youtube.com/watch?v=EK61htlw8hY" target="_blank" rel="external">“Dark Knowledge”</a>上的工作很有启发：其思路是通过将集成似然估计纳入到修改的目标函数中，从一个好的集成中抽出一个单独模型。</li>
+</ol>
+<h1 id="references"><a href="#references" class="headerlink" title="references"></a>references</h1><ol>
+<li><a href="http://cs231n.github.io/neural-networks-3/" target="_blank" rel="external">CS231n:Neural Networks Part 3: Learning and Evaluation</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/21798784?refer=intelligentunit" target="_blank" rel="external">知乎：CS231n课程笔记翻译：神经网络笔记3（下）</a> 翻的很棒！</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;本节主要讲了一些关于神经网络的学习与评估方面的知识。&lt;/p&gt;
+&lt;h1 id=&quot;Gradient-checks&quot;&gt;&lt;a href=&quot;#Gradient-checks&quot; class=&quot;headerlink&quot; title=&quot;Gradient checks&quot;&gt;&lt;/a&gt;Gradien
+    
+    </summary>
+    
+      <category term="Machine Learning" scheme="http://heimignx.cn/categories/Machine-Learning/"/>
+    
+    
+      <category term="Machine Learning" scheme="http://heimignx.cn/tags/Machine-Learning/"/>
+    
+      <category term="CS231n笔记" scheme="http://heimignx.cn/tags/CS231n%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>CS231n:Neural Networks Part 2: Setting up the Data and the Loss</title>
+    <link href="http://heimignx.cn/2016/08/18/cs231n-neural-networks-part-2-setting-up-the-Data-and-the-loss/"/>
+    <id>http://heimignx.cn/2016/08/18/cs231n-neural-networks-part-2-setting-up-the-Data-and-the-loss/</id>
+    <published>2016-08-18T13:22:45.000Z</published>
+    <updated>2016-10-15T14:06:53.920Z</updated>
+    
+    <content type="html"><![CDATA[<p>本节主要介绍了样本数据预处理，权重矩阵的初始化，规则化技术，以及一些损失函数。</p>
+<h1 id="Setting-up-the-data-and-the-model"><a href="#Setting-up-the-data-and-the-model" class="headerlink" title="Setting up the data and the model"></a>Setting up the data and the model</h1><h2 id="Data-Preprocessing"><a href="#Data-Preprocessing" class="headerlink" title="Data Preprocessing"></a>Data Preprocessing</h2><ol>
+<li><p>均值减法</p>
+</li>
+<li><p>归一化：<br>零中心化 + 每个维度/std（x, axis = 0）<br>每个维度做归一化，使得其值最大为1，最小为-1</p>
+</li>
+<li><p>PCA<br> 首先将数据去中心化，然后求数据的协方差矩阵，并进行奇异值分解，接着可以得到原始样本数据去相关性后的新样本数据，同时，如果我们想要对数据进行降维处理，只需要选择奇异值分解得到的左特征矩阵的前n个特征向量来去相关性计算就可以了。<br> code：</p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Assume input data matrix X of size [N x D]</span></div><div class="line">X -= np.mean(X, axis = <span class="number">0</span>) <span class="comment"># zero-center the data (important)</span></div><div class="line">cov = np.dot(X.T, X) / X.shape[<span class="number">0</span>] <span class="comment"># get the data covariance matrix</span></div><div class="line">U,S,V = np.linalg.svd(cov)</div><div class="line">Xrot = np.dot(X, U) <span class="comment"># decorrelate the data</span></div><div class="line">Xrot_reduced = np.dot(X, U[:,:<span class="number">100</span>]) <span class="comment"># Xrot_reduced becomes [N x 100]</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>白化<br>白化操作实际上是在去相关性的数据样本上除以他们对应的特征值矩阵，进行归一化。<br>几何解释：当输入数据服从一个多元高斯分布，那么白化就是将这些样本数据转变成服从一个零均值，单位协方差矩阵的高斯分布。<br>code：</p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># whiten the data:</span></div><div class="line"><span class="comment"># divide by the eigenvalues (which are square roots of the singular values)</span></div><div class="line">Xwhite = Xrot / np.sqrt(S + <span class="number">1e-5</span>)</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>下面三幅图片分别描述原始数据，去相关性的数据，和白化后的数据。</p>
+<p><img src="/img/blog/deeplearning/prepro2.jpeg" alt=""></p>
+<p>在实际的操作中，对于卷积神经网络，PCA/白化技术运用的并不多，通常会将数据进行零中心化处理。</p>
+<h2 id="Weight-Initialization"><a href="#Weight-Initialization" class="headerlink" title="Weight Initialization"></a>Weight Initialization</h2><ol>
+<li><p>错误：全零初始化，每个单元都一致，造成了对称性。</p>
+</li>
+<li><p>小随机值初始化： 非常接近0但又不等于0</p>
+</li>
+<li><p>使用 $1/sqrt(n)$ 来校准方差：<br>理论推导：<br>考虑内积$s=\sum_i^n w_i x_i$, 计算 $s$ 的方差：</p>
+<p> \begin{align}<br> Var(s) &amp;= Var(\sum_i^n w_ix_i) \\<br> &amp;= \sum_i^n Var(w_ix_i) \\<br> &amp;= \sum_i^n[E(w_i)]^2 Var(x_i)+E[(x_i)]^2 Var(w_i)+Var(x_i)Var(w_i) \\<br> &amp;= \sum_i^n Var(x_i)Var(w_i) \\<br> &amp;= (n Var(w))Var(x)<br> \end{align}<br> 所以，初始化权重矩阵 <code>w = np.random.randn(n) / sqrt(n)</code><br> 对于ReLU，初始化：<code>w = np.random.randn(n) * sqrt(2.0/n)</code><br> <a href="https://arxiv.org/pdf/1502.01852v1.pdf" target="_blank" rel="external">Delving Deep into Rectifiers: Surpassing Human-Level Performance on ImageNet Classification</a>(He et al.)</p>
+</li>
+<li><p>稀疏初始化</p>
+</li>
+<li><p>bias初始化：通常为0</p>
+</li>
+<li><p><a href="http://arxiv.org/pdf/1502.03167v3.pdf" target="_blank" rel="external">Batch Normalization</a>: 在网络的每一层之前都做预处理，只是这种操作以另一种方式与网络集成在一起。<br>下图给出了Batch Normalization的具体形式：<br><img src="/img/blog/deeplearning/batch_normalization.png" alt="batch normalization"></p>
+</li>
+</ol>
+<h2 id="Regularization"><a href="#Regularization" class="headerlink" title="Regularization"></a>Regularization</h2><ol>
+<li><p>$L_2$规则化：   $\frac{1}{2}\lambda w^2$<br>对于大数值的权重向量进行严厉的惩罚，倾向于更加分散的权重向量。</p>
+</li>
+<li><p>$L_1$规则化：  $\lambda |w|$<br>具有稀疏性</p>
+</li>
+<li><p>$L_1 \&amp; L_2$混合规则化:   $\lambda_1 |w| + \lambda_2 w^2 $<br><a href="http://web.stanford.edu/~hastie/Papers/B67.2%20%282005%29%20301-320%20Zou%20&amp;%20Hastie.pdf" target="_blank" rel="external">Elastic net regularization</a></p>
+</li>
+<li><p>Max norm constraints（最大范式约束）:<br>给每个神经元中权重向量的数量设定上限，并使用投影梯度下降来确保这一约束</p>
+</li>
+<li><p><a href="http://www.cs.toronto.edu/~rsalakhu/papers/srivastava14a.pdf" target="_blank" rel="external">Dropout</a>(随机失活)：<br>让神经元以超参数p的概率被激活或被设置为0<br>这属于网络在前向传播中有随机行为的方法</p>
+</li>
+</ol>
+<p><img src="/img/blog/deeplearning/dropout.jpeg" alt="Dropout"><br>    上图表示Dropout方法的具体形式，下面给出对应的代码逻辑：<br>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="string">""" Vanilla Dropout: Not recommended implementation (see notes below) """</span></div><div class="line"></div><div class="line">p = <span class="number">0.5</span> <span class="comment"># probability of keeping a unit active. higher = less dropout</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">train_step</span><span class="params">(X)</span>:</span></div><div class="line">  <span class="string">""" X contains the data """</span></div><div class="line">  </div><div class="line">  <span class="comment"># forward pass for example 3-layer neural network</span></div><div class="line">  H1 = np.maximum(<span class="number">0</span>, np.dot(W1, X) + b1)</div><div class="line">  U1 = np.random.rand(*H1.shape) &lt; p <span class="comment"># first dropout mask</span></div><div class="line">  H1 *= U1 <span class="comment"># drop!</span></div><div class="line">  H2 = np.maximum(<span class="number">0</span>, np.dot(W2, H1) + b2)</div><div class="line">  U2 = np.random.rand(*H2.shape) &lt; p <span class="comment"># second dropout mask</span></div><div class="line">  H2 *= U2 <span class="comment"># drop!</span></div><div class="line">  out = np.dot(W3, H2) + b3</div><div class="line">  </div><div class="line">  <span class="comment"># backward pass: compute gradients... (not shown)</span></div><div class="line">  <span class="comment"># perform parameter update... (not shown)</span></div><div class="line">  </div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">predict</span><span class="params">(X)</span>:</span></div><div class="line">  <span class="comment"># ensembled forward pass</span></div><div class="line">  H1 = np.maximum(<span class="number">0</span>, np.dot(W1, X) + b1) * p <span class="comment"># <span class="doctag">NOTE:</span> scale the activations</span></div><div class="line">  H2 = np.maximum(<span class="number">0</span>, np.dot(W2, H1) + b2) * p <span class="comment"># <span class="doctag">NOTE:</span> scale the activations</span></div><div class="line">  out = np.dot(W3, H2) + b3</div></pre></td></tr></table></figure></p>
+<p><strong>inverted dropout</strong><br>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="string">""" </span></div><div class="line">Inverted Dropout: Recommended implementation example.</div><div class="line">We drop and scale at train time and don't do anything at test time.</div><div class="line">"""</div><div class="line"></div><div class="line">p = <span class="number">0.5</span> <span class="comment"># probability of keeping a unit active. higher = less dropout</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">train_step</span><span class="params">(X)</span>:</span></div><div class="line">  <span class="comment"># forward pass for example 3-layer neural network</span></div><div class="line">  H1 = np.maximum(<span class="number">0</span>, np.dot(W1, X) + b1)</div><div class="line">  U1 = (np.random.rand(*H1.shape) &lt; p) / p <span class="comment"># first dropout mask. Notice /p!</span></div><div class="line">  H1 *= U1 <span class="comment"># drop!</span></div><div class="line">  H2 = np.maximum(<span class="number">0</span>, np.dot(W2, H1) + b2)</div><div class="line">  U2 = (np.random.rand(*H2.shape) &lt; p) / p <span class="comment"># second dropout mask. Notice /p!</span></div><div class="line">  H2 *= U2 <span class="comment"># drop!</span></div><div class="line">  out = np.dot(W3, H2) + b3</div><div class="line">  </div><div class="line">  <span class="comment"># backward pass: compute gradients... (not shown)</span></div><div class="line">  <span class="comment"># perform parameter update... (not shown)</span></div><div class="line">  </div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">predict</span><span class="params">(X)</span>:</span></div><div class="line">  <span class="comment"># ensembled forward pass</span></div><div class="line">  H1 = np.maximum(<span class="number">0</span>, np.dot(W1, X) + b1) <span class="comment"># no scaling necessary</span></div><div class="line">  H2 = np.maximum(<span class="number">0</span>, np.dot(W2, H1) + b2)</div><div class="line">  out = np.dot(W3, H2) + b3</div></pre></td></tr></table></figure></p>
+<h1 id="Loss-functions"><a href="#Loss-functions" class="headerlink" title="Loss functions"></a>Loss functions</h1><ol>
+<li><p>分类问题：</p>
+<p> 1) SVM : $L_i = \sum_{j\neq y_i} max(0, f_j - f_{y_i} + 1)$</p>
+<p> 2)  Softmax : $L_i = - log\frac{e^{f_{y_i}}}{\sum_j e^{f_j}}$</p>
+<p> 3) 当样本的类别数据巨大时，需要使用<a href="http://arxiv.org/pdf/1310.4546.pdf" target="_blank" rel="external">Hierarchical Softmax</a></p>
+<p> 4) 属性分类: 多标签/每个样本可能没有某个属性，属性之间不互相排斥<br>可以为每个属性创建一个独立的二分类的分类器</p>
+</li>
+<li><p>回归问题<br>$L_2$范式： $L_i = |f - y_i|^2_2$<br>$L_1$范式： $L_i = |f - y_i|_1 = \sum_j |f_j - (y_i)_j|$</p>
+</li>
+</ol>
+<h1 id="references"><a href="#references" class="headerlink" title="references"></a>references</h1><ol>
+<li><a href="http://cs231n.github.io/neural-networks-2/" target="_blank" rel="external">CS231n:Neural Networks Part 2: Setting up the Data and the Loss</a></li>
+<li><a href="http://www.jianshu.com/p/004c99623104" target="_blank" rel="external">CS231n (winter 2016) : Assignment1</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/21560667?refer=intelligentunit" target="_blank" rel="external">知乎：CS231n课程笔记翻译：神经网络笔记 2</a></li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;本节主要介绍了样本数据预处理，权重矩阵的初始化，规则化技术，以及一些损失函数。&lt;/p&gt;
+&lt;h1 id=&quot;Setting-up-the-data-and-the-model&quot;&gt;&lt;a href=&quot;#Setting-up-the-data-and-the-model&quot; class
+    
+    </summary>
+    
+      <category term="Machine Learning" scheme="http://heimignx.cn/categories/Machine-Learning/"/>
+    
+    
+      <category term="Machine Learning" scheme="http://heimignx.cn/tags/Machine-Learning/"/>
+    
+      <category term="CS231n笔记" scheme="http://heimignx.cn/tags/CS231n%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>CS231n:Neural Networks Part 1: Setting up the Architecture</title>
+    <link href="http://heimignx.cn/2016/08/17/cs231n-neural-networks-part%20-1-setting-up-the-architecture/"/>
+    <id>http://heimignx.cn/2016/08/17/cs231n-neural-networks-part -1-setting-up-the-architecture/</id>
+    <published>2016-08-17T13:22:45.000Z</published>
+    <updated>2016-10-15T14:06:53.920Z</updated>
+    
+    <content type="html"><![CDATA[<p>从这一节开始，课程重点：神经网络来了，本节主要讲一些神经网络中常用的损失函数，激活函数以及层次结构等。</p>
+<h1 id="Modeling-one-neuron"><a href="#Modeling-one-neuron" class="headerlink" title="Modeling one neuron"></a>Modeling one neuron</h1><p>很多人都知道神经网络中基本单元是受人脑中的神经元的启发而设计的，所以，本节一开始通过人脑中的基本神经元-突触来揭示了其工作原理，以及到神经网络中基本单元的类比。</p>
+<p>然后，介绍了几个基本的线性分类器 <strong>Binary Softmax classifier</strong> 和 <strong>Binary SVM classifier</strong></p>
+<p>常用的激活函数：</p>
+<p><strong>sigmoid</strong>:<br>函数形式： $$\sigma(x)=\frac{1}{1+e^{-x}}$$<br>函数图像可见<a href="http://heimingx.cn/2016/05/03/sigmoid-function-and-sigmoid-kernel/" target="_blank" rel="external">sigmoid function 和 sigmoid kernel
+</a><br><em>优点</em>：<br>对于神经元的激活频率有着良好的解释：从完全不激活（0）到在求和后的最大频率处的完全饱和的激活（1）<br><em>缺点</em>：</p>
+<ol>
+<li>饱和会使得梯度消失 </li>
+<li>输出不是零中心的</li>
+</ol>
+<p><strong>tanh</strong><br>函数形式： $$\tanh(x)=\tanh(\alpha x^T y+c) = 2\sigma(2x)-1$$<br>具有与sigmoid一样的性能，不过也有梯度会消失的缺点</p>
+<p><strong>ReLU (Rectified Linear Unit)</strong><br>函数形式:<br>$$f(x) = \max(0, x)$$<br>函数图像：<br><img src="/img/blog/deeplearning/relu.jpg" alt="ReLU"><br>根据函数图像易知，当 $x &lt;= 0$ 时，函数值为0；当 $x &gt; 0$时，函数斜率为1.</p>
+<p><em>优点</em>：</p>
+<ol>
+<li>对随机梯度下降的收敛有巨大的作用</li>
+<li>计算资源耗费少<br><em>缺点</em>：<br>在训练时，比较脆弱，并且可能“死掉”（<strong>这里有疑问，为什么会死掉？</strong>）</li>
+</ol>
+<p><strong>Leaky ReLU</strong><br>函数形式：</p>
+<p>$$f(x)=\mathbb{I}(x&lt;0) (\alpha x) + \mathbb{I}(x\geq 0) (x)$$</p>
+<p>函数图像：<br><img src="/img/blog/deeplearning/leaky_relu.png" alt="Leaky ReLU"><br>根据函数图像，可以看出Leaky ReLU是对ReLU的一个改进，当 $x&lt;=0$ 时，函数给出一个很小的负数梯度量</p>
+<p><strong>PReLU</strong> (Delving Deep into Rectifiers, Kaiming He, 2015)<br>把负区间上的斜率当作每个神经元中的一个参数来学习</p>
+<p><strong>Maxout</strong><br>函数形式：<br>$$f(x) = \max(W_1^T x + b_1, W^T_2 x + b_2)$$</p>
+<p>该方法是对ReLU和Leaky ReLU的一般化归纳<br>当 $W_1 = 0, b_1 = 0$ 时，就变成了ReLU<br><em>优点</em>：<br>拥有ReLU的优点（线性操作&amp;不饱和），而没有他的缺点（死亡的ReLU单元）<br><em>缺点</em>：<br>每个神经元的参数数量增加了一倍，导致整体参数的数量激增。</p>
+<h1 id="Neural-Network-architectures"><a href="#Neural-Network-architectures" class="headerlink" title="Neural Network architectures"></a>Neural Network architectures</h1><ol>
+<li><p>层的结构<br>神经网络模型是通过层状无环结构组成，比如全连接层结构。<br>其次，通常所说的几层神经网络是不连输入层的，比如下图为3层神经网络。<br><img src="/img/blog/deeplearning/neural_net2.jpeg" alt="3-layer NN"></p>
+</li>
+<li><p>前向传播<br>一般是先进行一个矩阵乘法，然后加上偏置并运用激活函数来实现。</p>
+</li>
+<li><p>表达能力<br>给出任意连续函数 $f(x)$ 和任意 $\epsilon &gt; 0$,均存在一个至少含1个隐层的神经网络 $g(x)$ (并且网络中有合理选择的非线性激活函数，比如Sigmoid)，对于 $\forall x$，使得 $|f(x) - g(x)| &lt; \epsilon$.</p>
+</li>
+<li><p>设置层的数量和尺寸<br>隐层单元越多，网络的表达能力越强<br>当出现Overfit时，应选择规则化而不是减少层数和单元数</p>
+</li>
+</ol>
+<h1 id="references"><a href="#references" class="headerlink" title="references"></a>references</h1><ol>
+<li><a href="http://cs231n.github.io/neural-networks-1/" target="_blank" rel="external">CS231n:Neural Networks Part 1: Setting up the Architecture</a></li>
+<li><a href="http://www.jianshu.com/p/004c99623104" target="_blank" rel="external">CS231n (winter 2016) : Assignment1</a> 这个作者自己总结的还是挺好的，值得参考，感谢博主！</li>
+<li><a href="https://zhuanlan.zhihu.com/p/21462488?refer=intelligentunit" target="_blank" rel="external">知乎：CS231n课程笔记翻译：神经网络笔记1上</a><br><a href="https://zhuanlan.zhihu.com/p/21513367?refer=intelligentunit" target="_blank" rel="external">知乎：CS231n课程笔记翻译：神经网络笔记1下</a></li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;从这一节开始，课程重点：神经网络来了，本节主要讲一些神经网络中常用的损失函数，激活函数以及层次结构等。&lt;/p&gt;
+&lt;h1 id=&quot;Modeling-one-neuron&quot;&gt;&lt;a href=&quot;#Modeling-one-neuron&quot; class=&quot;headerlink&quot; ti
+    
+    </summary>
+    
+      <category term="Machine Learning" scheme="http://heimignx.cn/categories/Machine-Learning/"/>
+    
+    
+      <category term="Machine Learning" scheme="http://heimignx.cn/tags/Machine-Learning/"/>
+    
+      <category term="CS231n笔记" scheme="http://heimignx.cn/tags/CS231n%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>CS231n:Backpropagation, Intuitions</title>
+    <link href="http://heimignx.cn/2016/08/16/cs231n-backpropagation-intuitions/"/>
+    <id>http://heimignx.cn/2016/08/16/cs231n-backpropagation-intuitions/</id>
+    <published>2016-08-16T13:22:45.000Z</published>
+    <updated>2016-10-15T14:06:53.919Z</updated>
+    
+    <content type="html"><![CDATA[<p>这一节主要介绍了反馈网络中的链式求导法则，非常的基础。</p>
+<h1 id="Simple-expressions-and-interpretation-of-the-gradient"><a href="#Simple-expressions-and-interpretation-of-the-gradient" class="headerlink" title="Simple expressions and interpretation of the gradient"></a>Simple expressions and interpretation of the gradient</h1><p>这段通过一个简单的栗子来解释梯度的意义，其实在高数中有学过，物理意义是：一个函数在某一点沿着某个方向的梯度方向便是上升最快的地方，所以，要使得目标函数值能够下降最快，便是沿着负梯度方向就好了。<br>课程中的解释是通过具体的数字来体现的：<br>函数：$$f(x, y) = xy$$<br>所以，该函数在 $x, y$ 方向上的梯度是 $$\frac{\partial f}{\partial x} = y;\quad \frac{\partial f}{\partial y} = x$$<br>当取$x=4, y=-3$时，函数$f(x, y) = -12$,且在 $x$ 上的导数是$\frac{\partial f}{\partial x} = -3$，这表明当我们给 $x$ 值增加一个很小的值，目标函数值就会下降（导数值是负的），且下降的幅度为 $3$。所以，函数在某个变量上的导数告诉了我们整个函数对于这个变量的敏感程度。<br>课程中还举了一个加法和max的例子，这里就不赘述了。</p>
+<h1 id="Compound-expressions-with-chain-rule"><a href="#Compound-expressions-with-chain-rule" class="headerlink" title="Compound expressions with chain rule"></a>Compound expressions with chain rule</h1><p>主要介绍链式法则。<br>函数：<br>$$f(x, y, z) = (x + y)z$$<br>将这个函数拆分成两个表达式：$q = x + y;\quad f = qz$，接着，分别对这两个子表达式中变量进行求导：$\frac{\partial f}{\partial q} = z; \quad \frac{\partial f}{\partial z} = q$, $\frac{\partial q}{\partial x} = 1; \quad \frac{\partial q}{\partial y} = 1$.那么要求函数$f$对$x$的导数便易得：$\frac{\partial f}{\partial x} = \frac{\partial f}{\partial q} \frac{\partial q}{\partial x}$。<br>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># set some inputs</span></div><div class="line">x = <span class="number">-2</span>; y = <span class="number">5</span>; z = <span class="number">-4</span></div><div class="line"></div><div class="line"><span class="comment"># perform the forward pass</span></div><div class="line">q = x + y <span class="comment"># q becomes 3</span></div><div class="line">f = q * z <span class="comment"># f becomes -12</span></div><div class="line"></div><div class="line"><span class="comment"># perform the backward pass (backpropagation) in reverse order:</span></div><div class="line"><span class="comment"># first backprop through f = q * z</span></div><div class="line">dfdz = q <span class="comment"># df/dz = q, so gradient on z becomes 3</span></div><div class="line">dfdq = z <span class="comment"># df/dq = z, so gradient on q becomes -4</span></div><div class="line"><span class="comment"># now backprop through q = x + y</span></div><div class="line">dfdx = <span class="number">1.0</span> * dfdq <span class="comment"># dq/dx = 1. And the multiplication here is the chain rule!</span></div><div class="line">dfdy = <span class="number">1.0</span> * dfdq <span class="comment"># dq/dy = 1</span></div></pre></td></tr></table></figure></p>
+<h1 id="Intuitive-understanding-of-backpropagation"><a href="#Intuitive-understanding-of-backpropagation" class="headerlink" title="Intuitive understanding of backpropagation"></a>Intuitive understanding of backpropagation</h1><p>对于反馈网络的理解，课程中是通过网络中每个门(gate)来解释的，每个门在接受输入后，完成两件事：1.给出输出；2.给出关于输出的，输入的局部梯度。<br>所以，整个反馈网络都是通过着一些个门来互相交流的，比如他们是想要更高或是更低的输出，最终对整个函数的结果产生影响。</p>
+<p>后面课程中有举了两个复杂一点的函数例子，这里就不搬过来了。</p>
+<h1 id="Patterns-in-backward-flow"><a href="#Patterns-in-backward-flow" class="headerlink" title="Patterns in backward flow"></a>Patterns in backward flow</h1><p>课程介绍了三种门的特性：<br><strong>add gate</strong>: distribute gradients equally to all its inputs<br><strong>max gate</strong>: routes the gradients to the higher input<br><strong>multiply gate</strong>: take the input activations, swap them and multiplies by its gradient</p>
+<p>对样本数据预处理的理解：<br>一般函数中都会有 $W^T x_i$ , 由于这样乘法的形式，如果给样本数据 $x_i * 1000$, 那么权重 $W$ 的梯度就会增加1000倍，变化率是很大的了，此时，就需要更低的学习率来中和这样的影响，所以，预处理要将样本数据进行规范化，以便不再出现上面奇怪的问题。</p>
+<h1 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h1><ol>
+<li><a href="http://cs231n.github.io/optimization-2/" target="_blank" rel="external">CS231n: Backpropagation, Intuitions</a></li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;这一节主要介绍了反馈网络中的链式求导法则，非常的基础。&lt;/p&gt;
+&lt;h1 id=&quot;Simple-expressions-and-interpretation-of-the-gradient&quot;&gt;&lt;a href=&quot;#Simple-expressions-and-interpret
+    
+    </summary>
+    
+      <category term="Machine Learning" scheme="http://heimignx.cn/categories/Machine-Learning/"/>
+    
+    
+      <category term="Machine Learning" scheme="http://heimignx.cn/tags/Machine-Learning/"/>
+    
+      <category term="CS231n笔记" scheme="http://heimignx.cn/tags/CS231n%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>CS231n:Optimization: Stochastic Gradient Descent</title>
+    <link href="http://heimignx.cn/2016/08/15/cs231n-optimization-sgd/"/>
+    <id>http://heimignx.cn/2016/08/15/cs231n-optimization-sgd/</id>
+    <published>2016-08-15T12:20:45.000Z</published>
+    <updated>2016-10-15T14:06:53.921Z</updated>
+    
+    <content type="html"><![CDATA[<p>这一节主要介绍一种优化方法，随机梯度下降，用于求解前面章节提到的目标函数中的权重矩阵$W$.</p>
+<h1 id="Visualizing-the-loss-function"><a href="#Visualizing-the-loss-function" class="headerlink" title="Visualizing the loss function"></a>Visualizing the loss function</h1><p>这里主要通过一些简单的例子来表明，我们所要求解的目标函数是一个凸问题，通过形象化的图形来体会优化的过程。同时，课程中也提到如果在神经网络中，目标函数就不再是凸的了，所以需要新的求解方法。</p>
+<h1 id="Optimization"><a href="#Optimization" class="headerlink" title="Optimization"></a>Optimization</h1><h2 id="Strategy-1-Random-Search"><a href="#Strategy-1-Random-Search" class="headerlink" title="Strategy 1: Random Search"></a>Strategy 1: Random Search</h2><p>首先限定一个最大迭代步数，然后在每一次迭代中都将随机的$W$值代入求得目标函数值，并记录下使得目标函数值取得当前最小的$W$作为最终的输出</p>
+<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> num <span class="keyword">in</span> xrange(<span class="number">1000</span>):</div><div class="line">    W = np.random.randn(<span class="number">10</span>, <span class="number">3073</span>) * <span class="number">0.0001</span> <span class="comment"># generate random parameters</span></div><div class="line">    loss = L(X_train, Y_train, W) <span class="comment"># get the loss over the entire training set</span></div><div class="line">    <span class="keyword">if</span> loss &lt; bestloss: <span class="comment"># keep track of the best solution</span></div><div class="line">        bestloss = loss</div><div class="line">        bestW = W</div><div class="line">    <span class="keyword">print</span> <span class="string">'in attempt %d the loss was %f, best %f'</span> % (num, loss, bestloss)</div></pre></td></tr></table></figure></p>
+<h2 id="Strategy-2-Random-Local-Search"><a href="#Strategy-2-Random-Local-Search" class="headerlink" title="Strategy 2: Random Local Search"></a>Strategy 2: Random Local Search</h2><p>对上面方法的一个改进，就是不是在每次的迭代中都给$W$赋随机值，而是根据初始赋随机值进行微调，如果能够使得目标函数值下降，则记录下该微调之后的$W$，直到迭代步数达到设定的值。</p>
+<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">W = np.random.randn(<span class="number">10</span>, <span class="number">3073</span>) * <span class="number">0.001</span> <span class="comment"># generate random starting W</span></div><div class="line">bestloss = float(<span class="string">"inf"</span>)</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="number">1000</span>):</div><div class="line">    step_size = <span class="number">0.0001</span></div><div class="line">    Wtry = W + np.random.randn(<span class="number">10</span>, <span class="number">3073</span>) * step_size</div><div class="line">    loss = L(Xtr_cols, Ytr, Wtry)</div><div class="line">    <span class="keyword">if</span> loss &lt; bestloss:</div><div class="line">        W = Wtry</div><div class="line">        bestloss = loss</div><div class="line">    <span class="keyword">print</span> <span class="string">'iter %d loss is %f'</span> % (i, bestloss)</div></pre></td></tr></table></figure></p>
+<h2 id="Strategy-3-Following-the-gradient"><a href="#Strategy-3-Following-the-gradient" class="headerlink" title="Strategy 3: Following the gradient"></a>Strategy 3: Following the gradient</h2><p>显然，策略2已经很接近通用的梯度下降方法了，唯一的区别是，我们在每一步迭代中都是取使目标函数下降最大的方向进行优化的，而要想能够找到使得目标函数下降最大的方向，就需要用到梯度了。</p>
+<h1 id="Computing-the-gradient"><a href="#Computing-the-gradient" class="headerlink" title="Computing the gradient"></a>Computing the gradient</h1><p>对于梯度的计算，课程中提供了两种方法</p>
+<h2 id="Numerically-with-finite-differences"><a href="#Numerically-with-finite-differences" class="headerlink" title="Numerically with finite differences"></a>Numerically with finite differences</h2><p>标签：a slow, approximate，but easy way</p>
+<p>公式：<br>$$\frac{d f(x)}{d x}=\lim_{x\to 0} \frac{f(x+h)-f(x)}{h}$$</p>
+<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">fx = f(x) <span class="comment"># evaluate function value at original point</span></div><div class="line">grad = np.zeros(x.shape)</div><div class="line">h = <span class="number">0.00001</span></div><div class="line"></div><div class="line"><span class="comment"># iterate over all indexes in x</span></div><div class="line">it = np.nditer(x, flags=[<span class="string">'multi_index'</span>], op_flags=[<span class="string">'readwrite'</span>])</div><div class="line"><span class="keyword">while</span> <span class="keyword">not</span> it.finished:</div><div class="line"></div><div class="line">    <span class="comment"># evaluate function at x+h</span></div><div class="line">    ix = it.multi_index</div><div class="line">    old_value = x[ix]</div><div class="line">    x[ix] = old_value + h <span class="comment"># increment by h</span></div><div class="line">    fxh = f(x) <span class="comment"># evalute f(x + h)</span></div><div class="line">    x[ix] = old_value <span class="comment"># restore to previous value (very important!)</span></div><div class="line"></div><div class="line">    <span class="comment"># compute the partial derivative</span></div><div class="line">    grad[ix] = (fxh - fx) / h <span class="comment"># the slope</span></div><div class="line">    it.iternext() <span class="comment"># step to next dimension</span></div></pre></td></tr></table></figure></p>
+<h2 id="Analytically-with-calculus"><a href="#Analytically-with-calculus" class="headerlink" title="Analytically with calculus"></a>Analytically with calculus</h2><p>标签： a fast, exact but more error-prone way</p>
+<p>以SVM损失函数在某个样本下的形式为例：<br>$$L_i = \sum_{j\neq y_i} \left [\max(0, w_j^T x_i - w_{y_i}^T x_i + \Delta) \right ]$$<br>计算上式对 $w_{y_i}$ 的梯度：<br>$$\nabla_{w_{y_i}}L_i = -\left (\sum_{j\neq y_i} \mathbb{I} (w_j^T x_i - w_{y_i}^T x_i + \Delta &gt; 0)\right )x_i$$<br>计算上式对 $j\neq y_i$ 的 $W_j$ 的梯度：<br>$$\nabla_{w_j}L_i = \mathbb{I} (w_j^T x_i - w_{y_i}^T x_i + \Delta &gt; 0)x_i$$</p>
+<h1 id="Gradient-Descent"><a href="#Gradient-Descent" class="headerlink" title="Gradient Descent"></a>Gradient Descent</h1><p>梯度下降方法的主要思路是，在梯度方向上，进行某一步长的移动以使得目标函数呈不增的趋势。</p>
+<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">  weights_grad = evaluate_gradient(loss_fun, data, weights)</div><div class="line">  weights += - step_size * weights_grad <span class="comment"># perform parameter updat</span></div></pre></td></tr></table></figure></p>
+<p><strong>Mini-batch gradient descent</strong><br>当数据集非常的大时，机器资源可能不能一次性的加载进所有的数据，所以可以每次只选择其中的一小部分进行处理。</p>
+<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">  data_batch = sample_training_data(data, <span class="number">256</span>) <span class="comment"># sample 256 examples</span></div><div class="line">  weights_grad = evaluate_gradient(loss_fun, data_batch, weights)</div><div class="line">  weights += - step_size * weights_grad <span class="comment"># perform parameter update</span></div></pre></td></tr></table></figure></p>
+<p>对于Mini-batch的大小，通常不用交叉验证的方式来选择，通常是根据经验提前设定的（根据计算资源而定）：$[32, 64, 128,…]$,通常选择的是2的倍数，因为这符合计算机的二进制计数原理。</p>
+<p><strong>Stochastic Gradient Descent (SGD)</strong><br>当Mini-batch gradient descent取极限时，即每次只取所有样本中的一个样例用于训练。但是由于在实践中发现，计算100个样本的梯度往往要优于计算某一个样本100次所得到的权重矩阵，所以Mini-batch gradient descent较为常用，而SGD有时也指Mini-batch gradient descent。</p>
+<h1 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h1><ol>
+<li><a href="http://cs231n.github.io/optimization-1" target="_blank" rel="external">CS231n: Optimization: Stochastic Gradient Descent</a></li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;这一节主要介绍一种优化方法，随机梯度下降，用于求解前面章节提到的目标函数中的权重矩阵$W$.&lt;/p&gt;
+&lt;h1 id=&quot;Visualizing-the-loss-function&quot;&gt;&lt;a href=&quot;#Visualizing-the-loss-function&quot; class=
+    
+    </summary>
+    
+      <category term="Machine Learning" scheme="http://heimignx.cn/categories/Machine-Learning/"/>
+    
+    
+      <category term="Machine Learning" scheme="http://heimignx.cn/tags/Machine-Learning/"/>
+    
+      <category term="CS231n笔记" scheme="http://heimignx.cn/tags/CS231n%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>CS231n:Linear classification: Support Vector Machine, Softmax</title>
+    <link href="http://heimignx.cn/2016/08/15/cs231n-linear-classification/"/>
+    <id>http://heimignx.cn/2016/08/15/cs231n-linear-classification/</id>
+    <published>2016-08-15T12:20:45.000Z</published>
+    <updated>2016-10-15T14:06:53.920Z</updated>
+    
+    <content type="html"><![CDATA[<p>在第一节的课程中主要介绍了KNN方法，由于knn是lazy Learning，主要有两个缺点：要记住所有的训练点；将测试点与所有训练点进行比较，为了克服这些缺点，通常会选择其他的分类方法，本节介绍了SVM和softmax classifier.</p>
+<h1 id="对线性分类器的解释"><a href="#对线性分类器的解释" class="headerlink" title="对线性分类器的解释"></a>对线性分类器的解释</h1><p>线性分类器的形式：<br>$$f(x_i;W,b)=Wx_i + b$$</p>
+<h2 id="结果向量-f-x-i-W-b-中值的大小"><a href="#结果向量-f-x-i-W-b-中值的大小" class="headerlink" title="结果向量 $f(x_i;W,b)$ 中值的大小"></a>结果向量 $f(x_i;W,b)$ 中值的大小</h2><p><img src="/img/blog/deeplearning/imagemap.jpg" alt=""></p>
+<p>上图表示判定样例$x_i$是属于各种类别的得分情况，向量$f(x_i;W,b)$的值来看此样例小猫被判定到了狗狗的类别中，所以分类错误，需要进一步的学习。</p>
+<h2 id="权重矩阵-W-的每一行都是一个template"><a href="#权重矩阵-W-的每一行都是一个template" class="headerlink" title="权重矩阵$W$的每一行都是一个template"></a>权重矩阵$W$的每一行都是一个template</h2><p><img src="/img/blog/deeplearning/templates.jpg" alt=""></p>
+<p>上图是通过将权重矩阵$W$中每一行reshape后画出来的图像，我们其实可以粗略的判断出一些类别，比如第二幅图是一辆偏粉红色的小汽车，表明，我们数据集中的小汽车颜色可能都偏红色，倒数第三章是有左右两个头的马儿，其实这跟训练数据集有关，可能数据集中包含了两个方向的马儿图片。<br>在分类时，其实是将样例与template进行内积运算以判断与template的距离，与相近则值越大。</p>
+<h1 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h1><h2 id="多类分类SVM"><a href="#多类分类SVM" class="headerlink" title="多类分类SVM"></a>多类分类SVM</h2><p>损失函数：<br>$$L_i = \sum_{j\neq y_i} \max(0, S_j - S_{y_i} + \Delta); \quad S_j = f(x_i, W)_j \tag 1$$</p>
+<p>这里损失函数想要表达的是：每一个错误类别的得分至少要比正确类别的得分小$\Delta$, 另外，这里的$\Delta$其实有点像经典SVM推导中的函数间隔，由于可以通过$W$的大小来调节最终值得大小，所以这里可以将$\Delta$设为1。</p>
+<blockquote>
+<p>这里的损失函数是hinge loss，不过与我们常见的SVM中的形式不太一样，<br>$$L_i = \max(0, 1- y_i f(x_i))\tag 2$$<br>一方面，公式（1）可以用于多类分类，而公式（2）用于多类分类需要使用其他策略，比如one-VS-all或者all-VS-all。</p>
+</blockquote>
+<p>规则化：<br>$$R(W)=\sum_k\sum_l W_{k,l}^2$$</p>
+<p>所以，多类分类最终的目标函数为：<br>$$\min L = \frac{1}{N}\sum_i L_i + \lambda R(W)\tag 3$$</p>
+<h2 id="Softmax-分类器"><a href="#Softmax-分类器" class="headerlink" title="Softmax 分类器"></a>Softmax 分类器</h2><p>主要将公式（3）中的hinge loss换成cross-entropy 损失（交叉熵损失）：<br>$$L_i = - \log(\frac{e^{f_{y_i}}}{\sum_j e^{f_j}}) = -f_{y_i} + \log\sum_j e^{f_j} \tag 4$$</p>
+<p>其中$f_j(z) = \frac{e^{z_j}}{\sum_k e^{z_k}}$ 称为Softmax function，所以将这种损失函数命名为Softmax classifier。</p>
+<p>Softmax classifier其实是binary Logistic  regression  classifier 在Multiple class上的一个泛化。</p>
+<p>Softmax分类器的优点主要是能够给出分类类别的概率。</p>
+<p>对于Softmax 分类器的解释主要有两种：</p>
+<ol>
+<li><p>information theory view<br> 在“真实”分布p和估计分布q之间的交叉熵定义如下：<br> $$H(p, q)=-\sum_x p(x) \log q(x)$$</p>
+<p> 因此，Softmax分类器所做的就是最小化在估计分类概率（就是上面的$e^{f_{y_i}}/\sum_j e^{f_j}$）和“真实”分布之间的交叉熵，在这个解释中，“真实”分布就是所有概率密度都分布在正确的类别上（比如： $p=[0,\cdots, 1,\cdots, 0]$中的$y_i$的位置就有一个单独的1）。<br> 交叉熵损失函数“想要”预测分布的所有概率密度都在正确分类类别上。</p>
+</li>
+<li><p>probabilistic interation<br>Softmax classifier将输出向量$f$中的评分值解释为没有归一化的对数概率，所以，先对$f$进行指数操作得到没有归一化的概率，然后，在进行归一化得到相应的概率值。</p>
+</li>
+</ol>
+<blockquote>
+<p>从数值上进行分析： 首先 $e^{f_{y_i}}/\sum_j e^{f_j}$ 必定属于 $(0, 1]$，要想目标函数尽量的小，那么 $\log()$ 就要尽量的大，由于 $\log$ 函数是单调递增的，所以即要求 $e^{f_{y_i}}/\sum_j e^{f_j}$ 尽量的大，而这正符合正确分类的要求。</p>
+</blockquote>
+<h1 id="Logistic-Regression"><a href="#Logistic-Regression" class="headerlink" title="Logistic Regression"></a>Logistic Regression</h1><p>对于Logistic Regression的讲解，西瓜书上讲的挺清楚的，这里将一个简单的思路记录写下来以促进理解。<br>首先，对于一般的二类分类问题，输出标记为 ${0, 1}$, 而通常的线性回归模型产生的预测值为实值，我们需要将这些实值转成 $0/1$ 值，当然，最理想的便是“单位阶跃函数”</p>
+<p>$$y=<br>\begin{cases}<br>0, z &lt; 0; \<br>0.5, z = 0; \<br>1, z &gt; 0,<br>\end{cases}$$</p>
+<p>但是，单位阶跃函数不连续的性质，在求解的时候会很不方便，所以就需要寻找一个替代函数，并希望其能够单调可微。这时便需要用到对数几率函数。<br>对数几率函数的形式为：<br>$$y=\frac{1}{1+ e^{-(w^Tx + b)}}\tag 5$$<br>这其实是<a href="http://heimingx.cn/2016/05/03/sigmoid-function-and-sigmoid-kernel/" target="_blank" rel="external">Sigmoid函数</a>的形式。该函数对应的模型称为Logistic Regression。</p>
+<p>将公式（5）进行简单的变化得到：<br>$$\ln\frac{y}{1-y}=w^Tx + b$$<br>这里将 $y$ 视为样本 $x$ 作为正例的可能性，则 $1-y$ 是其反例的可能性，两者的比值为 $y/(1-y)$ 称为“几率”（odds），反映了 $x$ 作为正例的相对可能性。对几率取对数则得到”对数几率”（log odds），所以，Logistic regression 又被称为“对数几率回归”。</p>
+<h1 id="references"><a href="#references" class="headerlink" title="references"></a>references</h1><ol>
+<li><a href="http://cs231n.github.io/linear-classify/#interpret" target="_blank" rel="external">cs231n: Linear classification: Support Vector Machine, Softmax</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/21102293?refer=intelligentunit" target="_blank" rel="external">CS231n课程笔记翻译：线性分类笔记（下）</a></li>
+<li>机器学习. 周志华 对数几率回归章节</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在第一节的课程中主要介绍了KNN方法，由于knn是lazy Learning，主要有两个缺点：要记住所有的训练点；将测试点与所有训练点进行比较，为了克服这些缺点，通常会选择其他的分类方法，本节介绍了SVM和softmax classifier.&lt;/p&gt;
+&lt;h1 id=&quot;对线
+    
+    </summary>
+    
+      <category term="Machine Learning" scheme="http://heimignx.cn/categories/Machine-Learning/"/>
+    
+    
+      <category term="Machine Learning" scheme="http://heimignx.cn/tags/Machine-Learning/"/>
+    
+      <category term="CS231n笔记" scheme="http://heimignx.cn/tags/CS231n%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>LibSVM在MATLAB中应用及一些问题</title>
+    <link href="http://heimignx.cn/2016/06/28/use-LibSVM-in-MATLAB/"/>
+    <id>http://heimignx.cn/2016/06/28/use-LibSVM-in-MATLAB/</id>
+    <published>2016-06-28T15:21:47.000Z</published>
+    <updated>2016-10-15T14:06:53.930Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="http://www.csie.ntu.edu.tw/~cjlin/libsvm/" target="_blank" rel="external">LibSVM</a>是台大林智仁教授开发的专门用于求解各种支持向量机问题的工具包，目前已经有Python、MATLAB、Java等平台下的工具包。其实很早就有听说这个工具包，最近要实现一个对比实验需要用到所以终于有机会感受一下她的强大了。</p>
+<p>下面简单介绍几个libsvm中常用的命令：<br>svmtrain<br>svmpredict<br>confusionmat</p>
+<h1 id="svmtrain"><a href="#svmtrain" class="headerlink" title="svmtrain"></a>svmtrain</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">model = libsvmtrain(training_label_vector, training_instance_matrix [, &apos;libsvm_options&apos;]);</div></pre></td></tr></table></figure>
+<h1 id="svmpredict"><a href="#svmpredict" class="headerlink" title="svmpredict"></a>svmpredict</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[predicted_label, accuracy, decision_values/prob_estimates] </div><div class="line">　　　　= libsvmpredict(testing_label_vector, testing_instance_matrix, model [, &apos;libsvm_options&apos;]);</div></pre></td></tr></table></figure>
+<h1 id="svmtrain参数设置"><a href="#svmtrain参数设置" class="headerlink" title="svmtrain参数设置"></a>svmtrain参数设置</h1><p>options:</p>
+<ul>
+<li>-s  svm_type : set type of SVM (default 0)</li>
+</ul>
+<p>　　　　0 – C-SVC</p>
+<p>　　　　1 – nu-SVC</p>
+<p>　　　　2 – one-class SVM</p>
+<p>　　　　3 – epsilon-SVR</p>
+<p>　　　　4 – nu-SVR</p>
+<ul>
+<li>-t kernel_type : set type of kernel function (default 2)</li>
+</ul>
+<p>　　　　0 – linear: $u’*v$</p>
+<p>　　　　1 – polynomial:  $(gamma * u^T * v + coef0)^{degree}$</p>
+<p>　　　　2 – radial basis function: $exp(-gamma*|u-v|^2)$</p>
+<p>　　　　3 – sigmoid: $ tanh(gamma * u^T * v + coef0)$</p>
+<p>　　　　<strong>4 – precomputed kernel (kernel values in training_instance_matrix)</strong></p>
+<ul>
+<li><p>-d degree : set degree in kernel function (default 3)</p>
+</li>
+<li><p>-g gamma : set gamma in kernel function (default 1/num_features)</p>
+</li>
+<li><p>-r coef0 : set coef0 in kernel function (default 0)</p>
+</li>
+<li><p>-c cost : set the parameter C of C-SVC, epsilon-SVR, and nu-SVR (default 1)</p>
+</li>
+<li><p>-n nu : set the parameter nu of nu-SVC, one-class SVM, and nu-SVR (default 0.5)</p>
+</li>
+<li><p>-p epsilon : set the epsilon in loss function of epsilon-SVR (default 0.1)</p>
+</li>
+<li><p>-m cachesize : set cache memory size in MB (default 100)</p>
+</li>
+<li><p>-e epsilon : set tolerance of termination criterion (default 0.001)</p>
+</li>
+<li><p>-h shrinking: whether to use the shrinking heuristics, 0 or 1 (default 1)</p>
+</li>
+<li><p>-b probability_estimates: whether to train a SVC or SVR model for probability estimates, 0 or 1 (default 0)</p>
+</li>
+<li><p>-wi weight: set the parameter C of class i to weight*C, for C-SVC (default 1)</p>
+</li>
+</ul>
+<p>对应的中文解释<a href="http://noalgo.info/363.html" target="_blank" rel="external">2</a>：</p>
+<ul>
+<li>-s svm类型：SVM设置类型（默认0)</li>
+</ul>
+<p>　　　　0 — C-SVC； </p>
+<p>　　　　1 – v-SVC； </p>
+<p>　　　　2 – 一类SVM； </p>
+<p>　　　　3 — e-SVR； </p>
+<p>　　　　4 — v-SVR</p>
+<ul>
+<li>-t 核函数类型：核函数设置类型（默认2）</li>
+</ul>
+<p>　　　　0 – 线性核函数：$u’*v$</p>
+<p>　　　　1 – 多项式核函数：$(gamma * u^T * v + coef0)^{degree}$</p>
+<p>　　　　2 – RBF(径向基)核函数：$exp(-gamma*|u-v|^2)$</p>
+<p>　　　　3 – sigmoid核函数：$ tanh(gamma * u^T * v + coef0)$</p>
+<p>　　　　<strong>4 - 预先计算好的核矩阵 （核矩阵取代training_instance_matrix）</strong></p>
+<ul>
+<li><p>-d degree：核函数中的degree设置（针对多项式核函数）（默认3）</p>
+</li>
+<li><p>-g r(gamma）：核函数中的gamma函数设置（针对多项式/rbf/sigmoid核函数）（默认1/k，k为总类别数)</p>
+</li>
+<li><p>-r coef0：核函数中的coef0设置（针对多项式/sigmoid核函数）（（默认0)</p>
+</li>
+<li><p>-c cost：设置C-SVC，e -SVR和v-SVR的参数（损失函数）（默认1）</p>
+</li>
+<li><p>-n nu：设置v-SVC，一类SVM和v- SVR的参数（默认0.5）</p>
+</li>
+<li><p>-p p：设置e -SVR 中损失函数p的值（默认0.1）</p>
+</li>
+<li><p>-m cachesize：设置cache内存大小，以MB为单位（默认40）</p>
+</li>
+<li><p>-e eps：设置允许的终止判据（默认0.001）</p>
+</li>
+<li><p>-h shrinking：是否使用启发式，0或1（默认1）</p>
+</li>
+<li><p>-wi weight：设置第几类的参数C为weight*C (C-SVC中的C) （默认1）</p>
+</li>
+<li><p>-v n: n-fold交互检验模式，n为fold的个数，必须大于等于2</p>
+</li>
+</ul>
+<h1 id="svmtrain输出model的含义"><a href="#svmtrain输出model的含义" class="headerlink" title="svmtrain输出model的含义"></a>svmtrain输出model的含义</h1><p>libsvmtrain函数返回训练好的SVM分类器模型，可以用来对未知的样本进行预测。这个模型是一个结构体，包含以下成员<a href="http://noalgo.info/363.html" target="_blank" rel="external">2</a>：</p>
+<ul>
+<li>-Parameters: 一个5 x 1的矩阵，从上到下依次表示：</li>
+</ul>
+<p>　　　　-s SVM类型（默认0）；</p>
+<p>　　　　-t 核函数类型（默认2）</p>
+<p>　　　　-d 核函数中的degree设置(针对多项式核函数)(默认3)；</p>
+<p>　　　　-g 核函数中的r(gamma）函数设置(针对多项式/rbf/sigmoid核函数) (默认类别数目的倒数)；</p>
+<p>　　　　-r 核函数中的coef0设置(针对多项式/sigmoid核函数)((默认0)</p>
+<ul>
+<li><p>-nr_class: 表示数据集中有多少类别，比如二分类时这个值即为2。</p>
+</li>
+<li><p>-totalSV: 表示支持向量的总数。</p>
+</li>
+<li><p>-rho: 决策函数wx+b中的常数项的相反数（-b）。</p>
+</li>
+<li><p>-Label: 表示数据集中类别的标签，比如二分类常见的1和-1。</p>
+</li>
+<li><p>-sv_indices: 表示支持向量对应的样本索引</p>
+</li>
+<li><p>-ProbA: 使用-b参数时用于概率估计的数值，否则为空。</p>
+</li>
+<li><p>-ProbB: 使用-b参数时用于概率估计的数值，否则为空。</p>
+</li>
+<li><p>-nSV: 表示每类样本的支持向量的数目，和Label的类别标签对应。如Label=[1; -1],nSV=[63; 67]，则标签为1的样本有63个支持向量，标签为-1的有67个。</p>
+</li>
+<li><p>-sv_coef: 表示每个支持向量在决策函数中的系数。</p>
+</li>
+<li><p>-SVs: 表示所有的支持向量，如果特征是n维的，支持向量一共有m个，则为m x n的稀疏矩阵。</p>
+</li>
+</ul>
+<p>另外，如果在训练中使用了-v参数进行交叉验证时，返回的不是一个模型，而是交叉验证的分类的正确率或者回归的均方根误差。</p>
+<h1 id="svmpredice输出含义"><a href="#svmpredice输出含义" class="headerlink" title="svmpredice输出含义"></a>svmpredice输出含义</h1><ul>
+<li><p>-predicted_label：第一个返回值，表示样本的预测类标号。</p>
+</li>
+<li><p>-accuracy：第二个返回值，一个3 x 1的数组，表示分类的正确率、回归的均方根误差、回归的平方相关系数。</p>
+</li>
+<li><p>-decision_values/prob_estimates：第三个返回值，一个矩阵包含决策的值或者概率估计。对于n个预测样本、k类的问题，如果指定“-b 1”参数，则n x k的矩阵，每一行表示这个样本分别属于每一个类别的概率；如果没有指定“-b 1”参数，则为n x k*(k-1)/2的矩阵，每一行表示k(k-1)/2个二分类SVM的预测结果。</p>
+</li>
+</ul>
+<h1 id="confusionmat"><a href="#confusionmat" class="headerlink" title="confusionmat"></a>confusionmat</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">C = confusionmat(testLabel, predLabel)</div></pre></td></tr></table></figure>
+<p>输出的是<a href="http://baike.baidu.com/view/2781781.htm" target="_blank" rel="external">混淆矩阵</a>。</p>
+<h1 id="运用中遇到的一些问题"><a href="#运用中遇到的一些问题" class="headerlink" title="运用中遇到的一些问题"></a>运用中遇到的一些问题</h1><h2 id="precomputed-kernel"><a href="#precomputed-kernel" class="headerlink" title="precomputed kernel"></a>precomputed kernel</h2><p>在svmtrain的参数中，对于核函数类型的选择，参数4比较特殊，是我们自己计算好核矩阵给libsvm来求解，其中有两个注意点：</p>
+<ol>
+<li><p>核矩阵的位置–取代原来训练实例矩阵的位置</p>
+</li>
+<li><p>核矩阵需要处理一下：</p>
+</li>
+</ol>
+<blockquote>
+<p>To use precomputed kernel, you must include sample serial number as the first column of the training and testing data.</p>
+</blockquote>
+<p>上面的话用代码来表示：</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">K = getKernel(X, Y, options);</div><div class="line">K = [(<span class="number">1</span>:size(K, <span class="number">1</span>))<span class="string">', K];</span></div><div class="line">model = svmtrain(trainLabel, K, '-t <span class="number">4</span><span class="string">');</span></div></pre></td></tr></table></figure>
+<h2 id="libsvmpredict的工作原理"><a href="#libsvmpredict的工作原理" class="headerlink" title="libsvmpredict的工作原理"></a>libsvmpredict的工作原理</h2><p>在应用中，有时我们只需要libsvmtrain的功能，在得到特征向量的信息之后，根据不同的需求来求解精度，而不再需要使用libsvmpredict的功能。这样我们就需要了解通过libsvmtrain求得得model来实现predict得功能。</p>
+<p>model的信息上面已经说明了，我们只需要利用好sv得信息：model.sv_indices, model.sv_coef, model.SVs。另外需要注意的是，model.sv_coef是支持向量的系数，相当于<code>alpha .* y_train</code>,所以，我们在求解时就不需要再乘<code>y_train</code>了,具体的形式为：</p>
+<p>$$predLabel = sign(\sum^n_{i=1} w_i K(x_i, x)) + b$$</p>
+<ul>
+<li><p>当输入libsvmtrain的是原始样本信息（而不是kernel matrix）</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">model = libsvmtrain(y_train, x_train, <span class="string">'-s 0 -t 2 -c 1.2 -g 2.8'</span>);</div><div class="line">[predictLabel, accuracy, prob_estimate] = libsvmpredict(y_test, x_test, model);</div><div class="line"></div><div class="line">b = -model.rho;</div><div class="line">sv_mat_sparse = model.SVs;</div><div class="line">sv_mat_full = full(sv_mat_sparse)';</div><div class="line"><span class="built_in">gamma</span> = model.Parameters(<span class="number">4</span>);</div><div class="line">tmp = @(x, y) (<span class="built_in">bsxfun</span>(@plus, sum(x.^<span class="number">2</span>, <span class="number">1</span>).<span class="string">', sum(y.^2, 1)) - 2 * (x'</span> * y));</div><div class="line">RBF = <span class="built_in">exp</span>(-<span class="built_in">gamma</span> * tmp(sv_mat_full, x_test));</div><div class="line">pred_label = model.sv_coef' * RBF + b;</div><div class="line">accuracy_self = mean(<span class="built_in">sign</span>(pred_label') == y_test);</div></pre></td></tr></table></figure>
+</li>
+<li><p>当输入libsvmtrain的是precomputed kernel matrix</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">train_kernel_mat = <span class="built_in">exp</span>( -<span class="built_in">gamma</span> * tmp(x_train, x_train));</div><div class="line">train_kernel_tilde = [(<span class="number">1</span>:size(train_kernel_mat, <span class="number">1</span>))<span class="string">', train_kernel_mat];</span></div><div class="line">model = libsvmtrain(y_train, train_kernel_tilde, '-t <span class="number">4</span><span class="string">');</span></div><div class="line"></div><div class="line">test_kernel_mat = exp(-gamma * tmp(x_train, x_test));</div><div class="line">test_kernel_tilde = [(1:size(test_kernel_mat, 1))', test_kernel_mat];</div><div class="line">[predictLabel, accuracy, prob_estimate] = libsvmpredict(y_test, test_kernel_tilde, model);</div><div class="line"></div><div class="line">b = -model.rho;</div><div class="line">sv_mat = x_train(:, model.sv_indices');</div><div class="line"><span class="built_in">gamma</span> = model.Parameters(<span class="number">4</span>);</div><div class="line">RBF = <span class="built_in">exp</span>(-<span class="built_in">gamma</span> * tmp(sv_mat, x_test));</div><div class="line">pred_label = model.sv_coef' * RBF + b;</div><div class="line">accuracy_self = mean(<span class="built_in">sign</span>(pred_label') == y_test);</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>我们会发现<code>accuracy_self</code>和<code>accuracy</code>的值是一样的。</p>
+<h1 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h1><p><a href="http://www.csie.ntu.edu.tw/~cjlin/libsvm/" target="_blank" rel="external">1</a> : <a href="http://www.csie.ntu.edu.tw/~cjlin/libsvm/" target="_blank" rel="external">林智仁Libsvm主页</a><br><a href="http://noalgo.info/363.html" target="_blank" rel="external">2</a> : <a href="http://noalgo.info/363.html" target="_blank" rel="external">LIBSVM在Matlab下的使用</a><br><a href="http://stackoverflow.com/questions/7715138/using-precomputed-kernels-with-libsvm" target="_blank" rel="external">3</a> : <a href="http://stackoverflow.com/questions/7715138/using-precomputed-kernels-with-libsvm" target="_blank" rel="external">using precomputed kernels with libsvm</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      LibSVM在MATLAB中运用的一些参数释义以及在运用过程中针对precomputed kernel的问题
+    
+    </summary>
+    
+      <category term="MATLAB" scheme="http://heimignx.cn/categories/MATLAB/"/>
+    
+    
+      <category term="matlab" scheme="http://heimignx.cn/tags/matlab/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Goldstein-Armijo Rule and backtracking line search</title>
+    <link href="http://heimignx.cn/2016/06/28/Goldstein-Armijo-Rule-and-backtracking-line-search/"/>
+    <id>http://heimignx.cn/2016/06/28/Goldstein-Armijo-Rule-and-backtracking-line-search/</id>
+    <published>2016-06-28T15:21:47.000Z</published>
+    <updated>2016-10-15T14:06:53.918Z</updated>
+    
+    <content type="html"><![CDATA[<p>在迭代型算法的优化问题中，我们经常会看到用Armijo Rule来更新步长，找到一个可行点进入下一次迭代。下面将我对Armijo的理解整理下来。</p>
+<h1 id="Goldstein-Armijo-Rule"><a href="#Goldstein-Armijo-Rule" class="headerlink" title="Goldstein-Armijo Rule"></a>Goldstein-Armijo Rule</h1><p>我们这里以梯度方法为例：</p>
+<blockquote>
+<p>初始点 $x_0 \in R^n$<br>迭代 ： $ x_{k+1} = x_k - h_k f’(x_k), k=0,1,… $</p>
+</blockquote>
+<p>这里$h_k$表示步长（大于0），$f’(x_k)$表示函数$f(x)$在$x_k$这一点的梯度方向。前面为负表示负梯度方向为函数下降最快的方向，至于为什么在这一点会下降最快，其实是有很好的理论证明的，后面有时间整理出来。<br>那么，对于步长的确定可以有很多方法，最简单的一种便是提前预定义好：<br>$$h_k = h &gt; 0$$<br>$$h_k = \frac{h}{\sqrt{k+1}}$$<br>这种方法在凸优化的框架下使用较多，主要由于凸优化函数的变化趋势是可预测的。<br>另外还有一种非常理想化的方法：<br>$$h_k = arg \min_{h\geq0}f(x_k - h f’(x_k))$$<br>显然，这种方法在实际的运用中属于空中楼阁，并没有可操作性。<br>下面最最常用的便是Armijo Rule了：</p>
+<blockquote>
+<p>Find $x_{k+1} = x_k - h f’(x_k)$ such that</p>
+<p>$$\alpha &lt;f’(x_k), x_k - x_{k+1}&gt; \quad \leq \quad f(x_k) - f(x_{k+1}) \tag 1$$</p>
+<p>$$\beta &lt;f’(x_k), x_k - x_{k+1}&gt; \quad \geq \quad f(x_k) - f(x_{k+1}) \tag 2$$<br>where $0 &lt; \alpha &lt; \beta &lt; 1$ are some fixed parameters</p>
+</blockquote>
+<p>对于这个规则，可能咋看并不能理解他的意图，下面通过一段证明来看一下这个规则的作用。</p>
+<h1 id="证明"><a href="#证明" class="headerlink" title="证明"></a>证明</h1><p>假设有如下问题<br>$$\min_{x\in R^n} f(x)$$<br>其中$f\in C^{1,1}_L(R^n)$。并且，我们这里假设函数有下界。</p>
+<blockquote>
+<p>这里$f\in C^{1,1}_L(R^n)$表示函数$f(x)$在$R^n$上是一阶连续可微的，并且其一阶导满足Lipschitz 连续性，参数为L,具体的公式如下<br>$$|f(y)-f(x)-&lt;f’(x), y-x&gt;| \quad \leq \quad \frac{L}{2} ||y-x||^2$$</p>
+</blockquote>
+<p>对于一个gradient step，我们有</p>
+<p>\begin{align}<br>f(y) &amp; \leq  f(x) + &lt;f’(x), y-x&gt; + \frac{L}{2}|y-x|^2 \\<br>&amp; = f(x) - h|f’(x)|^2 + \frac{h^2}{2}L|f’(x)|^2 \\<br>&amp; = f(x) - h(1-\frac{h}{2}L)|f’(x)|^2 \tag 3<br>\end{align}</p>
+<p>所以，为了使得我们的目标函数值有尽大程度的减小，我们需要求解下面的一维问题：<br>$$\Delta(h) = -h(1-\frac{h}{2}L) \to \min_h$$<br>对上式求导，得到$\Delta’(h)=hL-1=0$,所以$h^* = \frac{1}{L}$,由于$\Delta’’(h)=L \gt 0$,所以此时取得最小值。这样，将其代入上式，我们就能够得到单步梯度下降，目标函数值至少下降多少的形式：<br>$$f(y)\leq f(x)-\frac{1}{2L}|f’(x)|^2 \tag 4$$</p>
+<p>下面，我们来看一下Armijo Rule规定的两个式子与这目标函数值最小下降之间的关系。<br>首先，令$x_{k+1} = x_k - h_k f’(x_k)$,对于固定步长策略$h_k = h$,我们有<br>$$f(x_k) - f(x_{k+1}) \geq h(1-\frac{h}{2}L)|f’(x)|^2$$<br>所以当我们选择$h_k = \frac{2\alpha}{L}, \alpha \in (0, 1)$时，有</p>
+<p>$$f(x_k) - f(x_{k+1}) \geq \frac{2}{L}\alpha (1-\alpha)|f’(x)|^2 \tag 5$$</p>
+<p>显然，当$\alpha = \frac{1}{2}$时，取得最大值，即为前面(4)式等价。<br>接着，我们考虑Armijo Rule提到的两个式子：<br>首先，我们考虑公式（2），有<br>$$f(x_k)-f(x_{k+1}) \quad \leq \quad \beta &lt;f’(x_k), x_k-x_{k+1}&gt;\quad = \quad\beta h_k |f’(x)|^2$$<br>结合公式（3），我们有<br>$$h_k \geq \frac{2}{L}(1-\beta) \tag 6$$<br>接着，我们考虑公式（1），有</p>
+<p>$$f(x_k)-f(x_{k+1}) \quad \geq \quad \alpha &lt;f’(x_k), x_k-x_{k+1}&gt;\quad = \quad\alpha h_k |f’(x)|^2$$</p>
+<p>结合不等式（6），我们有</p>
+<p>$$f(x_k)-f(x_{k+1}) \quad \geq \quad \frac{2}{L}\alpha(1-\beta)|f’(x_k)|^2 \tag 7$$</p>
+<p>结合公式（4）（5）（7），容易得到<br>$$\frac{2}{L}\alpha(1-\beta) \leq \frac{2}{L}\alpha(1-\alpha) \leq \frac{1}{2L}, 0\leq \alpha \leq \beta \leq 1$$<br>所以，这表明对于给定的$\alpha,\beta$，只要满足公式（1）（2），就至少有公式（7）的下降程度，也就更趋近于最大下降（相当于满足了我们期望的下降）。</p>
+<h1 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h1><p>[1] : introductory lectures on convex optimization: a basic course(26页), Yurii Nesterov</p>
+]]></content>
+    
+    <summary type="html">
+    
+      Goldstein-Armijo规则以及回溯线性搜索
+    
+    </summary>
+    
+      <category term="Optimization" scheme="http://heimignx.cn/categories/Optimization/"/>
+    
+    
+      <category term="Optimization" scheme="http://heimignx.cn/tags/Optimization/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>LaTex中空格的用法</title>
+    <link href="http://heimignx.cn/2016/06/28/use-space-in-Latex/"/>
+    <id>http://heimignx.cn/2016/06/28/use-space-in-Latex/</id>
+    <published>2016-06-28T15:21:47.000Z</published>
+    <updated>2016-10-15T14:06:53.930Z</updated>
+    
+    <content type="html"><![CDATA[<p>两个quad空格&ensp;<code>a \qquad b</code>&ensp;$a \qquad b$&ensp;两个m的宽度<br>quad空格&ensp;&ensp;&ensp;&ensp;&ensp;<code>a \quad b</code>&ensp;$a \quad b$&ensp;一个m的宽度<br>大空格&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;<code>a\ b</code>&ensp;$a\ b$&ensp;1/3m宽度<br>中等空格&ensp;&ensp;&ensp;&ensp;&ensp;<code>a\;b</code>&ensp;$a\;b$&ensp;2/7m宽度<br>小空格&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;<code>a\,b</code>&ensp;$a\,b$&ensp;1/6m宽度<br>没有空格&ensp;&ensp;&ensp;&ensp;&ensp;<code>ab</code>&ensp;$ab\,$<br>紧贴&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;<code>a\!b</code>&ensp;$a\!b$&ensp;缩进1/6m宽度(在hexo中需要写成<code>a\\!b</code>)</p>
+<blockquote>
+<p>approximately the width of an “M” in the current font</p>
+</blockquote>
+<p><code>m</code> 代表当前字体下接近字符‘M’的宽度</p>
+]]></content>
+    
+    <summary type="html">
+    
+      Letex中空格的用法
+    
+    </summary>
+    
+      <category term="Latex" scheme="http://heimignx.cn/categories/Latex/"/>
+    
+    
+      <category term="Latex" scheme="http://heimignx.cn/tags/Latex/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Hexo中一些蛋疼的数学公式编辑</title>
+    <link href="http://heimignx.cn/2016/06/09/markdown-mathjax/"/>
+    <id>http://heimignx.cn/2016/06/09/markdown-mathjax/</id>
+    <published>2016-06-09T03:24:40.000Z</published>
+    <updated>2016-10-15T14:06:53.928Z</updated>
+    
+    <content type="html"><![CDATA[<p>由于写的博客中有很多公式，在线下编辑的时候都能正常显示，可是发布了之后出现了各种蛋疼的效果，折腾了好久，总结下来以备忘。</p>
+<h1 id="多行公式显示"><a href="#多行公式显示" class="headerlink" title="多行公式显示"></a>多行公式显示</h1><p>\begin{align} \\<br>\max_{w,b} \quad &amp; \gamma \\<br>s.t. \quad &amp;y_i(\frac{w}{||w||}x_i+\frac{b}{||w||})\geq \gamma, i=1,2,…,N<br>\end{align}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">code:</div><div class="line">\begin&#123;align&#125; \\\\</div><div class="line">\max_&#123;w,b&#125; \quad &amp; \gamma \\\\</div><div class="line">s.t. \quad &amp;y_i(\frac&#123;w&#125;&#123;||w||&#125;x_i+\frac&#123;b&#125;&#123;||w||&#125;)\geq \gamma, i=1,2,...,N</div><div class="line">\end&#123;align&#125;</div></pre></td></tr></table></figure>
+<p>注意，这里在最后不能加 <code>$</code> ，加上之后会显示不正常，然后每一行公式的最后要加四个 <code>\</code> ,我想原因是hexo中对于 <code>\</code> 是需要通过 <code>\</code> 转义的,所以两个 <code>\\</code>经过转义后等于一个 <code>\</code><br>另外，对于绝对值的写法在这里也失效了，只能简单粗暴的用四个 <code>|</code> 来解决了</p>
+<h1 id="对于下标的转义"><a href="#对于下标的转义" class="headerlink" title="对于下标的转义"></a>对于下标的转义</h1><p>$$L(w,b,\alpha) = \frac{1}{2}||w||^2 - \sum_{i=1}^N\alpha_i y_i (w \cdot x_i + b) + \sum_{i=1}^N\alpha_i$$</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">code:</div><div class="line">$$L(w,b,\alpha) = \frac&#123;1&#125;&#123;2&#125;||w||^2 - \sum\_&#123;i=1&#125;^N\alpha\_i y\_i (w \cdot x\_i + b) + \sum\_&#123;i=1&#125;^N\alpha\_i$$</div></pre></td></tr></table></figure>
+<p>这里出现了两个<code>\sum\_{i=1}^N</code>如果不对下标进行转义，写成<code>\sum_{i=1}^N</code>，就不能正常显示，不知道原因。只能先加上解决问题了</p>
+<p>其他的以后遇到了再添加吧</p>
+]]></content>
+    
+    <summary type="html">
+    
+      如题~
+    
+    </summary>
+    
+      <category term="Hexo" scheme="http://heimignx.cn/categories/Hexo/"/>
+    
+    
+      <category term="Hexo" scheme="http://heimignx.cn/tags/Hexo/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>支持向量机 梳理</title>
+    <link href="http://heimignx.cn/2016/06/08/support-vector-machine/"/>
+    <id>http://heimignx.cn/2016/06/08/support-vector-machine/</id>
+    <published>2016-06-08T14:24:45.000Z</published>
+    <updated>2016-10-15T14:06:53.930Z</updated>
+    
+    <content type="html"><![CDATA[<p>SVM是非常经典的分类方法，在李航的《统计学习方法》中给出基本模型是定义在特征空间上间隔最大的线性分类器，学习策略是间隔最大化，学习算法是求解凸二次规划的最优化算法。详细的推导过程书上写的很明确了，现在我自己再梳理一下，并穿插就一些疑问尝试给出自己的答案。</p>
+<p>首先，SVM的一种思路就是间隔最大化，对于间隔有函数间隔与几何间隔，由于函数间隔并不唯一确定，所以选择几何间隔，得到原始优化目标函数</p>
+<p>\begin{align} \\<br>\max_{w,b} \quad &amp; \gamma \\<br>s.t. \quad &amp;y_i(\frac{w}{||w||}x_i+\frac{b}{||w||})\geq \gamma, i=1,2,…,N<br>\end{align}</p>
+<p>根据函数间隔与几何间隔之间的关系，可以将约束中的$||w||$去掉</p>
+<p>\begin{align} \\<br>\max_{w,b} \quad &amp;\frac{\hat \gamma}{|w|} \\<br>s.t. \quad &amp;y_i(w\cdot x_i+b)\geq \hat \gamma, i=1,2,…,N<br>\end{align}</p>
+<p>取$\hat \gamma = 1$并作简单变换得到</p>
+<p>\begin{align} \\<br>\min_{w,b} \quad &amp;\frac{1}{2}|w|^2 \\<br>s.t. \quad &amp;y_i(w\cdot x_i + b) - 1 \geq 0,i=1,2,…,N<br>\end{align}</p>
+<p>这样，我们就得到了线性可分SVM的基本优化目标函数。接下来，是运用Lagrange对偶化来求解对偶问题。</p>
+<blockquote>
+<p>这里Lagrange对偶化有一个对偶间隔的问题，当目标函数和约束函数均是凸的情况下，当对偶问题的解满足KKT条件时，对偶间隔为0，即对偶问题与原问题等价。所以我们可以放心大胆的去求对偶问题了。注意，这里的KKT条件并不是SVM中独有的，应该是针对Lagrange对偶化的一个条件。但是，由于Lagrange对偶化是针对凸函数而言的，当核函数不定时，目标函数不再是凸函数，所以也就不能运用Lagrange对偶化来求解了，因为存在对偶间隔。</p>
+</blockquote>
+<p>Lagrange对偶化后得到Lagrange函数</p>
+<p>$$L(w,b,\alpha) = \frac{1}{2}||w||^2 - \sum_{i=1}^N\alpha_i y_i (w \cdot x_i + b) + \sum_{i=1}^N\alpha_i$$</p>
+<p>对$w,b$求偏导，并代入得到</p>
+<p>\begin{align} \\<br>\min_\alpha \quad &amp;\frac{1}{2}\sum_{i=1}^N\sum_{i=1}^N \alpha_i \alpha_j y_i y_j (x_i\cdot x_j) - \sum_{i=1}^N \alpha_i \\<br>s.t. \quad &amp;\sum_{i=1}^N \alpha_i y_i = 0 \\<br>&amp;\alpha_i \geq 0, i= 1,2,…,N<br>\end{align}</p>
+<p>到了这里，SVM的对偶优化目标就得到了。但是目前的模型容易过拟合，并且当样本数据不能够线性划分时，需要引入软间隔，此时原问题的优化目标为</p>
+<p>\begin{align}<br>\min_{w,b} \quad &amp;\frac{1}{2}||w||^2 + C\sum_{i=1}^N \xi_i \\<br>s.t. \quad &amp;y_i(w\cdot x_i + b) \geq 1 - \xi_i ,i=1,2,…,N \\<br>&amp;\xi_i \geq 0, i=1,2,…,N<br>\end{align}</p>
+<p>同样运用Lagrange对偶化后得到对应的对偶优化目标</p>
+<p>\begin{align}<br>\min_\alpha \quad &amp;\frac{1}{2}\sum_{i=1}^N\sum_{i=1}^N \alpha_i \alpha_j y_i y_j (x_i\cdot x_j) - \sum_{i=1}^N \alpha_i \\<br>s.t. \quad &amp;\sum_{i=1}^N \alpha_i y_i = 0 \\<br>&amp;0 \leq \alpha_i \leq C, i= 1,2,…,N<br>\end{align}</p>
+<p>然后根据求解得到最优的$\alpha^*$,根据公式就能够求得$w^*$,$b^*$了。这里$w^*$是唯一的，而$b^*$不是。<br>到这里，SVM的通过间隔最大化的大体推导思路就结束了。接下来需要关注的就是对于支持向量的讨论了，在《统计学习方法》的P113有较为详细的分析，讲的非常好，这里作简要分析。<br><img src="/img/blog/svm/svm_sv.png" alt="软间隔支持向量"></p>
+<p>根据软间隔支持向量的图，可以看出主要有四种情况：</p>
+<ul>
+<li><p>$\alpha_i^* \lt C$,则 $\xi_i = 0$,且支持向量$x_i$恰好落在间隔边界上（即图中的虚线上）</p>
+<blockquote>
+<p>在Lagrange对偶化的过程中，有$C-\alpha_i-\mu_i = 0$这样一个约束，由于$\alpha_i^* \lt C$,那么有$\mu_i^* &gt; 0$,那么表明对应的$\xi_i = 0$(KKT条件),即表明对于这一样本点，对于间隔超平面偏差为0.</p>
+</blockquote>
+</li>
+<li><p>$\alpha_i^* = C， 0 &lt;\xi_i&lt; 1$,则该样本分类正确，且落在间隔边界与分离超平面之间</p>
+</li>
+<li>$\alpha_i^* = C, \xi_i = 1$, 则该样本落在分离超平面上</li>
+<li>$\alpha_i^* = C, \xi_i &gt; 1$, 则该样本位于分离超平面误分的一侧。</li>
+</ul>
+<p>到这里线性SVM的基本知识点就差不多了。然后，在《统计学习方法》和西瓜书《机器学习》中都有降到对于SVM的另外一种解释。就是损失函数+正则化项的目标函数。</p>
+<p>$$\min_{w,b} [1-y_i(w\cdot x_i + b)]_+ + \lambda ||w||^2$$</p>
+<p>在西瓜书中明确说了这一模型与前面说的硬间隔最大化的原问题模型是等价的。其中，损失函数是一个非凸和非连续的函数，所以通常就选择一种替代损失函数，有hinge loss，指数损失， 对率损失。后一项正则化项可以根据需求来选择不同的范数，在间隔最大化的思路中，正则化项就选择的是$L_2$范数，这倾向于给出更多的支持向量点，而需要稀疏的支持向量时，可以选择$L_0, L_1$范数，其中，$L_0$范数会导致目标函数非凸，这样就又变成一个新的SVM问题—非凸SVM的求解。</p>
+<blockquote>
+<p>对于损失函数，通常选择的是hinge loss，一个很重要的点是它也能够带来稀疏的支持向量点。</p>
+</blockquote>
+<p>接下来，就是核函数的引入了，其实做法很简单，就是将样本内积换成核函数的形式，其他的都没有改动。</p>
+<p>\begin{align}<br>\min_\alpha &amp;\frac{1}{2}\sum_{i=1}^N\sum_{i=1}^N \alpha_i \alpha_j y_i y_j K(x_i\cdot x_j) - \sum_{i=1}^N \alpha_i \\<br>s.t. &amp;\sum_{i=1}^N \alpha_i y_i = 0 \\<br>&amp;0 \leq \alpha_i \leq C, i= 1,2,…,N<br>\end{align}</p>
+<p>其实对于核函数的理解需要了解再生核希尔伯特空间的一些具体性质（比如为什么$K(x_i, x_j)$就能够表示样本映射到特征空间（Hilbert空间）后的内积，这其实就是再生核的性质，具体的可以参考<a href="http://heimingx.cn/2016/05/24/reproducing-kernel-hilbert-spaces/" target="_blank" rel="external">再生核希尔伯特空间</a>的介绍）<br>最后，就是对这个优化问题的求解了，经典的快速算法就是SMO算法，可以参考<a href="http://heimingx.cn/2016/05/01/smo-algorithm/" target="_blank" rel="external">SMO算法实现</a></p>
+<p>参考</p>
+<ol>
+<li>李航老师的统计学习方法</li>
+<li>周志华老师的机器学习</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      关于SVM的基本知识点总结与一些自己的理解
+    
+    </summary>
+    
+      <category term="Machine Learning" scheme="http://heimignx.cn/categories/Machine-Learning/"/>
+    
+    
+      <category term="Machine Learning" scheme="http://heimignx.cn/tags/Machine-Learning/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>再生核希尔伯特空间</title>
+    <link href="http://heimignx.cn/2016/05/24/reproducing-kernel-hilbert-spaces/"/>
+    <id>http://heimignx.cn/2016/05/24/reproducing-kernel-hilbert-spaces/</id>
+    <published>2016-05-24T07:24:45.000Z</published>
+    <updated>2016-10-15T14:06:53.929Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="一些定义"><a href="#一些定义" class="headerlink" title="一些定义"></a>一些定义</h1><ol>
+<li>向量空间(vector space)： 满足加法和标量乘操作的集合</li>
+<li>范数向量空间(normed vector space)： 定义了向量长度的向量空间，这样我们就可以衡量向量间的长度了。</li>
+<li>度量空间(metric space)： 定义了两个点的距离的<strong>集合</strong>（这里不必须是向量空间）。范数向量空间是度量空间，但是度量空间不一定是范数向量空间。</li>
+<li>Banach 空间： 一个完备的范数向量空间。一个<strong>完备</strong>的空间指没有缺失的元素（所有的<em>柯西序列都是收敛的</em>）。</li>
+<li><p>内积空间(inner product space)<br>内积空间$(\mathcal{V}, \langle., .\rangle)$是在域$\mathbb{F}$上可进行$\langle., .\rangle : \mathcal{V}\times \mathcal{V} \to \mathbb{F}$运算法操作的向量空间，其满足三个原则：<br>1)共轭对称：$\langle \mathbf{x}, \mathbf{y} \rangle = \overline{\langle \mathbf{y}, \mathbf{x} \rangle}$<br>2)第一个变量满足线性性：$\langle a\mathbf{x}, \mathbf{y} \rangle = a \langle \mathbf{x}, \mathbf{y} \rangle$和$\langle \mathbf{x} + \mathbf{z}, \mathbf{y} \rangle = \langle \mathbf{x}, \mathbf{y} \rangle + \langle \mathbf{z}, \mathbf{y} \rangle$<br>3)正定性：$\langle \mathbf{x},\mathbf{x} \rangle \geq 0$其中等式只有在$\mathbf{x}=0$时取到。</p>
+<blockquote>
+<p>注：</p>
+<ol>
+<li>对于内积空间，我们可以推导出范数向量空间，即$l^2$范数空间，但是反过来就不一定成立了，因为如$l^1$范数，$||\mathbf{x}||_{1} = \sum_{i = 1}^n |x_i|$就不能满足内积空间</li>
+<li>An inner product space is also known as a <strong>pre-Hilbert space</strong>, meaning that it is one step behind a Hilbert space</li>
+</ol>
+</blockquote>
+</li>
+<li><p>希尔伯特空间： 当一个内积空间满足通过内积空间可推导出范数空间(赋范空间)，并且是完备的，那么这个内积空间就是希尔伯特空间。</p>
+<blockquote>
+<p>对于常见的$\mathbb R^n$,满足内积运算，能够推导出$l^2$范数，且是完备的，所以是希尔伯特空间。</p>
+</blockquote>
+<p> 另外希尔伯特空间是一个函数空间，即空间中每个元素都是一个函数，所以在希尔伯特空间中的函数可以理解为泛函（functional）</p>
+</li>
+<li><p>再生核：<br>$\mathcal{X}$是非空集，$\mathcal{H}$是定义在$\mathcal{X}$上的希尔伯特空间。核$\mathcal{k}$满足下面的两条性质就称为$\mathcal{H}$的再生核：<br>1) 对于每个$x_0 \in \mathcal{X}$, $k(y, x_0)$作为$y$的函数属于空间$\mathcal{H}$<br>2) reproducing property: 对于每个$x_0 \in \mathcal{X}$和$f \in \mathcal{H}$,有$f(x_0) = \langle f(.), k(.,x_0) \rangle_\mathcal{H}$</p>
+<blockquote>
+<p>对于再生核的理解，首先性质1表示在$\mathcal{X}$中的每个点都可以通过核函数$k$来映射到希尔伯特空间$\mathcal{H}$中，性质2，表示，对于任意的属于$\mathcal{H}$的核函数都可以在$\mathcal{H}$中找到一个函数$f$(注意希尔伯特空间是一个函数空间)来重构出一个新的函数（这里如果函数$f$是一个核函数的话，会再生出一个核函数）</p>
+</blockquote>
+</li>
+<li><p>再生核希尔伯特空间：<br>A Hilbert space $\mathcal{H}$ of complex-valued functions on a nonempty set $\mathcal{X}$ is called a reproducing kernel Hilbert space if the point evaluation functional $L_x$ is a bounded (equivalently, continuous) linear operator for all $x\in \mathcal{X}$</p>
+<p> 补充定义：<br> <strong>Point evaluation functional</strong> ：<br> The point evaluation functional $L_x:\mathcal{H} → \mathbb{C}$ at a point $x\in \mathcal{X}$ is defined as $L_x(f):=f(x)$.</p>
+<p> <strong>Linear operator (Linear map)</strong> :<br> Let $f:V→W$ be a function between two vector spaces $V,W$ over the same field $\mathbb F$. $f$ is called a linear operator if the following two conditions are satisfied for all $x,y\in \mathcal{V}$ and $a \in \mathbb{F}$.<br> 1)$f(u+v)=f(u)+f(v)$<br> 2)$f(au)=af(u)$</p>
+<p> <strong>Bounded linear operator</strong> :<br> Let $f:\mathcal{V}→\mathcal{W}$ be a linear operator between two normed vector spaces $(\mathcal{V},||.||_{\mathcal{V}})$ and $(\mathcal{W},||.||_{\mathcal{W}})$, $f$ is called a bounded linear operator if there exists some $M&gt;0$ such that for all $\mathbb u\in \mathcal{V}$,$||f(\mathbb u)||_{\mathcal{W}} \leq M ||\mathbb u||_{\mathcal{V}}$</p>
+</li>
+<li><p>定理：<br>一个希尔伯特空间$\mathcal{H}$是一个再生核希尔伯特空间，当且仅当它有一个再生核（证明要见参考1）</p>
+</li>
+<li><p>对于给定的希尔伯特空间，再生核是唯一的。</p>
+</li>
+</ol>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="http://sadeepj.blogspot.com/" target="_blank" rel="external">a-tutorial-introduction-to-reproducing-Kernel-Hilbert-Spaces</a>3篇有关希尔伯特空间的系列文章，很赞！不过需要翻墙~</li>
+<li><a href="http://blog.pluskid.org/?p=723" target="_blank" rel="external">Free Mind</a></li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      与再生核希尔伯特空间相关的一些定义及自己的理解
+    
+    </summary>
+    
+      <category term="Mathematics" scheme="http://heimignx.cn/categories/Mathematics/"/>
+    
+    
+      <category term="mathematics" scheme="http://heimignx.cn/tags/mathematics/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Adaboost算法实现</title>
+    <link href="http://heimignx.cn/2016/05/06/adaboost-algorithm/"/>
+    <id>http://heimignx.cn/2016/05/06/adaboost-algorithm/</id>
+    <published>2016-05-06T14:31:56.000Z</published>
+    <updated>2016-10-15T14:06:53.919Z</updated>
+    
+    <content type="html"><![CDATA[<p>adaboost算法是经典的boosting算法，今天把李航统计学习方法上面的例8.1实现了一下，虽然看着挺简单的，但实现的时候还是有很多细节需要注意。由于代码是严格按照书上算法流程来敲的，这里就不放算法步骤了。直接上代码吧。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># coding: utf-8</span></div><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Params</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.w = []</div><div class="line">        self.alpha = []</div><div class="line">        self.threshold = []</div><div class="line">        self.g = []</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">setW</span><span class="params">(self, w)</span>:</span></div><div class="line">        self.w = w</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getThreshold</span><span class="params">(x, y, params)</span>:</span></div><div class="line">    <span class="string">"""获取当前权值分布下的误差率最小的阈值"""</span></div><div class="line">    threshold = np.zeros(len(x) + <span class="number">1</span>)</div><div class="line">    <span class="keyword">for</span> idx <span class="keyword">in</span> range(len(x)):</div><div class="line">        <span class="keyword">if</span> idx &gt; <span class="number">0</span>:</div><div class="line">            threshold[idx] = np.mean(x[idx<span class="number">-1</span> : idx+<span class="number">1</span>])</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            threshold[idx] = x[idx] - <span class="number">0.5</span> <span class="comment">## 延拓0.5</span></div><div class="line">    threshold[<span class="number">-1</span>] = x[<span class="number">-1</span>] + <span class="number">0.5</span>    </div><div class="line">    predict = np.ones(len(y)) * <span class="number">-1</span></div><div class="line">    minError = <span class="number">1000</span></div><div class="line">    minThreshold = <span class="number">0</span></div><div class="line">    ming = <span class="number">1</span> <span class="comment">## 表示小于阈值时取1 否则取-1</span></div><div class="line">    <span class="keyword">for</span> idx <span class="keyword">in</span> range(len(threshold)):</div><div class="line">        predict = map(<span class="keyword">lambda</span> x1: <span class="number">1</span> <span class="keyword">if</span> x1 == <span class="keyword">True</span> <span class="keyword">else</span> <span class="number">-1</span>, x &lt; threshold[idx])</div><div class="line">        error = np.sum(params.w[predict != y]) <span class="comment">##这里用样本权重来衡量误差率</span></div><div class="line">        <span class="keyword">if</span> error &lt; minError:</div><div class="line">            minThreshold = idx</div><div class="line">            minError = error</div><div class="line">    <span class="keyword">for</span> idx <span class="keyword">in</span> range(len(threshold)):</div><div class="line">        predict = map(<span class="keyword">lambda</span> x1: <span class="number">1</span> <span class="keyword">if</span> x1 == <span class="keyword">True</span> <span class="keyword">else</span> <span class="number">-1</span>, x &gt; threshold[idx])</div><div class="line">        error = np.sum(params.w[predict != y])</div><div class="line">        <span class="keyword">if</span> error &lt; minError:</div><div class="line">            minThreshold = idx</div><div class="line">            minError = error</div><div class="line">            ming = <span class="number">-1</span></div><div class="line">    params.threshold.append(threshold[minThreshold])</div><div class="line">    params.g.append(ming)</div><div class="line">    <span class="keyword">return</span> minError</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getGofx</span><span class="params">(idx, x, params)</span>:</span></div><div class="line">    <span class="string">"""获取第idx个分类器的预测值"""</span></div><div class="line">    <span class="keyword">if</span> params.g[idx] == <span class="number">1</span>:</div><div class="line">        G = map(<span class="keyword">lambda</span> x1: <span class="number">1</span> <span class="keyword">if</span> x1 == <span class="keyword">True</span> <span class="keyword">else</span> <span class="number">-1</span>, x &lt; params.threshold[idx])</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        G = map(<span class="keyword">lambda</span> x1: <span class="number">1</span> <span class="keyword">if</span> x1 == <span class="keyword">True</span> <span class="keyword">else</span> <span class="number">-1</span>, x &gt; params.threshold[idx])</div><div class="line">    <span class="keyword">return</span> np.array(G)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">updateWeight</span><span class="params">(x, y, params)</span>:</span></div><div class="line">    <span class="string">"""更新样本权重"""</span></div><div class="line">    G = getGofx(<span class="number">-1</span>, x, params)</div><div class="line">    normer = np.exp(- params.alpha[<span class="number">-1</span>] * y * G)</div><div class="line">    Z = np.dot(params.w, normer)</div><div class="line">    params.w = params.w * normer / Z</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getPredict</span><span class="params">(x, params)</span>:</span></div><div class="line">    <span class="string">"""获取当前分类器的预测"""</span></div><div class="line">    predict = np.zeros(len(x))</div><div class="line">    <span class="keyword">for</span> idx <span class="keyword">in</span> range(len(params.alpha)):</div><div class="line">        G = getGofx(idx, x, params)</div><div class="line">        predict += G * params.alpha[idx]</div><div class="line">    predict = np.sign(predict)</div><div class="line">    <span class="keyword">return</span> predict</div><div class="line">    </div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">adaboost</span><span class="params">(x, y, params)</span>:</span></div><div class="line">    <span class="string">"""adaboost训练过程"""</span></div><div class="line">    errorNum = len(y)</div><div class="line">    <span class="keyword">while</span>(errorNum &gt; <span class="number">0</span>):</div><div class="line">        errorRate = getThreshold(x, y, params)</div><div class="line">        </div><div class="line">        alpha = <span class="number">0.5</span> * np.log((<span class="number">1</span> - errorRate)/errorRate)</div><div class="line">        params.alpha.append(alpha)</div><div class="line">        </div><div class="line">        updateWeight(x, y, params)</div><div class="line">        predict = getPredict(x, params)</div><div class="line">        error = predict != y</div><div class="line">        errorNum = len(y[error])</div><div class="line">        <span class="keyword">print</span> <span class="string">"alpha:"</span>, params.alpha</div><div class="line">        <span class="keyword">print</span> <span class="string">"threshold:"</span>, params.threshold</div><div class="line">        <span class="keyword">print</span> <span class="string">"errorNum:"</span>, errorNum</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></div><div class="line">    x = np.array([<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>])</div><div class="line">    y = np.array([<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">-1</span>,<span class="number">-1</span>,<span class="number">-1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">-1</span>])</div><div class="line">    params = Params()</div><div class="line">    params.setW(np.ones(len(y)) * (<span class="number">1.0</span> / len(y)))</div><div class="line">    adaboost(x, y, params)</div><div class="line">    </div><div class="line">    predict = getPredict(x, params)</div><div class="line">    <span class="keyword">print</span> <span class="string">"y = "</span>, y</div><div class="line">    <span class="keyword">print</span> <span class="string">"predict = "</span>, predict</div><div class="line">    </div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    main()</div></pre></td></tr></table></figure>
+<ol>
+<li><a href="https://github.com/HeimingX/MLAlgorithms/tree/master/boosting/adaboost" target="_blank" rel="external">源代码下载</a> （如果有帮助记得点赞哦~~哈哈）</li>
+<li>接下来，要用AdaBoost来跑一个实际的数据集来体验一下，同时尝试不同的基分类器看一下他强大的效果。</li>
+<li>啊，Python用的还是不熟啊！！！</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      统计学习方法Adaboost算法例8.1的简单实现
+    
+    </summary>
+    
+      <category term="Machine Learning" scheme="http://heimignx.cn/categories/Machine-Learning/"/>
+    
+    
+      <category term="machine learning" scheme="http://heimignx.cn/tags/machine-learning/"/>
+    
+      <category term="python" scheme="http://heimignx.cn/tags/python/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>sigmoid function 和 sigmoid kernel</title>
+    <link href="http://heimignx.cn/2016/05/03/sigmoid-function-and-sigmoid-kernel/"/>
+    <id>http://heimignx.cn/2016/05/03/sigmoid-function-and-sigmoid-kernel/</id>
+    <published>2016-05-03T14:31:56.000Z</published>
+    <updated>2016-10-15T14:06:53.929Z</updated>
+    
+    <content type="html"><![CDATA[<p>今天在跟老师讨论多核学习问题时，遇到sigmoid kernel，发现自己记忆的与老师说的好像不一样，然后查了一下，发现原来在形式上是有两种表示形式的，但是本质是相同的。</p>
+<h1 id="sigmoid-function"><a href="#sigmoid-function" class="headerlink" title="sigmoid function"></a>sigmoid function</h1><p>sigmoid function : $$sigmoid(x) = \frac{1}{1+e^{-x}}$$<br>sigmoid function在神经网络中是一种典型的神经元激活函数,图形为：<br><img src="/img/blog/sigmoid/sigmoidfunction.jpg" alt="sigmoid function"></p>
+<h1 id="sigmoid-kernel"><a href="#sigmoid-kernel" class="headerlink" title="sigmoid kernel"></a>sigmoid kernel</h1><p>sigmoid kernel : $$k(x, y) = \tanh(\alpha x^Ty + c)$$<br>其中$\tanh(x)$是双曲正切函数<br>$$\tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}} = \frac{1}{1+e^{-2x}} - \frac{1}{e^{2x} + 1}$$<br>图形为：<br><img src="/img/blog/sigmoid/tanhfunction.jpg" alt="tanh function"></p>
+<p>可以看到两者的曲线趋势都是差不多的，s型函数，只是值域不同。那么我们再来将tanh拆开画图看看效果：<br>$$\frac{1}{1+e^{-2x}}$$<br><img src="/img/blog/sigmoid/tanhfunction1.jpg" alt="tanh function 1"><br>$$- \frac{1}{e^{2x} + 1}$$<br><img src="/img/blog/sigmoid/tanhfunction2.jpg" alt="tanh function 2"></p>
+<p>我们可以看到这两个的图形趋势也是相同的，同样值域不一样，而且前者值域是$[0, 1]$,后者的值域是$[-1, 0]$，那么两者相加正好实现了原双曲正切的值域范围。<br>那么，我们平时所用的sigmoid函数只是取了前半部分。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      两者之间的联系与区别
+    
+    </summary>
+    
+      <category term="Mathematics" scheme="http://heimignx.cn/categories/Mathematics/"/>
+    
+    
+      <category term="machine learning" scheme="http://heimignx.cn/tags/machine-learning/"/>
+    
+      <category term="mathematics" scheme="http://heimignx.cn/tags/mathematics/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>SMO算法实现</title>
+    <link href="http://heimignx.cn/2016/05/01/smo-algorithm/"/>
+    <id>http://heimignx.cn/2016/05/01/smo-algorithm/</id>
+    <published>2016-05-01T15:31:56.000Z</published>
+    <updated>2016-10-15T14:06:53.930Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="一些理解"><a href="#一些理解" class="headerlink" title="一些理解"></a>一些理解</h1><p>svm的理论部分在很多资料里都有详细的推导过程，这里就不总结了，对于SMO算法，《统计学习方法》中是这样描述的：</p>
+<blockquote>
+<p>smo算法是一种启发式算法，其基本思路是：如果所有变量的解都满足此最优化问题的KKT条件，那么这个最优化问题的解就得到了。<strong>因为KKT条件是该最优化问题的充分必要条件</strong></p>
+</blockquote>
+<p>所以，我们的目标就是找到一组解使得他们都满足最优化问题的KKT条件。那么smo算法的手段就是：</p>
+<blockquote>
+<p>否则，选择两个变量，固定其他变量，针对这两个变量构建一个二次规划问题。这个二次规划问题关于这两个变量的解应该更接近于原始二次规划问题，。。。</p>
+</blockquote>
+<p>对于两个变量的选择，要求其中至少一个变量是违反KKT条件的。第一个变量$\alpha_1$选取违反KKT条件最严重的样本点，在实现过程中，感觉并不好判断违反的严重程度，所以选择全部遍历；第二个变量$\alpha_2$选取希望使其能够有足够大的变化。</p>
+<h1 id="Python实现"><a href="#Python实现" class="headerlink" title="Python实现"></a>Python实现</h1><p>代码有参考博文[1]中的实现，主要改进：</p>
+<ol>
+<li>对于第二个变量的选择，并没有遍历所有的样本点，而是选择能够使得$\alpha_2$有足够大的变化的点，实验表明，这样能够提高迭代效率；</li>
+<li>给出了高斯核函数的实现</li>
+<li>重构了一下代码~~ 当然也还有改进的地方，欢迎下方评论哦~</li>
+<li><a href="https://github.com/HeimingX/MLAlgorithms/tree/master/smv_smo" target="_blank" rel="external">源码及样本数据下载</a>如果有帮助记得点赞哦~~哈哈</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div><div class="line">207</div><div class="line">208</div><div class="line">209</div><div class="line">210</div><div class="line">211</div><div class="line">212</div><div class="line">213</div><div class="line">214</div><div class="line">215</div><div class="line">216</div><div class="line">217</div><div class="line">218</div><div class="line">219</div><div class="line">220</div><div class="line">221</div><div class="line">222</div><div class="line">223</div><div class="line">224</div><div class="line">225</div><div class="line">226</div><div class="line">227</div><div class="line">228</div><div class="line">229</div><div class="line">230</div><div class="line">231</div><div class="line">232</div><div class="line">233</div><div class="line">234</div><div class="line">235</div><div class="line">236</div><div class="line">237</div><div class="line">238</div><div class="line">239</div><div class="line">240</div><div class="line">241</div><div class="line">242</div><div class="line">243</div><div class="line">244</div><div class="line">245</div><div class="line">246</div><div class="line">247</div><div class="line">248</div><div class="line">249</div><div class="line">250</div><div class="line">251</div><div class="line">252</div><div class="line">253</div><div class="line">254</div><div class="line">255</div><div class="line">256</div><div class="line">257</div><div class="line">258</div><div class="line">259</div><div class="line">260</div><div class="line">261</div><div class="line">262</div><div class="line">263</div><div class="line">264</div><div class="line">265</div><div class="line">266</div><div class="line">267</div><div class="line">268</div><div class="line">269</div><div class="line">270</div><div class="line">271</div><div class="line">272</div><div class="line">273</div><div class="line">274</div><div class="line">275</div><div class="line">276</div><div class="line">277</div><div class="line">278</div><div class="line">279</div><div class="line">280</div><div class="line">281</div><div class="line">282</div><div class="line">283</div><div class="line">284</div><div class="line">285</div><div class="line">286</div><div class="line">287</div><div class="line">288</div><div class="line">289</div><div class="line">290</div><div class="line">291</div><div class="line">292</div><div class="line">293</div><div class="line">294</div><div class="line">295</div><div class="line">296</div><div class="line">297</div><div class="line">298</div><div class="line">299</div><div class="line">300</div><div class="line">301</div><div class="line">302</div><div class="line">303</div><div class="line">304</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"><span class="string">'''</span></div><div class="line">Created on 2016年5月1日</div><div class="line"></div><div class="line">@author: heiming</div><div class="line">'''</div><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="keyword">from</span> scipy <span class="keyword">import</span> io</div><div class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Params</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="comment">##alpha:lagrange multiplyer</span></div><div class="line">        self.a = []</div><div class="line">        <span class="comment">##b bias</span></div><div class="line">        self.b = <span class="number">0.0</span></div><div class="line">        <span class="comment">## punish parameter</span></div><div class="line">        self.c = <span class="number">10</span></div><div class="line">        <span class="comment">## decision error</span></div><div class="line">        self.epsilon = <span class="number">0.001</span></div><div class="line">        <span class="comment">## stop tolerance</span></div><div class="line">        self.stopTol = <span class="number">0.0001</span></div><div class="line">        <span class="comment">## smo difference of predict accuracy</span></div><div class="line">        self.e = []</div><div class="line">        <span class="comment">## maximum iteration</span></div><div class="line">        self.maxIter = <span class="number">100</span></div><div class="line">        <span class="comment">## kernel type</span></div><div class="line">        self.kernelType = <span class="string">'gaussian'</span></div><div class="line">        <span class="comment">## gaussian parameter</span></div><div class="line">        self.sigma = <span class="number">0.5</span></div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">setC</span><span class="params">(self, c)</span>:</span></div><div class="line">        self.c = c</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">setEpsilon</span><span class="params">(self, epsilon)</span>:</span></div><div class="line">        self.epsilon = epsilon</div><div class="line">        </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">setKernel</span><span class="params">(self, kernelType, *args)</span>:</span></div><div class="line">        self.kernelType = kernelType</div><div class="line">        <span class="keyword">if</span> self.kernelType == <span class="string">'gaussian'</span>:</div><div class="line">            self.sigma = args[<span class="number">0</span>]</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">setMaxIter</span><span class="params">(self, Maxiter)</span>:</span></div><div class="line">        self.maxIter = Maxiter</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">loadData</span><span class="params">(filePath, fileType)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    load样本</div><div class="line">    """</div><div class="line">    <span class="keyword">if</span> fileType == <span class="string">'txt'</span>:</div><div class="line">        data = np.loadtxt(filePath)</div><div class="line">        trainData = data[:, :<span class="number">-1</span>]</div><div class="line">        trainLabel = data[:, <span class="number">-1</span>]</div><div class="line">        testData = []</div><div class="line">        testLabel = []</div><div class="line">    <span class="keyword">if</span> fileType == <span class="string">'mat'</span>:</div><div class="line">        data = io.loadmat(filePath)</div><div class="line">        trainData = data[<span class="string">'xapp'</span>]</div><div class="line">        trainLabel = np.reshape(data[<span class="string">'yapp'</span>], newshape = (<span class="number">1</span>, data[<span class="string">'yapp'</span>].size))[<span class="number">0</span>]</div><div class="line">        testData = data[<span class="string">'xtest'</span>]</div><div class="line">        testLabel = np.reshape(data[<span class="string">'ytest'</span>], newshape = (<span class="number">1</span>, data[<span class="string">'ytest'</span>].size))[<span class="number">0</span>]</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> (trainData, trainLabel, testData, testLabel)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">kernel</span><span class="params">(data_j, data_i, params)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    计算样本j和样本i的内积</div><div class="line">    """</div><div class="line">    <span class="keyword">if</span> params.kernelType == <span class="string">'linear'</span>:</div><div class="line">        k = np.dot(data_j, data_i)</div><div class="line">    <span class="keyword">if</span> params.kernelType == <span class="string">'gaussian'</span>:</div><div class="line">        diff = data_j - data_i</div><div class="line">        diff = np.dot(diff, diff)</div><div class="line">        k = np.exp(- diff / (<span class="number">2.0</span> * np.square(params.sigma)))</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> k</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">gOfx</span><span class="params">(data, label, data_i, params)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    计算g(x)=sum(ai * yi * k(xi, x)) + b</div><div class="line">    """</div><div class="line">    <span class="keyword">if</span> params.kernelType == <span class="string">'linear'</span>:</div><div class="line">        k = np.dot(data, data_i) </div><div class="line">    <span class="keyword">if</span> params.kernelType == <span class="string">'gaussian'</span>:</div><div class="line">        diff = np.subtract(data, data_i)</div><div class="line">        diff = np.sum(np.multiply(diff, diff), axis = <span class="number">1</span>)</div><div class="line">        k = np.exp(- diff / (<span class="number">2.0</span> * np.square(params.sigma)))</div><div class="line">    g = np.dot(np.multiply(params.a ,label), k) + params.b</div><div class="line">    <span class="keyword">return</span> g</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">init</span><span class="params">(data, label, params)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    初始化E, a</div><div class="line">    """</div><div class="line">    params.a = np.zeros((<span class="number">1</span>, len(label)))[<span class="number">0</span>]</div><div class="line">    <span class="keyword">for</span> idx <span class="keyword">in</span> range(len(params.a)):</div><div class="line">        diff = gOfx(data, label, data[idx], params) - label[idx]</div><div class="line">        params.e.append(diff)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">updateE</span><span class="params">(data, label, params)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    更新E</div><div class="line">    """</div><div class="line">    <span class="keyword">for</span> idx <span class="keyword">in</span> range(len(params.a)):</div><div class="line">        diff = gOfx(data, label, data[idx], params) - label[idx]</div><div class="line">        params.e[idx] = diff</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getMaxE</span><span class="params">(idx, params)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    获取除去第idx个样本后最大的E</div><div class="line">    """</div><div class="line">    tmp = params.e[<span class="number">1</span> : idx] + [<span class="number">0</span>] + params.e[idx+<span class="number">1</span> :]</div><div class="line">    <span class="keyword">return</span> tmp.index(max(tmp))</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getMinE</span><span class="params">(idx, params)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    获取除去第idx个样本后最小的E</div><div class="line">    """</div><div class="line">    tmp = params.e[<span class="number">1</span>:idx] + [params.c * <span class="number">10</span>] + params.e[idx+<span class="number">1</span> :]</div><div class="line">    <span class="keyword">return</span> tmp.index(min(tmp))</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">judgeConvergence</span><span class="params">(data, label, params)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    判断是否都已满足KKT条件</div><div class="line">    """</div><div class="line">    alphay = <span class="number">0.0</span>    </div><div class="line">    <span class="keyword">for</span> idx <span class="keyword">in</span> range(len(label)):</div><div class="line">        yg = label[idx] * gOfx(data, label, data[idx], params)</div><div class="line">        <span class="keyword">if</span> (params.a[idx] == <span class="number">0</span>) <span class="keyword">and</span> (yg &lt; <span class="number">1</span> - params.epsilon):</div><div class="line">            <span class="keyword">return</span> <span class="keyword">False</span></div><div class="line">        <span class="keyword">elif</span> (params.a[idx] &gt; <span class="number">0</span>) <span class="keyword">and</span> (params.a[idx] &lt; params.c) <span class="keyword">and</span> \</div><div class="line">            (yg &gt; <span class="number">1</span> + params.epsilon) <span class="keyword">or</span> (yg &lt; <span class="number">1</span> - params.epsilon):</div><div class="line">            <span class="keyword">return</span> <span class="keyword">False</span></div><div class="line">        <span class="keyword">elif</span> (params.a[idx] == params.c) <span class="keyword">and</span> (yg &gt; <span class="number">1</span> + params.epsilon):</div><div class="line">            <span class="keyword">return</span> <span class="keyword">False</span></div><div class="line">        <span class="keyword">if</span> (params.a[idx] &lt; <span class="number">0</span>) <span class="keyword">or</span> (params.a[idx] &gt; params.c):</div><div class="line">            <span class="keyword">return</span> <span class="keyword">False</span></div><div class="line">        alphay += params.a[idx] * label[idx]</div><div class="line">    <span class="keyword">if</span> abs(alphay) &gt; params.epsilon:</div><div class="line">        <span class="keyword">return</span> <span class="keyword">False</span></div><div class="line">    <span class="keyword">return</span> <span class="keyword">True</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">train</span><span class="params">(data, label, params)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    svm train, use smo solve the quadratic convex problem</div><div class="line">    """</div><div class="line">    iters = <span class="number">0</span></div><div class="line">    init(data, label, params)</div><div class="line">    updated = <span class="keyword">True</span></div><div class="line">    <span class="keyword">while</span> iters &lt; params.maxIter <span class="keyword">and</span> updated:</div><div class="line">        updated = <span class="keyword">False</span></div><div class="line">        iters += <span class="number">1</span></div><div class="line">        <span class="comment">##这里直接遍历所有的样本，只要违反了KKT条件就进入迭代</span></div><div class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(params.a)):</div><div class="line">            ai = params.a[i]</div><div class="line">            ei = params.e[i]</div><div class="line">            </div><div class="line">            <span class="keyword">if</span> (label[i] * ei &lt; params.stopTol <span class="keyword">and</span> ai &lt; params.c) <span class="keyword">or</span> \</div><div class="line">                (label[i] * ei &gt; params.stopTol <span class="keyword">and</span> ai &gt; <span class="number">0</span>):</div><div class="line">                <span class="keyword">if</span> ei &gt; <span class="number">0</span>:</div><div class="line">                    j = getMinE(i, params)</div><div class="line">                <span class="keyword">else</span>:</div><div class="line">                    j = getMaxE(i, params)</div><div class="line">                </div><div class="line">                eta = kernel(data[i], data[i], params) + \</div><div class="line">                    kernel(data[j], data[j], params) - \</div><div class="line">                    <span class="number">2</span> * kernel(data[i], data[j], params)</div><div class="line">                <span class="keyword">if</span> eta &lt;= <span class="number">0</span>:</div><div class="line">                    <span class="keyword">continue</span></div><div class="line">                new_aj = params.a[j] + label[j] * \</div><div class="line">                    (params.e[i] - params.e[j]) / eta</div><div class="line">                L = <span class="number">0.0</span></div><div class="line">                H = <span class="number">0.0</span></div><div class="line">                <span class="keyword">if</span> label[i] == label[j]:</div><div class="line">                    L = max(<span class="number">0</span>, params.a[j] + params.a[i] - params.c)</div><div class="line">                    H = min(params.c, params.a[j] + params.a[i])</div><div class="line">                <span class="keyword">else</span>:</div><div class="line">                    L = max(<span class="number">0</span>, params.a[j] - params.a[i])</div><div class="line">                    H = min(params.c, params.c + params.a[j] - params.a[i])</div><div class="line">                <span class="keyword">if</span> new_aj &gt; H:</div><div class="line">                    new_aj = H</div><div class="line">                <span class="keyword">if</span> new_aj &lt; L:</div><div class="line">                    new_aj = L</div><div class="line">                </div><div class="line">                <span class="comment">##判断alpha j是否有较大的变化</span></div><div class="line">                <span class="keyword">if</span> abs(params.a[j] - new_aj) &lt; <span class="number">0.001</span>:</div><div class="line">                    <span class="keyword">print</span> <span class="string">"j= %d, is not moving enough"</span> % j</div><div class="line">                    <span class="keyword">continue</span></div><div class="line">                new_ai = params.a[i] + label[i] * label[j] * (params.a[j] - new_aj)</div><div class="line">                new_b1 = params.b - params.e[i] - label[i] * kernel(data[i], data[i], params) * (new_ai - params.a[i]) \</div><div class="line">                    - label[j] * kernel(data[j], data[i], params) * (new_aj - params.a[j])</div><div class="line">                new_b2 = params.b - params.e[j] - label[i] * kernel(data[i], data[j], params) * (new_ai - params.a[i]) \</div><div class="line">                    - label[j] * kernel(data[j], data[j], params) * (new_aj - params.a[j])</div><div class="line">                <span class="keyword">if</span> new_ai &gt; <span class="number">0</span> <span class="keyword">and</span> new_ai &lt; params.c:</div><div class="line">                    new_b = new_b1</div><div class="line">                <span class="keyword">elif</span> new_aj &gt; <span class="number">0</span> <span class="keyword">and</span> new_aj &lt; params.c:</div><div class="line">                    new_b = new_b2</div><div class="line">                <span class="keyword">else</span>:</div><div class="line">                    new_b = (new_ai + new_aj)/<span class="number">2.0</span></div><div class="line">                    </div><div class="line">                params.a[i] = new_ai</div><div class="line">                params.a[j] = new_aj</div><div class="line">                params.b = new_b</div><div class="line">                updateE(data, label, params)</div><div class="line">                updated = <span class="keyword">True</span></div><div class="line">                <span class="keyword">print</span> <span class="string">"iterate: %d, change pair: i: %d, j: %d"</span> % (iters, i, j)</div><div class="line">        res = judgeConvergence(data, label, params)</div><div class="line">        <span class="keyword">if</span> res:</div><div class="line">            <span class="keyword">break</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">predictAccuracy</span><span class="params">(trainData, trainLabel, testData, testLabel, params)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    计算测试集的精度</div><div class="line">    """</div><div class="line">    pred = np.zeros((<span class="number">1</span>, len(testLabel)))</div><div class="line">    <span class="keyword">for</span> idx <span class="keyword">in</span> range(len(testLabel)):</div><div class="line">        pred[<span class="number">0</span>, idx] = gOfx(trainData, trainLabel, testData[idx], params)</div><div class="line">    accuracy = np.mean(np.sign(pred) == testLabel)</div><div class="line">    <span class="keyword">return</span> accuracy</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getSupportVector</span><span class="params">(params)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    获取支持向量的index</div><div class="line">    """</div><div class="line">    supportVector = []</div><div class="line">    <span class="keyword">for</span> idx <span class="keyword">in</span> range(len(params.a)):</div><div class="line">        <span class="keyword">if</span> params.a[idx] &gt; <span class="number">0</span> <span class="keyword">and</span> params.a[idx] &lt; params.c:</div><div class="line">            supportVector.append(idx)</div><div class="line">    <span class="keyword">return</span> supportVector</div><div class="line">            </div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">draw</span><span class="params">(trainData, trainLabel, params)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    特征数是两维时，可以画图来展示</div><div class="line">    """</div><div class="line">    plt.xlabel(<span class="string">u'x1'</span>)</div><div class="line">    plt.xlim(<span class="number">0</span>, <span class="number">100</span>)</div><div class="line">    plt.ylabel(<span class="string">u'x2'</span>)</div><div class="line">    plt.ylim(<span class="number">0</span>, <span class="number">100</span>)</div><div class="line">    plt.title(<span class="string">'svm - %s, tolerance %f, c %f'</span> % (<span class="string">'trainData'</span>, params.stopTol, params.c))</div><div class="line">    <span class="keyword">for</span> idx <span class="keyword">in</span> range(len(trainLabel)):</div><div class="line">        data = trainData[idx]</div><div class="line">        <span class="keyword">if</span> int(trainLabel[idx]) &gt; <span class="number">0</span>:</div><div class="line">            plt.plot(data[<span class="number">0</span>], data[<span class="number">1</span>], <span class="string">'or'</span>)</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            plt.plot(data[<span class="number">0</span>], data[<span class="number">1</span>], <span class="string">'xg'</span>)</div><div class="line">    </div><div class="line">    w1 = <span class="number">0.0</span></div><div class="line">    w2 = <span class="number">0.0</span></div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(trainLabel)):</div><div class="line">        w1 += params.a[i] * trainLabel[i] * trainData[i][<span class="number">0</span>]</div><div class="line">        w2 += params.a[i] * trainLabel[i] * trainData[i][<span class="number">1</span>]</div><div class="line">    w = - w1 / w2</div><div class="line">    </div><div class="line">    b = - params.b / w2</div><div class="line">    r = <span class="number">1</span> / w2</div><div class="line">    lp_x1 = [<span class="number">10</span>, <span class="number">90</span>]</div><div class="line">    lp_x2 = []</div><div class="line">    lp_x2up = []</div><div class="line">    lp_x2down = []</div><div class="line">    <span class="keyword">for</span> x1 <span class="keyword">in</span> lp_x1:</div><div class="line">        lp_x2.append(w * x1 + b)</div><div class="line">        lp_x2up.append(w * x1 + b + r)</div><div class="line">        lp_x2down.append(w * x1 + b - r)</div><div class="line">    plt.plot(lp_x1, lp_x2, <span class="string">'b'</span>)</div><div class="line">    plt.plot(lp_x1, lp_x2up, <span class="string">'b--'</span>)</div><div class="line">    plt.plot(lp_x1, lp_x2down, <span class="string">'b--'</span>)</div><div class="line">    plt.show()</div><div class="line">    </div><div class="line">    </div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></div><div class="line"><span class="comment">####------------------------------------------</span></div><div class="line"><span class="comment">#     filePath = '../smo/train.txt'</span></div><div class="line"><span class="comment">#     fileType = 'txt'</span></div><div class="line"><span class="comment">#     trainData, trainLabel, testData, testLabel = loadData(filePath, fileType)</span></div><div class="line"><span class="comment">#     params = Params()</span></div><div class="line"><span class="comment">#     params.setKernel('linear')</span></div><div class="line">    </div><div class="line"><span class="comment">####------------------------------------------</span></div><div class="line">    filePath = <span class="string">'../smo/ionosphere_1.mat'</span></div><div class="line">    fileType = <span class="string">'mat'</span></div><div class="line">    trainData, trainLabel, testData, testLabel = loadData(filePath, fileType)</div><div class="line">    params = Params()</div><div class="line"><span class="comment">#     params.setKernel("gaussian", 0.5) #acc=0.902857  100步截断</span></div><div class="line">    params.setKernel(<span class="string">"gaussian"</span>, <span class="number">1</span>) <span class="comment"># acc = 0.942857  18步收敛</span></div><div class="line">    params.setMaxIter(<span class="number">500</span>) <span class="comment">##在230步左右收敛，精度为0.88,sv 太多</span></div><div class="line">    params.setEpsilon(<span class="number">0.01</span>)</div><div class="line"></div><div class="line"><span class="comment">####------------------------------------------</span></div><div class="line"></div><div class="line">    train(trainData, trainLabel, params)</div><div class="line">    <span class="keyword">print</span> <span class="string">'a= '</span>, params.a</div><div class="line">    <span class="keyword">print</span> <span class="string">'b= '</span>, params.b</div><div class="line">         </div><div class="line">    supportVector = getSupportVector(params)</div><div class="line">    <span class="keyword">print</span> <span class="string">'support vector = '</span>, supportVector</div><div class="line">    </div><div class="line"><span class="comment">#### 两维特征可以在样本空间中画出图来展示划分效果</span></div><div class="line"><span class="comment">#     draw(trainData, trainLabel, params)</span></div><div class="line"></div><div class="line"><span class="comment">#### 有测试集可以计算出预测精度</span></div><div class="line">    print(<span class="string">'test set accuracy: %f'</span> % predictAccuracy(trainData, trainLabel, testData, testLabel, params))</div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    main()</div></pre></td></tr></table></figure>
+<h1 id="实验结果分析"><a href="#实验结果分析" class="headerlink" title="实验结果分析"></a>实验结果分析</h1><ul>
+<li>线性核函数的分类效果图<br><img src="/img/blog/smo/smo.png" alt="linear kernel"></li>
+</ul>
+<p>这里可能跟博文[1]中的结果不太一样了，主要是由于改变了对于第二变量的选择</p>
+<ul>
+<li><p>高斯核函数</p>
+<blockquote>
+<p><strong>dataset: ionosphere(trainingSet : testingSet = 1:1)</strong><br>sigma = 5 accuracy = 0.46 iteration &lt;=100<br>sigma = 1 accuracy = 0.942857 iteration = 18<br>sigma = 0.5 accuracy = 0.902857 iteration = 100+<br>sigma = 0.05 accuracy = 0.645714 iteration &lt;=100</p>
+</blockquote>
+<p>  可以看出sigma的选择对于精度的影响还是很大的。这里只列出了sigma的影响，还有其他的参数对于精度和训练的迭代步数都有影响。</p>
+</li>
+</ul>
+<h1 id="一些想法"><a href="#一些想法" class="headerlink" title="一些想法"></a>一些想法</h1><ol>
+<li><p>刚开始看的时候有这样一个疑问：</p>
+<blockquote>
+<p>如果有多组解都满足kkt条件，那么smo算法不一定会找到使得目标函数取最小值的解</p>
+</blockquote>
+<p> 然而有：KKT条件是最优化问题的充分必要条件，不禁感叹这样的理论是多么的强大！！！于是可以放心大胆的用smo了</p>
+</li>
+<li><p>对于核函数的选择，高斯核是很常用的，但是对于sigma的选取却很有讲究，在上面的实验结果也能够看出，不同的sigma的选择，对预测精度和迭代步数都有影响，于是搜索了一下，高斯核参数sigma对svm的影响，发现有不少关于这方面的讨论，不过还有一些暂时还消化不了，先总结下来。</p>
+<blockquote>
+<p>这里面大家需要注意的就是gamma的物理意义，大家提到很多的RBF的幅宽，它会影响每个支持向量对应的高斯的作用范围，从而影响泛化性能。我的理解：如果设的<strong>太大</strong>，则会造成<strong>只会作用于支持向量样本附近，对于未知样本分类效果很差</strong>，存在训练准确率可以很高，而测试准确率不高的可能，就是通常说的过训练；而如果设的<strong>过小</strong>，则会<strong>造成平滑效应太大，无法在训练集上得到特别高的准确率，也会影响测试集的准确率</strong>。</p>
+</blockquote>
+<p> 此外大家注意RBF公式里面的$\sigma$和$\gamma$的关系如下：</p>
+<p> The rbf kernel is typically defined as</p>
+<p> $$k(x,z) = e^{\frac{-d(x,z)^2}{2*\sigma^2}}$$ </p>
+<p> which can be re-defined in terms of gamma as </p>
+<p> $$k(x,z) = e^{-\gamma *d(x,z)^2}$$</p>
+<p> where $\gamma = \frac{1}{2*\sigma^2}$.</p>
+<blockquote>
+<p>$\gamma$越大，支持向量越少，$\gamma$值越小，支持向量越多。<br>RBF核应该可以得到与线性核相近的效果（按照理论，RBF核可以模拟线性核），可能好于线性核，也可能差于，但是，不应该相差太多。</p>
+</blockquote>
+<p> 当然，很多问题中，比如维度过高，或者样本海量的情况下，大家更倾向于用线性核，因为效果相当，但是在速度和模型大小方面，线性核会有更好的表现。</p>
+</li>
+<li><p>smo名字的由来，未知~求解答~~</p>
+</li>
+</ol>
+<h1 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h1><ol>
+<li><a href="http://liuhongjiang.github.io/tech/blog/2012/12/28/svm-smo/" target="_blank" rel="external">SMO序列最小最优化算法</a> 这篇博文写的很赞，里面对KKT条件的推导规约很好</li>
+<li><a href="http://blog.csdn.net/lujiandong1/article/details/46386201" target="_blank" rel="external">SVM的两个参数 C 和 gamma</a> </li>
+<li><a href="http://blog.sina.com.cn/s/blog_6ae183910101cxbv.html" target="_blank" rel="external">使用svm的一个常见错误</a> 及博主的<a href="http://weibo.com/facerecog?source=blog&amp;is_all=1&amp;noscale_head=1&amp;is_search=1&amp;key_word=rbf#_rnd1462087315345" target="_blank" rel="external">微博</a> 啊，里面还是有一些暂时不能看懂的东西，核方法很强大，需要进一步学习！</li>
+<li><a href="http://cs231n.github.io/python-numpy-tutorial/" target="_blank" rel="external">Python Numpy Tutorial</a> 这个是stanford的一个教程，很赞！</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      最近机器学习课上到了支持向量机，这两天把SMO算法实现了一下。
+    
+    </summary>
+    
+      <category term="Machine Learning" scheme="http://heimignx.cn/categories/Machine-Learning/"/>
+    
+    
+      <category term="machine learning" scheme="http://heimignx.cn/tags/machine-learning/"/>
+    
+      <category term="python" scheme="http://heimignx.cn/tags/python/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>python中RuntimeWarning overflow encountered in exp</title>
+    <link href="http://heimignx.cn/2016/04/30/python-runtime-error-exp-overflow/"/>
+    <id>http://heimignx.cn/2016/04/30/python-runtime-error-exp-overflow/</id>
+    <published>2016-04-30T14:50:12.000Z</published>
+    <updated>2016-10-15T14:06:53.929Z</updated>
+    
+    <content type="html"><![CDATA[<p>python中numpy.exp()和scipy.exp()函数参数取一个很大的值（2500）时，会出现上面的溢出问题，在<a href="http://stackoverflow.com/questions/9559346/deal-with-overflow-in-exp-using-numpy" target="_blank" rel="external">stackoverflow</a>上提供了两个解决方案：1. 安装一个bigfloat库 2. 用numpy.seterr来控制异常的抛出。目前采用了第一种方法解决。</p>
+<h1 id="Bigfloat下载"><a href="#Bigfloat下载" class="headerlink" title="Bigfloat下载"></a>Bigfloat下载</h1><p><a href="http://www.lfd.uci.edu/~gohlke/pythonlibs/#bigfloat" target="_blank" rel="external">Unofficial Windows Binaries for Python Extension Packages</a></p>
+<h1 id="windows上whl文件安装"><a href="#windows上whl文件安装" class="headerlink" title="windows上whl文件安装"></a>windows上whl文件安装</h1><p><a href="http://www.cnblogs.com/wu-wenmin/p/4250330.html" target="_blank" rel="external">windows下安装easy_install, pip 及whl文件安装方法</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      如题~
+    
+    </summary>
+    
+      <category term="Python" scheme="http://heimignx.cn/categories/Python/"/>
+    
+    
+      <category term="python" scheme="http://heimignx.cn/tags/python/"/>
+    
+  </entry>
+  
+</feed>

@@ -1,0 +1,1119 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?7087845a301293ae16f515623150d1a9";
+      var s = document.getElementsByTagName("script")[0]; 
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+    <title>Heiming Xu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="heimingx">
+    
+
+    
+    <meta name="description" content="Optimize Life">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Heiming Xu">
+<meta property="og:url" content="http://heimignx.cn/page/3/index.html">
+<meta property="og:site_name" content="Heiming Xu">
+<meta property="og:description" content="Optimize Life">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Heiming Xu">
+<meta name="twitter:description" content="Optimize Life">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Heiming Xu" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/titanicCats.ico">
+    
+    
+    <link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+  <body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Heiming Xu">Heiming Xu</a></h1>
+				<h2 class="blog-motto">Optimize Life</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/reference">Reference</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:heimignx.cn">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main">
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/04/29/semi-continuity/" title="半连续" itemprop="url">半连续</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
+		
+  <p class="article-time">
+    <time datetime="2016-04-29T07:24:45.000Z" itemprop="datePublished"> 发表于 2016-04-29</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><p>半连续（semi-continuity）是对函数连续性的一种描述，与连续相比更弱一些。主要有两种半连续：上半连续（upper semi-continuous）和下半连续（lower semi-continuous）。</p>
+<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p><strong>上半连续</strong><br>$$\lim \sup_{x\to x_0} f(x) \leq f(x_0)$$<br>这里的$\lim \sup$表示极限上界，就是说函数$f(x)$在趋向于$x_0$时，函数的极限上界要小于等于$f(x_0)$,可以借助下图来理解。</p>
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/c/c0/Upper_semi.svg" alt="upper semi-continuity"><br>可以看出，由于函数是分段的，从左侧趋向于$x_0$时（取不到），必定会小于$f(x_0)$，而从右侧趋向于$x_0$时是可以取到$f(x_0)$的，那么等号成立。</p>
+<p><strong>下半连续</strong><br>$$\lim\inf_{x\to x_0} f(x) \geq f(x_0)$$<br>同理，这边的$\lim \inf$表示极限下界。</p>
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/b/b0/Lower_semi.svg" alt="lower semi-continuity"><br>这里的分析与上半连续一致，不赘述了。</p>
+<h1 id="性质"><a href="#性质" class="headerlink" title="性质"></a>性质</h1><ol>
+<li>一个函数是连续的当且仅当他是上半连续的和下半连续的</li>
+<li>两个上半连续的实值函数相加还是上半连续的；如果两个函数都是非负的，那么两者的乘积为上半连续</li>
+<li>一个上半连续的函数乘以一个负数，变为下半连续</li>
+<li>如果$C$是一个紧凑的空间（比如一个闭合的，有界的空间），且$f : C \to [-\infty, \infty)$是上半连续的，那函数$f$在$C$上必定取到最大值；<br>同理，对于在$f : C \to (-\infty, \infty]$是下半连续的，那么函数在$C$上必定能取得最小值</li>
+<li><p>假设$f_i : X \to [-\infty, \infty]$ 是一个下半连续函数，且每个 $ f_i $ 的定义域 $ I $ 都是非空的，那么定义函数 $f$ （追点取极值）</p>
+<p> $$f(x) = \sup_{i\in I} f_i(x), x\in X$$<br> 那么函数$f$也是下半连续的。</p>
+</li>
+<li>一个函数$f : \mathbf R^n \to \mathbf R$是下半连续的当且仅当它的上境界是闭合的</li>
+</ol>
+<h1 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h1><ol>
+<li><a href="https://en.wikipedia.org/wiki/Semi-continuity" target="_blank" rel="external">wiki semi-continuity</a></li>
+</ol>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Mathematics/">Mathematics</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/mathematics/">mathematics</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/04/29/semi-continuity/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/29/semi-continuity/" data-count-type="comments">&nbsp;Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/04/20/lintcode17-subsets/" title="lintcode[17] 子集" itemprop="url">lintcode[17] 子集</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
+		
+  <p class="article-time">
+    <time datetime="2016-04-20T13:34:34.000Z" itemprop="datePublished"> 发表于 2016-04-20</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><p>给定一个含不同整数的集合，返回其所有的子集</p>
+<blockquote>
+<p>如果 S = [1,2,3]，有如下的解：<br>    [<br>          [3],<br>          [1],<br>          [2],<br>          [1,2,3],<br>          [1,3],<br>          [2,3],<br>          [1,2],<br>          []<br>    ]</p>
+</blockquote>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>这题与全排列的题目有点类似，不过子集需要把所有排列的情况都列出来<br>这里参考了<a href="http://www.cnblogs.com/theskulls/p/5099745.html" target="_blank" rel="external">lintcode 中等题：subSets 子集</a>的解法，感谢博主！</p>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    @param S: The set of numbers.</div><div class="line">    @return: A list of lists. See example.</div><div class="line">    """</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">subsets</span><span class="params">(self, S)</span>:</span></div><div class="line">        S.sort()</div><div class="line">        res = []</div><div class="line">        self.mydfs(res, S, <span class="number">0</span>, <span class="number">0</span>, [])</div><div class="line">        <span class="keyword">return</span> res</div><div class="line">        </div><div class="line">        </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">mydfs</span><span class="params">(self, res, S, depth, start, valuelist)</span>:</span></div><div class="line">        res.append(valuelist)</div><div class="line">        <span class="keyword">print</span> res</div><div class="line">        <span class="keyword">if</span> depth == len(S): <span class="keyword">return</span></div><div class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(start, len(S)):</div><div class="line">            self.mydfs(res, S, depth+<span class="number">1</span>, i+<span class="number">1</span>, valuelist+[S[i]])</div></pre></td></tr></table></figure>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Lintcode/">Lintcode</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/python/">python</a><a href="/tags/lintcode/">lintcode</a><a href="/tags/algorithm/">algorithm</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/04/20/lintcode17-subsets/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/20/lintcode17-subsets/" data-count-type="comments">&nbsp;Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/04/18/lintcode16-permute-unique/" title="lintcode[16] 带重复元素的排列" itemprop="url">lintcode[16] 带重复元素的排列</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
+		
+  <p class="article-time">
+    <time datetime="2016-04-18T13:28:46.000Z" itemprop="datePublished"> 发表于 2016-04-18</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><p>给出一个具有重复数字的列表，找出列表所有不同的排列。</p>
+<blockquote>
+<p>给出列表 [1,2,2]，不同的排列有：<br>    [<br>      [1,2,2],<br>      [2,1,2],<br>      [2,2,1]<br>    ]</p>
+</blockquote>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>这题与上一题的思路差不多，先给list排序，然后在进行排列</p>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    @param nums: A list of integers.</div><div class="line">    @return: A list of unique permutations.</div><div class="line">    """</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">permuteUnique</span><span class="params">(self, nums)</span>:</span></div><div class="line">        <span class="comment"># write your code here</span></div><div class="line">        res = []</div><div class="line">        nums.sort()</div><div class="line">        self.getPermute([], nums, res)</div><div class="line">        <span class="keyword">return</span> res</div><div class="line">        </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">getPermute</span><span class="params">(self, current, num, res)</span>:</span></div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> num:</div><div class="line">            res.append(current + [])</div><div class="line">            <span class="comment">#print res</span></div><div class="line">            <span class="keyword">return</span></div><div class="line">        <span class="keyword">for</span> i, v <span class="keyword">in</span> enumerate(num):</div><div class="line">            <span class="keyword">if</span> i &gt; <span class="number">0</span> <span class="keyword">and</span> num[i] == num[i - <span class="number">1</span>]:</div><div class="line">                <span class="keyword">continue</span></div><div class="line">            current.append(num[i])</div><div class="line">            self.getPermute(current, num[:i] + num[i+<span class="number">1</span>:], res)</div><div class="line">            current.pop()</div></pre></td></tr></table></figure>
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Lintcode/">Lintcode</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/python/">python</a><a href="/tags/lintcode/">lintcode</a><a href="/tags/algorithm/">algorithm</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/04/18/lintcode16-permute-unique/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/18/lintcode16-permute-unique/" data-count-type="comments">&nbsp;Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/04/17/lintcode15-permutation/" title="lintcode[15] 全排列" itemprop="url">lintcode[15] 全排列</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
+		
+  <p class="article-time">
+    <time datetime="2016-04-17T10:39:20.000Z" itemprop="datePublished"> 发表于 2016-04-17</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><p>For nums = [1,2,3], the permutations are:</p>
+<blockquote>
+<p>[[1,2,3],<br>   [1,3,2],<br>   [2,1,3],<br>   [2,3,1],<br>   [3,1,2],<br>   [3,2,1]]</p>
+</blockquote>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>这题比较简单，不过lintcode平台这题不能用len()函数,所以，需要用enumerate来实现(这里参考了这位<a href="http://blog.csdn.net/u013291394/article/details/50476076#comments" target="_blank" rel="external">博主</a>的方法)</p>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    @param nums: A list of Integers.</div><div class="line">    @return: A list of permutations.</div><div class="line">    """</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">permute</span><span class="params">(self, nums)</span>:</span></div><div class="line">        <span class="comment"># write your code here</span></div><div class="line">        <span class="comment">#if len(num) &lt;= 1: return [num]</span></div><div class="line">        result = []</div><div class="line">        <span class="keyword">if</span> nums == <span class="keyword">None</span>:</div><div class="line">            <span class="keyword">return</span> []</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            self.get_permute([], nums, result)</div><div class="line">            <span class="keyword">return</span> result</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_permute</span><span class="params">(self, current, num, result)</span>:</span></div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> num:</div><div class="line">            result.append(current + [])</div><div class="line">            <span class="keyword">return</span></div><div class="line">        <span class="keyword">for</span> i, v <span class="keyword">in</span> enumerate(num):</div><div class="line">            current.append(num[i])</div><div class="line">            self.get_permute(current, num[:i] + num[i + <span class="number">1</span>:], result)</div><div class="line">            current.pop()</div></pre></td></tr></table></figure>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Lintcode/">Lintcode</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/python/">python</a><a href="/tags/lintcode/">lintcode</a><a href="/tags/algorithm/">algorithm</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/04/17/lintcode15-permutation/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/17/lintcode15-permutation/" data-count-type="comments">&nbsp;Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/04/17/hexo-build/" title="关于Hexo搭建" itemprop="url">关于Hexo搭建</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
+		
+  <p class="article-time">
+    <time datetime="2016-04-17T04:46:04.000Z" itemprop="datePublished"> 发表于 2016-04-17</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="写在前面的话"><a href="#写在前面的话" class="headerlink" title="写在前面的话"></a>写在前面的话</h1><p>目前hexo搭建静态博客已经很流行了，方便，快捷，而且还有很多主题供大家选择，真是超赞的。不过，由于hexo没有后端，所以，在不同机器上想要实现同步更新博客，就比较麻烦了，不过也有很多解决方案，比如：<a href="http://chitanda.me/2015/06/18/hexo-sync-in-multiple-pc/" target="_blank" rel="external">利用git解决hexo博客多PC间同步问题</a>就提供了好几种，我选择的是在github上建一个单独的仓库，将博客源文件备份到上面，这样，在不同电脑上只要git clone下来，然后再进行hexo环境安装就能够实现同步了</p>
+<h1 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h1><p>但是在上传博客源文件时，出现了一个问题，就是themes文件夹下的除了landscape这个主题能正常上传外，其他主题都上传不了，搞了好久，终于在一个博客里找到了答案：由于我们安装的其他主题本身就有git进行管理，没有记错的话，其实我们当初是git clone来的主题，所以，我们需要把这些文件夹下的.git文件夹给删掉，再重新上传就可以了。<br>参考自<a href="http://youthyblog.com/2014/06/28/%E4%BD%BF%E7%94%A8github%E7%AE%A1%E7%90%86hexo%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6/" target="_blank" rel="external">用github管理hexo本地文件夹实现两台电脑同步</a>感谢这位博主！</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Hexo/">Hexo</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Hexo/">Hexo</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/04/17/hexo-build/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/17/hexo-build/" data-count-type="comments">&nbsp;Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/04/12/lintcode14-binary-search/" title="lintcode[14] 二分查找" itemprop="url">lintcode[14] 二分查找</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
+		
+  <p class="article-time">
+    <time datetime="2016-04-12T13:24:57.000Z" itemprop="datePublished"> 发表于 2016-04-12</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><p>给定一个排序的整数数组（升序）和一个要查找的整数target，用O(logn)的时间查找到target第一次出现的下标（从0开始），如果target不存在于数组中，返回-1。</p>
+<blockquote>
+<p>在数组 [1, 2, 3, 3, 4, 5, 10] 中二分查找3，返回2。</p>
+</blockquote>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>search_idx = (tail + head) / 2 这里不是减法<br>然后注意是要找到第一个target</p>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></div><div class="line">    <span class="comment"># @param nums: The integer array</span></div><div class="line">    <span class="comment"># @param target: Target number to find</span></div><div class="line">    <span class="comment"># @return the first position of target in nums, position start from 0 </span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">binarySearch</span><span class="params">(self, nums, target)</span>:</span></div><div class="line">        <span class="comment"># write your code here</span></div><div class="line">        len_nums = len(nums)</div><div class="line">        search_idx = <span class="number">0</span></div><div class="line">        head = <span class="number">0</span></div><div class="line">        tail = len_nums - <span class="number">1</span></div><div class="line">        <span class="keyword">while</span> head != tail:</div><div class="line">            search_idx = (tail + head) / <span class="number">2</span></div><div class="line">            <span class="keyword">if</span> nums[search_idx] == target:</div><div class="line">                <span class="keyword">while</span> nums[search_idx] == target:</div><div class="line">                    <span class="keyword">if</span> search_idx &gt; head:</div><div class="line">                        search_idx -= <span class="number">1</span></div><div class="line">                    <span class="keyword">else</span>:</div><div class="line">                        <span class="keyword">return</span> search_idx</div><div class="line">                <span class="keyword">return</span> search_idx + <span class="number">1</span></div><div class="line">            <span class="keyword">elif</span> nums[search_idx] &gt; target:</div><div class="line">                tail = search_idx - <span class="number">1</span></div><div class="line">            <span class="keyword">else</span>:</div><div class="line">                head = search_idx + <span class="number">1</span></div><div class="line">        <span class="keyword">if</span> nums[head] == target:</div><div class="line">            <span class="keyword">return</span> head</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">return</span> <span class="number">-1</span></div></pre></td></tr></table></figure>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Lintcode/">Lintcode</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/python/">python</a><a href="/tags/lintcode/">lintcode</a><a href="/tags/algorithm/">algorithm</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/04/12/lintcode14-binary-search/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/12/lintcode14-binary-search/" data-count-type="comments">&nbsp;Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/04/11/lintcode13-strStr/" title="lintcode[13] 字符串查找" itemprop="url">lintcode[13] 字符串查找</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
+		
+  <p class="article-time">
+    <time datetime="2016-04-11T13:18:03.000Z" itemprop="datePublished"> 发表于 2016-04-11</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><p>对于一个给定的 source 字符串和一个 target 字符串，你应该在 source 字符串中找出 target 字符串出现的第一个位置(从0开始)。如果不存在，则返回 -1。</p>
+<blockquote>
+<p>如果 source = “source” 和 target = “target”，返回 -1。<br>如果 source = “abcdabcdefg” 和 target = “bcd”，返回 1。</p>
+</blockquote>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>字符串匹配，有著名的KMP算法，这里咩有实现，只是用了暴力搜索<br>不过有很多小的细节需要注意</p>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">strStr</span><span class="params">(self, source, target)</span>:</span></div><div class="line">        <span class="keyword">if</span> source == <span class="keyword">None</span> <span class="keyword">or</span> target == <span class="keyword">None</span>:</div><div class="line">            <span class="keyword">return</span> <span class="number">-1</span></div><div class="line">        sourceLen = len(source)</div><div class="line">        targetLen = len(target)</div><div class="line">        <span class="keyword">if</span> sourceLen == <span class="number">0</span> <span class="keyword">and</span> targetLen != <span class="number">0</span>:</div><div class="line">            <span class="keyword">return</span> <span class="number">-1</span></div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span>(sourceLen <span class="keyword">and</span> targetLen):</div><div class="line">            <span class="keyword">return</span> <span class="number">0</span></div><div class="line">        sourceIdx = <span class="number">0</span></div><div class="line">        <span class="keyword">while</span> sourceIdx &lt; sourceLen:</div><div class="line">            targetIdx = <span class="number">0</span></div><div class="line">            tmpIdx = sourceIdx</div><div class="line">            <span class="keyword">while</span> targetIdx &lt; targetLen <span class="keyword">and</span> source[tmpIdx] == target[targetIdx]:</div><div class="line">                    tmpIdx += <span class="number">1</span></div><div class="line">                    targetIdx += <span class="number">1</span></div><div class="line">            <span class="keyword">if</span> targetIdx == targetLen:</div><div class="line">                <span class="keyword">return</span> sourceIdx</div><div class="line">            <span class="keyword">else</span>:</div><div class="line">                sourceIdx += <span class="number">1</span></div><div class="line">        <span class="keyword">return</span> <span class="number">-1</span></div></pre></td></tr></table></figure>
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Lintcode/">Lintcode</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/python/">python</a><a href="/tags/lintcode/">lintcode</a><a href="/tags/algorithm/">algorithm</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/04/11/lintcode13-strStr/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/11/lintcode13-strStr/" data-count-type="comments">&nbsp;Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/04/10/lintcode12-min-stack/" title="lintcode[12] min stack" itemprop="url">lintcode[12] min stack</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
+		
+  <p class="article-time">
+    <time datetime="2016-04-10T13:15:33.000Z" itemprop="datePublished"> 发表于 2016-04-10</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><p>实现一个带有取最小值min方法的栈，min方法将返回当前栈中的最小值。</p>
+<p>你实现的栈将支持push，pop 和 min 操作，所有操作要求都在O(1)时间内完成。</p>
+<blockquote>
+<p>如下操作：push(1)，pop()，push(2)，push(3)，min()， push(1)，min() 返回1，2，1</p>
+</blockquote>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>搞两个list，一个放原序数，另一个存前i个数的最小值<br>这边一开始多想了，在minstack中并不需要把所有的数都放进去，要真正理解存前i个数的最小值得意义</p>
+<p>对了今天发现lintcode一个非常恶心的bug，居然不能有中文注释！！！！！搞了好久wtf</p>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MinStack</span><span class="params">(object)</span>:</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="comment"># do some intialize if necessary</span></div><div class="line">        self.stack = []</div><div class="line">        <span class="comment"># the ith number is the min of the numbers哈哈</span></div><div class="line">        self.minstack = []</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">push</span><span class="params">(self, number)</span>:</span></div><div class="line">        <span class="comment"># write yout code here</span></div><div class="line">        self.stack.append(number)</div><div class="line">        <span class="keyword">if</span> len(self.minstack) == <span class="number">0</span> <span class="keyword">or</span> self.minstack[<span class="number">-1</span>] &gt;= number:</div><div class="line">            self.minstack.append(number)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">pop</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="comment"># pop and return the top item in stack</span></div><div class="line">        <span class="keyword">if</span> self.stack[<span class="number">-1</span>] == self.minstack[<span class="number">-1</span>]:</div><div class="line">            self.minstack.pop()</div><div class="line">        <span class="keyword">return</span> self.stack.pop()</div><div class="line">        </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">min</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="comment"># return the minimum number in stack</span></div><div class="line">        <span class="keyword">return</span> self.minstack[<span class="number">-1</span>]</div></pre></td></tr></table></figure>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Lintcode/">Lintcode</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/python/">python</a><a href="/tags/lintcode/">lintcode</a><a href="/tags/algorithm/">algorithm</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/04/10/lintcode12-min-stack/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/10/lintcode12-min-stack/" data-count-type="comments">&nbsp;Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/04/09/lintcode11-search-range/" title="lintcode[11] 二叉查找树中搜索区间" itemprop="url">lintcode[11] 二叉查找树中搜索区间</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
+		
+  <p class="article-time">
+    <time datetime="2016-04-09T13:10:51.000Z" itemprop="datePublished"> 发表于 2016-04-09</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><p>给定两个值 k1 和 k2（k1 &lt; k2）和一个二叉查找树的根节点。找到树中所有值在 k1 到 k2 范围内的节点。即打印所有x (k1 &lt;= x &lt;= k2) 其中 x 是二叉查找树的中的节点值。返回所有升序的节点值。</p>
+<blockquote>
+<p>如果有 k1 = 10 和 k2 = 22, 你的程序应该返回 [12, 20, 22].</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">    20</div><div class="line">   /  \</div><div class="line">  8   22</div><div class="line"> / \</div><div class="line">4   12</div></pre></td></tr></table></figure>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>本质就是有条件的中序遍历</p>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="string">"""</span></div><div class="line">Definition of TreeNode:</div><div class="line">class TreeNode:</div><div class="line">    def __init__(self, val):</div><div class="line">        self.val = val</div><div class="line">        self.left, self.right = None, None</div><div class="line">"""</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    @param root: The root of the binary search tree.</div><div class="line">    @param k1 and k2: range k1 to k2.</div><div class="line">    @return: Return all keys that k1&lt;=key&lt;=k2 in ascending order.</div><div class="line">    """     </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">searchRange</span><span class="params">(self, root, k1, k2)</span>:</span></div><div class="line">        <span class="comment"># write your code here</span></div><div class="line">        res = self.inorderSearch(root, k1, k2)</div><div class="line">        <span class="keyword">return</span> res</div><div class="line">        </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">inorderSearch</span><span class="params">(self, root, k1, k2)</span>:</span></div><div class="line">        inorder = []</div><div class="line">        <span class="keyword">if</span> root == <span class="keyword">None</span>:</div><div class="line">            <span class="keyword">return</span> inorder</div><div class="line">        left = self.inorderSearch(root.left, k1, k2)</div><div class="line">        <span class="keyword">if</span> len(left) != <span class="number">0</span>:</div><div class="line"><span class="comment">#            inorder.append(left)</span></div><div class="line">            inorder += left</div><div class="line">        <span class="keyword">if</span> root.val &gt;= k1 <span class="keyword">and</span> root.val &lt;= k2:</div><div class="line">            inorder.append(root.val)</div><div class="line">        right = self.inorderSearch(root.right, k1, k2)</div><div class="line">        <span class="keyword">if</span> len(right) != <span class="number">0</span>:</div><div class="line"><span class="comment">#            inorder.append(right)</span></div><div class="line">            inorder += right</div><div class="line">        <span class="keyword">return</span> inorder</div></pre></td></tr></table></figure>
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Lintcode/">Lintcode</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/python/">python</a><a href="/tags/lintcode/">lintcode</a><a href="/tags/algorithm/">algorithm</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/04/09/lintcode11-search-range/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/09/lintcode11-search-range/" data-count-type="comments">&nbsp;Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/04/08/hello-world/" title="Hello World" itemprop="url">Hello World</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
+		
+  <p class="article-time">
+    <time datetime="2016-04-08T15:29:23.000Z" itemprop="datePublished"> 发表于 2016-04-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Hexo/">Hexo</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Hexo/">Hexo</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/04/08/hello-world/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/08/hello-world/" data-count-type="comments">&nbsp;Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+
+  <nav id="page-nav" class="clearfix">
+    <a class="extend prev" rel="prev" href="/page/2/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/">Next<span></span></a>
+  </nav>
+
+</div>
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Hexo/" title="Hexo">Hexo<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Latex/" title="Latex">Latex<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Lintcode/" title="Lintcode">Lintcode<sup>16</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/MATLAB/" title="MATLAB">MATLAB<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Machine-Learning/" title="Machine Learning">Machine Learning<sup>14</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Mathematics/" title="Mathematics">Mathematics<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Optimization/" title="Optimization">Optimization<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Python/" title="Python">Python<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Tattle/" title="Tattle">Tattle<sup>3</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/algorithm/" title="algorithm">algorithm<sup>16</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/lintcode/" title="lintcode">lintcode<sup>16</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Machine-Learning/" title="Machine Learning">Machine Learning<sup>10</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/python/" title="python">python<sup>10</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c/" title="c++">c++<sup>9</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/CS231n笔记/" title="CS231n笔记">CS231n笔记<sup>7</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/matlab/" title="matlab">matlab<sup>6</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/machine-learning/" title="machine learning">machine learning<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Hexo/" title="Hexo">Hexo<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mathematics/" title="mathematics">mathematics<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/tattle/" title="tattle">tattle<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/code-optimize/" title="code optimize">code optimize<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Optimization/" title="Optimization">Optimization<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Tattle/" title="Tattle">Tattle<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Latex/" title="Latex">Latex<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www.lifuhao.cn/" target="_blank" title="李狗蛋师兄">李狗蛋师兄</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://zhikaizhang.cn/" target="_blank" title="张致恺博客">张致恺博客</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/heimingx" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:heimingx@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="heimingx">heimingx</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End --><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="custom_mathjax_source">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+  </body>
+ </html>

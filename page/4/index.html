@@ -1,0 +1,1133 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?7087845a301293ae16f515623150d1a9";
+      var s = document.getElementsByTagName("script")[0]; 
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+    <title>Heiming Xu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="heimingx">
+    
+
+    
+    <meta name="description" content="Optimize Life">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Heiming Xu">
+<meta property="og:url" content="http://heimignx.cn/page/4/index.html">
+<meta property="og:site_name" content="Heiming Xu">
+<meta property="og:description" content="Optimize Life">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Heiming Xu">
+<meta name="twitter:description" content="Optimize Life">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Heiming Xu" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/titanicCats.ico">
+    
+    
+    <link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+  <body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Heiming Xu">Heiming Xu</a></h1>
+				<h2 class="blog-motto">Optimize Life</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/reference">Reference</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:heimignx.cn">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main">
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/04/08/lintcode9-fizz-buzz/" title="lintcode[9] fizz buzz问题" itemprop="url">lintcode[9] fizz buzz问题</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
+		
+  <p class="article-time">
+    <time datetime="2016-04-08T13:06:03.000Z" itemprop="datePublished"> 发表于 2016-04-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><p>给你一个整数n. 从 1 到 n 按照下面的规则打印每个数：</p>
+<ul>
+<li>如果这个数被3整除，打印fizz.</li>
+<li>如果这个数被5整除，打印buzz.</li>
+<li>如果这个数能同时被3和5整除，打印fizz buzz.</li>
+</ul>
+<blockquote>
+<p>比如 n = 15, 返回一个字符串数组：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">[</div><div class="line">  &quot;1&quot;, &quot;2&quot;, &quot;fizz&quot;,</div><div class="line">  &quot;4&quot;, &quot;buzz&quot;, &quot;fizz&quot;,</div><div class="line">  &quot;7&quot;, &quot;8&quot;, &quot;fizz&quot;,</div><div class="line">  &quot;buzz&quot;, &quot;11&quot;, &quot;fizz&quot;,</div><div class="line">  &quot;13&quot;, &quot;14&quot;, &quot;fizz buzz&quot;</div><div class="line">]</div></pre></td></tr></table></figure>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>主要判断这个数是不是能被3或5整除</p>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">class</span> Solution &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * param n: As description.</div><div class="line">     * return: A list of strings.</div><div class="line">     */</div><div class="line">    <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; fizzBuzz(<span class="keyword">int</span> n) &#123;</div><div class="line">        <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; results;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</div><div class="line">            <span class="keyword">if</span> (i % <span class="number">15</span> == <span class="number">0</span>) &#123;</div><div class="line">                results.push_back(<span class="string">"fizz buzz"</span>);</div><div class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (i % <span class="number">5</span> == <span class="number">0</span>) &#123;</div><div class="line">                results.push_back(<span class="string">"buzz"</span>);</div><div class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (i % <span class="number">3</span> == <span class="number">0</span>) &#123;</div><div class="line">                results.push_back(<span class="string">"fizz"</span>);</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                results.push_back(to_string(i));</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> results;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Lintcode/">Lintcode</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/lintcode/">lintcode</a><a href="/tags/c/">c++</a><a href="/tags/algorithm/">algorithm</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/04/08/lintcode9-fizz-buzz/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/08/lintcode9-fizz-buzz/" data-count-type="comments">&nbsp;Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/04/07/lintcode8-rotate-string/" title="lintcode[8] 旋转字符串" itemprop="url">lintcode[8] 旋转字符串</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
+		
+  <p class="article-time">
+    <time datetime="2016-04-07T13:01:56.000Z" itemprop="datePublished"> 发表于 2016-04-07</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><p>给定一个字符串和一个偏移量，根据偏移量旋转字符串(从左向右旋转)</p>
+<blockquote>
+<p>对于字符串 “abcdefg”.<br>offset=0 =&gt; “abcdefg”<br>offset=1 =&gt; “gabcdef”<br>offset=2 =&gt; “fgabcde”<br>offset=3 =&gt; “efgabcd”</p>
+</blockquote>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>这题主要考虑的是字符串拼接，方法有四种</p>
+<ol>
+<li>+=， </li>
+<li><p>append，</p>
+<blockquote>
+<p><strong>string的连接：</strong><br>string &amp;operator+=(const string &amp;s);//把字符串s连接到当前字符串的结尾<br>string &amp;append(const char <em>s);            //把c类型字符串s连接到当前字符串结尾<br>string &amp;append(const char </em>s,int n);//把c类型字符串s的前n个字符连接到当前字符串结尾<br>string &amp;append(const string &amp;s);    //同operator+=()<br>string &amp;append(const string &amp;s,int pos,int n);//把字符串s中从pos开始的n个字符连接到当前字符串的结尾<br>string &amp;append(int n,char c);        //在当前字符串结尾添加n个字符c<br>string &amp;append(const_iterator first,const_iterator last);//把迭代器first和last之间的部分连接到当前字符串的结尾</p>
+</blockquote>
+</li>
+<li><p>stringstream s1; s1&lt;&lt;s2;</p>
+</li>
+<li>sprintf</li>
+</ol>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">class</span> Solution &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * @param str: a string</div><div class="line">     * @param offset: an integer</div><div class="line">     * @return: nothing</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">rotateString</span><span class="params">(<span class="built_in">string</span> &amp;str,<span class="keyword">int</span> offset)</span></span>&#123;</div><div class="line">        <span class="comment">//wirte your code here</span></div><div class="line">        <span class="keyword">int</span> <span class="built_in">strlen</span> = str.length();</div><div class="line">        <span class="keyword">if</span>(<span class="built_in">strlen</span> == <span class="number">0</span>)&#123;</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125;</div><div class="line">        offset %= <span class="built_in">strlen</span>;</div><div class="line">        <span class="built_in">string</span> tmp = <span class="string">""</span>;</div><div class="line">        <span class="keyword">while</span>(offset)&#123;</div><div class="line">            tmp = str[<span class="built_in">strlen</span> - <span class="number">1</span>];</div><div class="line">            str.erase(<span class="built_in">strlen</span> - <span class="number">1</span>);</div><div class="line"><span class="comment">//          str = tmp + str;</span></div><div class="line">            str = tmp.append(str);</div><div class="line">            offset--;</div><div class="line">        &#125; </div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Lintcode/">Lintcode</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/lintcode/">lintcode</a><a href="/tags/c/">c++</a><a href="/tags/algorithm/">algorithm</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/04/07/lintcode8-rotate-string/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/07/lintcode8-rotate-string/" data-count-type="comments">&nbsp;Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/04/06/lintcode7-serialize-and-deserialize/" title="lintcode[7] 二叉树的序列化和反序列化" itemprop="url">lintcode[7] 二叉树的序列化和反序列化</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
+		
+  <p class="article-time">
+    <time datetime="2016-04-06T12:55:42.000Z" itemprop="datePublished"> 发表于 2016-04-06</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><p>设计一个算法，并编写代码来序列化和反序列化二叉树。将树写入一个文件被称为“序列化”，读取文件后重建同样的二叉树被称为“反序列化”。</p>
+<p>如何反序列化或序列化二叉树是没有限制的，你只需要确保可以将二叉树序列化为一个字符串，并且可以将字符串反序列化为原来的树结构。</p>
+<blockquote>
+<p>给出一个测试数据样例， 二叉树{3,9,20,#,#,15,7}，表示如下的树结构：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">  3</div><div class="line"> / \</div><div class="line">9  20</div><div class="line">  /  \</div><div class="line"> 15   7</div></pre></td></tr></table></figure>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>这题主要考察对二叉树的建立与遍历的过程，需要注意很多小的细节的地方</p>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Definition of TreeNode:</div><div class="line"> * class TreeNode &#123;</div><div class="line"> * public:</div><div class="line"> *     int val;</div><div class="line"> *     TreeNode *left, *right;</div><div class="line"> *     TreeNode(int val) &#123;</div><div class="line"> *         this-&gt;val = val;</div><div class="line"> *         this-&gt;left = this-&gt;right = NULL;</div><div class="line"> *     &#125;</div><div class="line"> * &#125;</div><div class="line"> */</div><div class="line"><span class="keyword">class</span> Solution &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * This method will be invoked first, you should design your own algorithm </div><div class="line">     * to serialize a binary tree which denote by a root node to a string which</div><div class="line">     * can be easily deserialized by your own "deserialize" method later.</div><div class="line">     */</div><div class="line">    <span class="function"><span class="built_in">string</span> <span class="title">serialize</span><span class="params">(TreeNode *root)</span> </span>&#123;</div><div class="line">        <span class="comment">// write your code here</span></div><div class="line">        <span class="keyword">if</span>(!root)   <span class="keyword">return</span> <span class="string">"#"</span>;</div><div class="line">        <span class="built_in">string</span> res = <span class="string">""</span>;</div><div class="line">        <span class="keyword">char</span> buf[<span class="number">100</span>];</div><div class="line">        <span class="built_in">sprintf</span>(buf, <span class="string">"%d"</span>, root-&gt;val);</div><div class="line">        res.append(<span class="built_in">string</span>(buf));</div><div class="line">        <span class="built_in">queue</span>&lt;TreeNode *&gt; q;</div><div class="line">        q.push(root);</div><div class="line">        <span class="keyword">while</span>(!q.empty())&#123;</div><div class="line">            TreeNode *now = q.front();</div><div class="line">            q.pop();</div><div class="line">            TreeNode *left = now-&gt;left;</div><div class="line">            TreeNode *right = now-&gt;right;</div><div class="line">            <span class="keyword">if</span>(!left)&#123;</div><div class="line">                res.append(<span class="string">",#"</span>);</div><div class="line">            &#125;<span class="keyword">else</span>&#123;</div><div class="line">                <span class="built_in">sprintf</span>(buf, <span class="string">"%d"</span>, left-&gt;val);</div><div class="line">                res.append(<span class="string">","</span>);</div><div class="line">                res.append(<span class="built_in">string</span>(buf));</div><div class="line">                q.push(left);</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">if</span>(!right)&#123;</div><div class="line">                res.append(<span class="string">",#"</span>);</div><div class="line">            &#125;<span class="keyword">else</span>&#123;</div><div class="line">                <span class="built_in">sprintf</span>(buf, <span class="string">"%d"</span>, right-&gt;val);</div><div class="line">                res.append(<span class="string">","</span>);</div><div class="line">                res.append(<span class="built_in">string</span>(buf));</div><div class="line">                q.push(right);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        <span class="keyword">return</span> res;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * This method will be invoked second, the argument data is what exactly</div><div class="line">     * you serialized at method "serialize", that means the data is not given by</div><div class="line">     * system, it's given by your own serialize method. So the format of data is</div><div class="line">     * designed by yourself, and deserialize it here as you serialize it in </div><div class="line">     * "serialize" method.</div><div class="line">     */</div><div class="line">    <span class="function">TreeNode *<span class="title">deserialize</span><span class="params">(<span class="built_in">string</span> data)</span> </span>&#123;</div><div class="line">        <span class="comment">// write your code here</span></div><div class="line">        <span class="keyword">if</span>(data[<span class="number">0</span>]==<span class="string">'#'</span>)    <span class="keyword">return</span> <span class="literal">NULL</span>;</div><div class="line">        <span class="built_in">deque</span>&lt;<span class="built_in">string</span>&gt; q;</div><div class="line">        <span class="keyword">while</span>(<span class="literal">true</span>)&#123;</div><div class="line">            <span class="keyword">int</span> pos = data.find_last_of(<span class="string">','</span>);</div><div class="line">            <span class="keyword">if</span>(pos==<span class="built_in">string</span>::npos)&#123;</div><div class="line">                q.push_front(data);</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            &#125;</div><div class="line">            q.push_front(data.substr(pos+<span class="number">1</span>));</div><div class="line">            data.erase(pos);</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        <span class="built_in">string</span> s = q.front();</div><div class="line">        q.pop_front();</div><div class="line">        TreeNode *root = <span class="keyword">new</span> TreeNode(atoi(s.c_str()));</div><div class="line">        <span class="built_in">queue</span>&lt;TreeNode *&gt; q1;</div><div class="line">        q1.push(root);</div><div class="line">        <span class="keyword">while</span>(!q1.empty())&#123;</div><div class="line">            TreeNode *now = q1.front();</div><div class="line">            q1.pop();</div><div class="line">            s = q.front();</div><div class="line">            q.pop_front();</div><div class="line">            <span class="keyword">if</span>(s[<span class="number">0</span>]!=<span class="string">'#'</span>)&#123;</div><div class="line">                now-&gt;left = <span class="keyword">new</span> TreeNode(atoi(s.c_str()));</div><div class="line">                q1.push(now-&gt;left);</div><div class="line">            &#125;</div><div class="line">            s = q.front();</div><div class="line">            q.pop_front();</div><div class="line">            <span class="keyword">if</span>(s[<span class="number">0</span>]!=<span class="string">'#'</span>)&#123;</div><div class="line">                now-&gt;right = <span class="keyword">new</span> TreeNode(atoi(s.c_str()));</div><div class="line">                q1.push(now-&gt;right);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        <span class="keyword">return</span> root;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Lintcode/">Lintcode</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/lintcode/">lintcode</a><a href="/tags/c/">c++</a><a href="/tags/algorithm/">algorithm</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/04/06/lintcode7-serialize-and-deserialize/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/06/lintcode7-serialize-and-deserialize/" data-count-type="comments">&nbsp;Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/04/05/lintcode6-merge-order-array/" title="lintcode[6] 合并排序数组" itemprop="url">lintcode[6] 合并排序数组</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
+		
+  <p class="article-time">
+    <time datetime="2016-04-05T12:52:49.000Z" itemprop="datePublished"> 发表于 2016-04-05</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><p>合并两个排序的整数数组A和B变成一个新的数组。</p>
+<blockquote>
+<p>给出A=[1,2,3,4]，B=[2,4,5,6]，返回 [1,2,2,3,4,4,5,6]</p>
+</blockquote>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>这题可以考虑不另外开辟空间，直接先比较两个数组的大小，将小的复制到大的里面，然后返回大的就好，不过这里，vector用的不熟。</p>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">class</span> Solution &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * @param A and B: sorted integer array A and B.</div><div class="line">     * @return: A new sorted integer array</div><div class="line">     */</div><div class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; mergeSortedArray(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;A, <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;B) &#123;</div><div class="line">        <span class="comment">// write your code here</span></div><div class="line">        <span class="keyword">int</span> A_len = A.size();</div><div class="line">        <span class="keyword">int</span> B_len = B.size();</div><div class="line">        </div><div class="line">        <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; C;</div><div class="line">        <span class="keyword">int</span> i = <span class="number">0</span>, j = <span class="number">0</span>;</div><div class="line">        <span class="keyword">while</span>(i &lt; A_len &amp;&amp; j &lt; B_len)&#123;</div><div class="line">            <span class="keyword">if</span>(A[i] &lt;= B[j])&#123;</div><div class="line">                C.push_back(A[i++]);</div><div class="line">            &#125;<span class="keyword">else</span>&#123;</div><div class="line">                C.push_back(B[j++]);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">while</span>(i &lt; A_len)&#123;</div><div class="line">            C.push_back(A[i++]);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">while</span>(j &lt; B_len)&#123;</div><div class="line">            C.push_back(B[j++]);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> C;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Lintcode/">Lintcode</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/lintcode/">lintcode</a><a href="/tags/c/">c++</a><a href="/tags/algorithm/">algorithm</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/04/05/lintcode6-merge-order-array/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/05/lintcode6-merge-order-array/" data-count-type="comments">&nbsp;Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/04/04/lintcode5-kth-large-number/" title="lintcode[5] 第k大元素" itemprop="url">lintcode[5] 第k大元素</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
+		
+  <p class="article-time">
+    <time datetime="2016-04-04T12:47:46.000Z" itemprop="datePublished"> 发表于 2016-04-04</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><p>在数组中找到第k大的元素</p>
+<blockquote>
+<p>给出数组 [9,3,2,4,8]，第三大的元素是 4<br>给出数组 [1,2,3,4,5]，第一大的元素是 5，第二大的元素是 4，第三大的元素是3，以此类推</p>
+</blockquote>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>这题直接用sort函数排个序就解决了</p>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">class</span> Solution &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="comment">/*</span></div><div class="line">     * param k : description of k</div><div class="line">     * param nums : description of array and index 0 ~ n-1</div><div class="line">     * return: description of return</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">int</span> <span class="title">kthLargestElement</span><span class="params">(<span class="keyword">int</span> k, <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; nums)</span> </span>&#123;</div><div class="line">        <span class="comment">// write your code here</span></div><div class="line">        sort(nums.begin(), nums.end(),greater&lt;<span class="keyword">int</span>&gt;());</div><div class="line">        <span class="keyword">return</span> nums[k<span class="number">-1</span>];</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Lintcode/">Lintcode</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/lintcode/">lintcode</a><a href="/tags/c/">c++</a><a href="/tags/algorithm/">algorithm</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/04/04/lintcode5-kth-large-number/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/04/lintcode5-kth-large-number/" data-count-type="comments">&nbsp;Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/04/03/lintcode4-ugly-number/" title="lintcode[4] 丑数" itemprop="url">lintcode[4] 丑数</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
+		
+  <p class="article-time">
+    <time datetime="2016-04-03T12:43:35.000Z" itemprop="datePublished"> 发表于 2016-04-03</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><p>设计一个算法，找出只含素因子2，3，5 的第 n 大的数。符合条件的数如：</p>
+<blockquote>
+<p>1, 2, 3, 4, 5, 6, 8, 9, 10, 12…<br>如果n = 9， 返回 10</p>
+</blockquote>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>这题最开始的想法就是遍历所有的数，判断该数书不是丑数，但是为超时，所以就要考虑其他方法。<br>这题在<strong><a href="http://zhedahht.blog.163.com/blog/static/2541117420094245366965/" target="_blank" rel="external">剑指offer</a></strong>上有，参考了他的解法<br>思路：只考虑丑数，而丑数的形成是由2,3,5的倍数组合而成，那就是由这三个数交替生成，产生一个丑数数组，典型的空间换时间</p>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">class</span> Solution &#123;</div><div class="line"><span class="keyword">private</span>:</div><div class="line">    <span class="function"><span class="keyword">int</span> <span class="title">min</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b, <span class="keyword">int</span> c)</span></span>&#123;</div><div class="line">        <span class="keyword">int</span> minNum = (a &lt; b) ? a : b;</div><div class="line">        minNum = (minNum &lt; c) ? minNum : c;</div><div class="line">        <span class="keyword">return</span> minNum;</div><div class="line">    &#125;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="comment">/*</span></div><div class="line">     * @param n an integer</div><div class="line">     * @return the nth prime number as description.</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">int</span> <span class="title">nthUglyNumber</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</div><div class="line">        <span class="comment">// write your code here</span></div><div class="line">        <span class="keyword">if</span>(n &lt; <span class="number">1</span>)&#123;</div><div class="line">            <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">int</span> *uglyNumbers = <span class="keyword">new</span> <span class="keyword">int</span>[n];</div><div class="line">        uglyNumbers[<span class="number">0</span>] = <span class="number">1</span>;</div><div class="line">        <span class="keyword">int</span> nextUglyNumIdx = <span class="number">1</span>;</div><div class="line">		</div><div class="line">        <span class="keyword">int</span> *multiply2 = uglyNumbers;</div><div class="line">        <span class="keyword">int</span> *multiply3 = uglyNumbers;</div><div class="line">        <span class="keyword">int</span> *multiply5 = uglyNumbers;</div><div class="line">		</div><div class="line">        <span class="keyword">while</span>(nextUglyNumIdx &lt; n)&#123;</div><div class="line">            <span class="keyword">int</span> minUgly = min(*multiply2 * <span class="number">2</span>, *multiply3 * <span class="number">3</span>, *multiply5 * <span class="number">5</span>);</div><div class="line">            uglyNumbers[nextUglyNumIdx] = minUgly;</div><div class="line">			</div><div class="line">            <span class="keyword">if</span>(minUgly &gt;= *multiply2 * <span class="number">2</span>) multiply2++;</div><div class="line">            <span class="keyword">if</span>(minUgly &gt;= *multiply3 * <span class="number">3</span>) multiply3++;</div><div class="line">            <span class="keyword">if</span>(minUgly &gt;= *multiply5 * <span class="number">5</span>) multiply5++;</div><div class="line">			</div><div class="line">            nextUglyNumIdx ++;	</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">int</span> ugly = uglyNumbers[n - <span class="number">1</span>];</div><div class="line">        <span class="keyword">delete</span>[] uglyNumbers;</div><div class="line">		</div><div class="line">        <span class="keyword">return</span> ugly; </div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Lintcode/">Lintcode</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/lintcode/">lintcode</a><a href="/tags/c/">c++</a><a href="/tags/algorithm/">algorithm</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/04/03/lintcode4-ugly-number/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/03/lintcode4-ugly-number/" data-count-type="comments">&nbsp;Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/04/02/lintcode3-count-numbers/" title="lintcode[3] 统计数字" itemprop="url">lintcode[3] 统计数字</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
+		
+  <p class="article-time">
+    <time datetime="2016-04-02T12:39:55.000Z" itemprop="datePublished"> 发表于 2016-04-02</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><p>计算数字k在0到n中的出现的次数，k可能是0~9的一个值</p>
+<blockquote>
+<p>例如n=12，k=1，在 [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]，我们发现1出现了5次 (1, 10, 11, 12)</p>
+</blockquote>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>暴力破解，遍历每个数的每一位，但是要考虑到是从0开始的，所以单独考虑k=0的特殊情况</p>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">class</span> Solution &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="comment">/*</span></div><div class="line">     * param k : As description.</div><div class="line">     * param n : As description.</div><div class="line">     * return: How many k's between 0 and n.</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">int</span> <span class="title">digitCounts</span><span class="params">(<span class="keyword">int</span> k, <span class="keyword">int</span> n)</span> </span>&#123;</div><div class="line">        <span class="comment">// write your code here</span></div><div class="line">        <span class="keyword">int</span> res = <span class="number">0</span>;</div><div class="line">        <span class="keyword">if</span>(k == <span class="number">0</span>)&#123;</div><div class="line">    	    res += <span class="number">1</span>;</div><div class="line">    	&#125;</div><div class="line">        <span class="keyword">while</span>(n)&#123;</div><div class="line">            <span class="keyword">int</span> tmp = n;</div><div class="line">            <span class="keyword">while</span>(tmp)&#123;	</div><div class="line">                <span class="keyword">int</span> digital = tmp % <span class="number">10</span>;</div><div class="line">                <span class="keyword">if</span>(digital == k)&#123;</div><div class="line">                    res += <span class="number">1</span>;</div><div class="line">                &#125;</div><div class="line">                tmp /= <span class="number">10</span>;</div><div class="line">            &#125;</div><div class="line">            n--;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> res;</div><div class="line">    &#125; </div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Lintcode/">Lintcode</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/lintcode/">lintcode</a><a href="/tags/c/">c++</a><a href="/tags/algorithm/">algorithm</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/04/02/lintcode3-count-numbers/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/02/lintcode3-count-numbers/" data-count-type="comments">&nbsp;Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/04/01/lintcode2-wei-bu-de-ling/" title="lintcode[2] 尾部的零" itemprop="url">lintcode[2] 尾部的零</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
+		
+  <p class="article-time">
+    <time datetime="2016-04-01T04:55:32.000Z" itemprop="datePublished"> 发表于 2016-04-01</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><p>设计一个算法，计算出n阶乘中尾部零的个数</p>
+<blockquote>
+<p>11! = 39916800，因此应该返回 2</p>
+</blockquote>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>主要思路就是看10的组成2和5，然后含有5的数远远小于含有2的数的数量，于是我们只要统计出含有5的数的数量，同时，对于不同的数，对于5的贡献不一样，5,15,20均只贡献1个5，而25会贡献2个5，所以要计算两次，递归找下去</p>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><pre><code class="c++"><span class="keyword">class</span> Solution {
+ <span class="keyword">public</span>:
+    <span class="comment">// param n : description of n</span>
+    <span class="comment">// return: description of return </span>
+    <span class="function"><span class="keyword">long</span> <span class="keyword">long</span> <span class="title">trailingZeros</span><span class="params">(<span class="keyword">long</span> <span class="keyword">long</span> n)</span> </span>{
+        <span class="keyword">long</span> <span class="keyword">long</span> num = <span class="number">0</span>;
+        <span class="keyword">while</span>(n){
+            num += n / <span class="number">5</span>;
+            n /= <span class="number">5</span>;  
+        }
+        <span class="keyword">return</span> num;
+    }
+};
+</code></pre>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Lintcode/">Lintcode</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/lintcode/">lintcode</a><a href="/tags/c/">c++</a><a href="/tags/algorithm/">algorithm</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/04/01/lintcode2-wei-bu-de-ling/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/01/lintcode2-wei-bu-de-ling/" data-count-type="comments">&nbsp;Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/04/01/lintcode1-aplusb/" title="lintcode[1] a + b" itemprop="url">lintcode[1] a + b</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
+		
+  <p class="article-time">
+    <time datetime="2016-04-01T04:50:21.000Z" itemprop="datePublished"> 发表于 2016-04-01</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><p>给出两个整数a和b, 求他们的和, 但不能使用 + 等数学运算符。</p>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>这题其实考察了加法的本质：两数相加和进位操作 用异或表示两数相加，用与和左移来表示进位</p>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">class</span> Solution &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="comment">/*</span></div><div class="line">     * @param a: The first integer</div><div class="line">     * @param b: The second integer</div><div class="line">     * @return: The sum of a and b</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">int</span> <span class="title">aplusb</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</div><div class="line">        <span class="comment">// write your code here, try to do it without arithmetic operators.</span></div><div class="line">        <span class="keyword">if</span>(b == <span class="number">0</span>)&#123;</div><div class="line">            <span class="keyword">return</span> a;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">int</span> sum = a ^ b;</div><div class="line">        <span class="keyword">int</span> carry = (a &amp; b) &lt;&lt; <span class="number">1</span>;</div><div class="line">        <span class="keyword">return</span> aplusb(sum, carry);</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Lintcode/">Lintcode</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/lintcode/">lintcode</a><a href="/tags/c/">c++</a><a href="/tags/algorithm/">algorithm</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/04/01/lintcode1-aplusb/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/01/lintcode1-aplusb/" data-count-type="comments">&nbsp;Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/03/11/use-Mosek-in-cvx/" title="在CVX中使用Mosek" itemprop="url">在CVX中使用Mosek</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
+		
+  <p class="article-time">
+    <time datetime="2016-03-11T15:21:47.000Z" itemprop="datePublished"> 发表于 2016-03-11</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>在cvx中默认的<a href="http://cvxr.com/cvx/doc/solver.html" target="_blank" rel="external">solver</a>是SDT3，解决一般的问题没有问题，但是发现涉及到高维向量（e.p. 求解1000+维向量）的求解时，会很慢，所以尝试换一个solver，以改善性能。目前尝试了Mosek，感觉是比SDT3快点的。搞了一个晚上，总结一下。</p>
+<h1 id="申请academic-license"><a href="#申请academic-license" class="headerlink" title="申请academic license"></a>申请academic license</h1><p>因为非professional版本的cvx不包含Mosek，所以需要购买，但是对于科研用途，cvx会提供一个license，期限好像是一年。需要填个<a href="http://cvxr.com/cvx/academic/" target="_blank" rel="external">表格</a>就ok了。</p>
+<h1 id="Mosek安装"><a href="#Mosek安装" class="headerlink" title="Mosek安装"></a>Mosek安装</h1><p>在收到cvx发的邮件后，按照Mosek安装教程<a href="http://cvxr.com/cvx/mosek/" target="_blank" rel="external">MOSEK and CVX</a>上的步骤执行就好了。<br>在安装好后，可以通过mosekopt语句来验证是否已经安装成功</p>
+<h1 id="Mosek使用"><a href="#Mosek使用" class="headerlink" title="Mosek使用"></a>Mosek使用</h1><p>在确定安装成功后，可以按照<a href="http://cvxr.com/cvx/doc/mosek.html#mosek" target="_blank" rel="external">Using MOSEK with CVX¶</a>来设置使用Mosek就可以了。</p>
+<blockquote>
+<p><strong><em>note:</em></strong><br>不过这里需要注意的是，我们在使用Mosek的时候，并不需要按照Mosek官网提供的user’s guide来写优化代码，还是按照cvx的guide来写就可以了;另外，我是将Mosek设置成default的，不知道什么原因，由于之前是使用的SDT3，即使选择了Mosek作为当前的solver，都没用，所以所幸将Mosek设置成了default。</p>
+</blockquote>
+<p>对了，这里还有个资源<a href="http://ask.cvxr.com/t/how-to-use-mosek-in-cvx/28" target="_blank" rel="external">How to use MOSEK in CVX?</a></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/MATLAB/">MATLAB</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/matlab/">matlab</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/03/11/use-Mosek-in-cvx/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/03/11/use-Mosek-in-cvx/" data-count-type="comments">&nbsp;Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+
+  <nav id="page-nav" class="clearfix">
+    <a class="extend prev" rel="prev" href="/page/3/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/5/">Next<span></span></a>
+  </nav>
+
+</div>
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Hexo/" title="Hexo">Hexo<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Latex/" title="Latex">Latex<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Lintcode/" title="Lintcode">Lintcode<sup>16</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/MATLAB/" title="MATLAB">MATLAB<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Machine-Learning/" title="Machine Learning">Machine Learning<sup>14</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Mathematics/" title="Mathematics">Mathematics<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Optimization/" title="Optimization">Optimization<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Python/" title="Python">Python<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Tattle/" title="Tattle">Tattle<sup>3</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/algorithm/" title="algorithm">algorithm<sup>16</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/lintcode/" title="lintcode">lintcode<sup>16</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Machine-Learning/" title="Machine Learning">Machine Learning<sup>10</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/python/" title="python">python<sup>10</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c/" title="c++">c++<sup>9</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/CS231n笔记/" title="CS231n笔记">CS231n笔记<sup>7</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/matlab/" title="matlab">matlab<sup>6</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/machine-learning/" title="machine learning">machine learning<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Hexo/" title="Hexo">Hexo<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mathematics/" title="mathematics">mathematics<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/tattle/" title="tattle">tattle<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/code-optimize/" title="code optimize">code optimize<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Optimization/" title="Optimization">Optimization<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Tattle/" title="Tattle">Tattle<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Latex/" title="Latex">Latex<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www.lifuhao.cn/" target="_blank" title="李狗蛋师兄">李狗蛋师兄</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://zhikaizhang.cn/" target="_blank" title="张致恺博客">张致恺博客</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/heimingx" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:heimingx@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="heimingx">heimingx</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End --><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="custom_mathjax_source">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+  </body>
+ </html>

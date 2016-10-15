@@ -1,0 +1,671 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?7087845a301293ae16f515623150d1a9";
+      var s = document.getElementsByTagName("script")[0]; 
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+    <title>SMO算法实现 | Heiming Xu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="heimingx">
+    
+
+    
+    <meta name="description" content="最近机器学习课上到了支持向量机，这两天把SMO算法实现了一下。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SMO算法实现">
+<meta property="og:url" content="http://heimignx.cn/2016/05/01/smo-algorithm/index.html">
+<meta property="og:site_name" content="Heiming Xu">
+<meta property="og:description" content="最近机器学习课上到了支持向量机，这两天把SMO算法实现了一下。">
+<meta property="og:image" content="http://heimignx.cn/img/blog/smo/smo.png">
+<meta property="og:updated_time" content="2016-10-15T14:06:53.930Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SMO算法实现">
+<meta name="twitter:description" content="最近机器学习课上到了支持向量机，这两天把SMO算法实现了一下。">
+<meta name="twitter:image" content="http://heimignx.cn/img/blog/smo/smo.png">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Heiming Xu" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/titanicCats.ico">
+    
+    
+    <link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+  <body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Heiming Xu">Heiming Xu</a></h1>
+				<h2 class="blog-motto">Optimize Life</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/reference">Reference</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:heimignx.cn">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/05/01/smo-algorithm/" title="SMO算法实现" itemprop="url">SMO算法实现</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
+		
+  <p class="article-time">
+    <time datetime="2016-05-01T15:31:56.000Z" itemprop="datePublished"> 发表于 2016-05-01</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#一些理解"><span class="toc-number">1.</span> <span class="toc-text">一些理解</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Python实现"><span class="toc-number">2.</span> <span class="toc-text">Python实现</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#实验结果分析"><span class="toc-number">3.</span> <span class="toc-text">实验结果分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#一些想法"><span class="toc-number">4.</span> <span class="toc-text">一些想法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#reference"><span class="toc-number">5.</span> <span class="toc-text">reference</span></a></li></ol>
+		
+		</div>
+		
+		<h1 id="一些理解"><a href="#一些理解" class="headerlink" title="一些理解"></a>一些理解</h1><p>svm的理论部分在很多资料里都有详细的推导过程，这里就不总结了，对于SMO算法，《统计学习方法》中是这样描述的：</p>
+<blockquote>
+<p>smo算法是一种启发式算法，其基本思路是：如果所有变量的解都满足此最优化问题的KKT条件，那么这个最优化问题的解就得到了。<strong>因为KKT条件是该最优化问题的充分必要条件</strong></p>
+</blockquote>
+<p>所以，我们的目标就是找到一组解使得他们都满足最优化问题的KKT条件。那么smo算法的手段就是：</p>
+<blockquote>
+<p>否则，选择两个变量，固定其他变量，针对这两个变量构建一个二次规划问题。这个二次规划问题关于这两个变量的解应该更接近于原始二次规划问题，。。。</p>
+</blockquote>
+<p>对于两个变量的选择，要求其中至少一个变量是违反KKT条件的。第一个变量$\alpha_1$选取违反KKT条件最严重的样本点，在实现过程中，感觉并不好判断违反的严重程度，所以选择全部遍历；第二个变量$\alpha_2$选取希望使其能够有足够大的变化。</p>
+<h1 id="Python实现"><a href="#Python实现" class="headerlink" title="Python实现"></a>Python实现</h1><p>代码有参考博文[1]中的实现，主要改进：</p>
+<ol>
+<li>对于第二个变量的选择，并没有遍历所有的样本点，而是选择能够使得$\alpha_2$有足够大的变化的点，实验表明，这样能够提高迭代效率；</li>
+<li>给出了高斯核函数的实现</li>
+<li>重构了一下代码~~ 当然也还有改进的地方，欢迎下方评论哦~</li>
+<li><a href="https://github.com/HeimingX/MLAlgorithms/tree/master/smv_smo" target="_blank" rel="external">源码及样本数据下载</a>如果有帮助记得点赞哦~~哈哈</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div><div class="line">207</div><div class="line">208</div><div class="line">209</div><div class="line">210</div><div class="line">211</div><div class="line">212</div><div class="line">213</div><div class="line">214</div><div class="line">215</div><div class="line">216</div><div class="line">217</div><div class="line">218</div><div class="line">219</div><div class="line">220</div><div class="line">221</div><div class="line">222</div><div class="line">223</div><div class="line">224</div><div class="line">225</div><div class="line">226</div><div class="line">227</div><div class="line">228</div><div class="line">229</div><div class="line">230</div><div class="line">231</div><div class="line">232</div><div class="line">233</div><div class="line">234</div><div class="line">235</div><div class="line">236</div><div class="line">237</div><div class="line">238</div><div class="line">239</div><div class="line">240</div><div class="line">241</div><div class="line">242</div><div class="line">243</div><div class="line">244</div><div class="line">245</div><div class="line">246</div><div class="line">247</div><div class="line">248</div><div class="line">249</div><div class="line">250</div><div class="line">251</div><div class="line">252</div><div class="line">253</div><div class="line">254</div><div class="line">255</div><div class="line">256</div><div class="line">257</div><div class="line">258</div><div class="line">259</div><div class="line">260</div><div class="line">261</div><div class="line">262</div><div class="line">263</div><div class="line">264</div><div class="line">265</div><div class="line">266</div><div class="line">267</div><div class="line">268</div><div class="line">269</div><div class="line">270</div><div class="line">271</div><div class="line">272</div><div class="line">273</div><div class="line">274</div><div class="line">275</div><div class="line">276</div><div class="line">277</div><div class="line">278</div><div class="line">279</div><div class="line">280</div><div class="line">281</div><div class="line">282</div><div class="line">283</div><div class="line">284</div><div class="line">285</div><div class="line">286</div><div class="line">287</div><div class="line">288</div><div class="line">289</div><div class="line">290</div><div class="line">291</div><div class="line">292</div><div class="line">293</div><div class="line">294</div><div class="line">295</div><div class="line">296</div><div class="line">297</div><div class="line">298</div><div class="line">299</div><div class="line">300</div><div class="line">301</div><div class="line">302</div><div class="line">303</div><div class="line">304</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"><span class="string">'''</span></div><div class="line">Created on 2016年5月1日</div><div class="line"></div><div class="line">@author: heiming</div><div class="line">'''</div><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="keyword">from</span> scipy <span class="keyword">import</span> io</div><div class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Params</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="comment">##alpha:lagrange multiplyer</span></div><div class="line">        self.a = []</div><div class="line">        <span class="comment">##b bias</span></div><div class="line">        self.b = <span class="number">0.0</span></div><div class="line">        <span class="comment">## punish parameter</span></div><div class="line">        self.c = <span class="number">10</span></div><div class="line">        <span class="comment">## decision error</span></div><div class="line">        self.epsilon = <span class="number">0.001</span></div><div class="line">        <span class="comment">## stop tolerance</span></div><div class="line">        self.stopTol = <span class="number">0.0001</span></div><div class="line">        <span class="comment">## smo difference of predict accuracy</span></div><div class="line">        self.e = []</div><div class="line">        <span class="comment">## maximum iteration</span></div><div class="line">        self.maxIter = <span class="number">100</span></div><div class="line">        <span class="comment">## kernel type</span></div><div class="line">        self.kernelType = <span class="string">'gaussian'</span></div><div class="line">        <span class="comment">## gaussian parameter</span></div><div class="line">        self.sigma = <span class="number">0.5</span></div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">setC</span><span class="params">(self, c)</span>:</span></div><div class="line">        self.c = c</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">setEpsilon</span><span class="params">(self, epsilon)</span>:</span></div><div class="line">        self.epsilon = epsilon</div><div class="line">        </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">setKernel</span><span class="params">(self, kernelType, *args)</span>:</span></div><div class="line">        self.kernelType = kernelType</div><div class="line">        <span class="keyword">if</span> self.kernelType == <span class="string">'gaussian'</span>:</div><div class="line">            self.sigma = args[<span class="number">0</span>]</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">setMaxIter</span><span class="params">(self, Maxiter)</span>:</span></div><div class="line">        self.maxIter = Maxiter</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">loadData</span><span class="params">(filePath, fileType)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    load样本</div><div class="line">    """</div><div class="line">    <span class="keyword">if</span> fileType == <span class="string">'txt'</span>:</div><div class="line">        data = np.loadtxt(filePath)</div><div class="line">        trainData = data[:, :<span class="number">-1</span>]</div><div class="line">        trainLabel = data[:, <span class="number">-1</span>]</div><div class="line">        testData = []</div><div class="line">        testLabel = []</div><div class="line">    <span class="keyword">if</span> fileType == <span class="string">'mat'</span>:</div><div class="line">        data = io.loadmat(filePath)</div><div class="line">        trainData = data[<span class="string">'xapp'</span>]</div><div class="line">        trainLabel = np.reshape(data[<span class="string">'yapp'</span>], newshape = (<span class="number">1</span>, data[<span class="string">'yapp'</span>].size))[<span class="number">0</span>]</div><div class="line">        testData = data[<span class="string">'xtest'</span>]</div><div class="line">        testLabel = np.reshape(data[<span class="string">'ytest'</span>], newshape = (<span class="number">1</span>, data[<span class="string">'ytest'</span>].size))[<span class="number">0</span>]</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> (trainData, trainLabel, testData, testLabel)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">kernel</span><span class="params">(data_j, data_i, params)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    计算样本j和样本i的内积</div><div class="line">    """</div><div class="line">    <span class="keyword">if</span> params.kernelType == <span class="string">'linear'</span>:</div><div class="line">        k = np.dot(data_j, data_i)</div><div class="line">    <span class="keyword">if</span> params.kernelType == <span class="string">'gaussian'</span>:</div><div class="line">        diff = data_j - data_i</div><div class="line">        diff = np.dot(diff, diff)</div><div class="line">        k = np.exp(- diff / (<span class="number">2.0</span> * np.square(params.sigma)))</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> k</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">gOfx</span><span class="params">(data, label, data_i, params)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    计算g(x)=sum(ai * yi * k(xi, x)) + b</div><div class="line">    """</div><div class="line">    <span class="keyword">if</span> params.kernelType == <span class="string">'linear'</span>:</div><div class="line">        k = np.dot(data, data_i) </div><div class="line">    <span class="keyword">if</span> params.kernelType == <span class="string">'gaussian'</span>:</div><div class="line">        diff = np.subtract(data, data_i)</div><div class="line">        diff = np.sum(np.multiply(diff, diff), axis = <span class="number">1</span>)</div><div class="line">        k = np.exp(- diff / (<span class="number">2.0</span> * np.square(params.sigma)))</div><div class="line">    g = np.dot(np.multiply(params.a ,label), k) + params.b</div><div class="line">    <span class="keyword">return</span> g</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">init</span><span class="params">(data, label, params)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    初始化E, a</div><div class="line">    """</div><div class="line">    params.a = np.zeros((<span class="number">1</span>, len(label)))[<span class="number">0</span>]</div><div class="line">    <span class="keyword">for</span> idx <span class="keyword">in</span> range(len(params.a)):</div><div class="line">        diff = gOfx(data, label, data[idx], params) - label[idx]</div><div class="line">        params.e.append(diff)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">updateE</span><span class="params">(data, label, params)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    更新E</div><div class="line">    """</div><div class="line">    <span class="keyword">for</span> idx <span class="keyword">in</span> range(len(params.a)):</div><div class="line">        diff = gOfx(data, label, data[idx], params) - label[idx]</div><div class="line">        params.e[idx] = diff</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getMaxE</span><span class="params">(idx, params)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    获取除去第idx个样本后最大的E</div><div class="line">    """</div><div class="line">    tmp = params.e[<span class="number">1</span> : idx] + [<span class="number">0</span>] + params.e[idx+<span class="number">1</span> :]</div><div class="line">    <span class="keyword">return</span> tmp.index(max(tmp))</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getMinE</span><span class="params">(idx, params)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    获取除去第idx个样本后最小的E</div><div class="line">    """</div><div class="line">    tmp = params.e[<span class="number">1</span>:idx] + [params.c * <span class="number">10</span>] + params.e[idx+<span class="number">1</span> :]</div><div class="line">    <span class="keyword">return</span> tmp.index(min(tmp))</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">judgeConvergence</span><span class="params">(data, label, params)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    判断是否都已满足KKT条件</div><div class="line">    """</div><div class="line">    alphay = <span class="number">0.0</span>    </div><div class="line">    <span class="keyword">for</span> idx <span class="keyword">in</span> range(len(label)):</div><div class="line">        yg = label[idx] * gOfx(data, label, data[idx], params)</div><div class="line">        <span class="keyword">if</span> (params.a[idx] == <span class="number">0</span>) <span class="keyword">and</span> (yg &lt; <span class="number">1</span> - params.epsilon):</div><div class="line">            <span class="keyword">return</span> <span class="keyword">False</span></div><div class="line">        <span class="keyword">elif</span> (params.a[idx] &gt; <span class="number">0</span>) <span class="keyword">and</span> (params.a[idx] &lt; params.c) <span class="keyword">and</span> \</div><div class="line">            (yg &gt; <span class="number">1</span> + params.epsilon) <span class="keyword">or</span> (yg &lt; <span class="number">1</span> - params.epsilon):</div><div class="line">            <span class="keyword">return</span> <span class="keyword">False</span></div><div class="line">        <span class="keyword">elif</span> (params.a[idx] == params.c) <span class="keyword">and</span> (yg &gt; <span class="number">1</span> + params.epsilon):</div><div class="line">            <span class="keyword">return</span> <span class="keyword">False</span></div><div class="line">        <span class="keyword">if</span> (params.a[idx] &lt; <span class="number">0</span>) <span class="keyword">or</span> (params.a[idx] &gt; params.c):</div><div class="line">            <span class="keyword">return</span> <span class="keyword">False</span></div><div class="line">        alphay += params.a[idx] * label[idx]</div><div class="line">    <span class="keyword">if</span> abs(alphay) &gt; params.epsilon:</div><div class="line">        <span class="keyword">return</span> <span class="keyword">False</span></div><div class="line">    <span class="keyword">return</span> <span class="keyword">True</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">train</span><span class="params">(data, label, params)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    svm train, use smo solve the quadratic convex problem</div><div class="line">    """</div><div class="line">    iters = <span class="number">0</span></div><div class="line">    init(data, label, params)</div><div class="line">    updated = <span class="keyword">True</span></div><div class="line">    <span class="keyword">while</span> iters &lt; params.maxIter <span class="keyword">and</span> updated:</div><div class="line">        updated = <span class="keyword">False</span></div><div class="line">        iters += <span class="number">1</span></div><div class="line">        <span class="comment">##这里直接遍历所有的样本，只要违反了KKT条件就进入迭代</span></div><div class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(params.a)):</div><div class="line">            ai = params.a[i]</div><div class="line">            ei = params.e[i]</div><div class="line">            </div><div class="line">            <span class="keyword">if</span> (label[i] * ei &lt; params.stopTol <span class="keyword">and</span> ai &lt; params.c) <span class="keyword">or</span> \</div><div class="line">                (label[i] * ei &gt; params.stopTol <span class="keyword">and</span> ai &gt; <span class="number">0</span>):</div><div class="line">                <span class="keyword">if</span> ei &gt; <span class="number">0</span>:</div><div class="line">                    j = getMinE(i, params)</div><div class="line">                <span class="keyword">else</span>:</div><div class="line">                    j = getMaxE(i, params)</div><div class="line">                </div><div class="line">                eta = kernel(data[i], data[i], params) + \</div><div class="line">                    kernel(data[j], data[j], params) - \</div><div class="line">                    <span class="number">2</span> * kernel(data[i], data[j], params)</div><div class="line">                <span class="keyword">if</span> eta &lt;= <span class="number">0</span>:</div><div class="line">                    <span class="keyword">continue</span></div><div class="line">                new_aj = params.a[j] + label[j] * \</div><div class="line">                    (params.e[i] - params.e[j]) / eta</div><div class="line">                L = <span class="number">0.0</span></div><div class="line">                H = <span class="number">0.0</span></div><div class="line">                <span class="keyword">if</span> label[i] == label[j]:</div><div class="line">                    L = max(<span class="number">0</span>, params.a[j] + params.a[i] - params.c)</div><div class="line">                    H = min(params.c, params.a[j] + params.a[i])</div><div class="line">                <span class="keyword">else</span>:</div><div class="line">                    L = max(<span class="number">0</span>, params.a[j] - params.a[i])</div><div class="line">                    H = min(params.c, params.c + params.a[j] - params.a[i])</div><div class="line">                <span class="keyword">if</span> new_aj &gt; H:</div><div class="line">                    new_aj = H</div><div class="line">                <span class="keyword">if</span> new_aj &lt; L:</div><div class="line">                    new_aj = L</div><div class="line">                </div><div class="line">                <span class="comment">##判断alpha j是否有较大的变化</span></div><div class="line">                <span class="keyword">if</span> abs(params.a[j] - new_aj) &lt; <span class="number">0.001</span>:</div><div class="line">                    <span class="keyword">print</span> <span class="string">"j= %d, is not moving enough"</span> % j</div><div class="line">                    <span class="keyword">continue</span></div><div class="line">                new_ai = params.a[i] + label[i] * label[j] * (params.a[j] - new_aj)</div><div class="line">                new_b1 = params.b - params.e[i] - label[i] * kernel(data[i], data[i], params) * (new_ai - params.a[i]) \</div><div class="line">                    - label[j] * kernel(data[j], data[i], params) * (new_aj - params.a[j])</div><div class="line">                new_b2 = params.b - params.e[j] - label[i] * kernel(data[i], data[j], params) * (new_ai - params.a[i]) \</div><div class="line">                    - label[j] * kernel(data[j], data[j], params) * (new_aj - params.a[j])</div><div class="line">                <span class="keyword">if</span> new_ai &gt; <span class="number">0</span> <span class="keyword">and</span> new_ai &lt; params.c:</div><div class="line">                    new_b = new_b1</div><div class="line">                <span class="keyword">elif</span> new_aj &gt; <span class="number">0</span> <span class="keyword">and</span> new_aj &lt; params.c:</div><div class="line">                    new_b = new_b2</div><div class="line">                <span class="keyword">else</span>:</div><div class="line">                    new_b = (new_ai + new_aj)/<span class="number">2.0</span></div><div class="line">                    </div><div class="line">                params.a[i] = new_ai</div><div class="line">                params.a[j] = new_aj</div><div class="line">                params.b = new_b</div><div class="line">                updateE(data, label, params)</div><div class="line">                updated = <span class="keyword">True</span></div><div class="line">                <span class="keyword">print</span> <span class="string">"iterate: %d, change pair: i: %d, j: %d"</span> % (iters, i, j)</div><div class="line">        res = judgeConvergence(data, label, params)</div><div class="line">        <span class="keyword">if</span> res:</div><div class="line">            <span class="keyword">break</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">predictAccuracy</span><span class="params">(trainData, trainLabel, testData, testLabel, params)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    计算测试集的精度</div><div class="line">    """</div><div class="line">    pred = np.zeros((<span class="number">1</span>, len(testLabel)))</div><div class="line">    <span class="keyword">for</span> idx <span class="keyword">in</span> range(len(testLabel)):</div><div class="line">        pred[<span class="number">0</span>, idx] = gOfx(trainData, trainLabel, testData[idx], params)</div><div class="line">    accuracy = np.mean(np.sign(pred) == testLabel)</div><div class="line">    <span class="keyword">return</span> accuracy</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getSupportVector</span><span class="params">(params)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    获取支持向量的index</div><div class="line">    """</div><div class="line">    supportVector = []</div><div class="line">    <span class="keyword">for</span> idx <span class="keyword">in</span> range(len(params.a)):</div><div class="line">        <span class="keyword">if</span> params.a[idx] &gt; <span class="number">0</span> <span class="keyword">and</span> params.a[idx] &lt; params.c:</div><div class="line">            supportVector.append(idx)</div><div class="line">    <span class="keyword">return</span> supportVector</div><div class="line">            </div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">draw</span><span class="params">(trainData, trainLabel, params)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    特征数是两维时，可以画图来展示</div><div class="line">    """</div><div class="line">    plt.xlabel(<span class="string">u'x1'</span>)</div><div class="line">    plt.xlim(<span class="number">0</span>, <span class="number">100</span>)</div><div class="line">    plt.ylabel(<span class="string">u'x2'</span>)</div><div class="line">    plt.ylim(<span class="number">0</span>, <span class="number">100</span>)</div><div class="line">    plt.title(<span class="string">'svm - %s, tolerance %f, c %f'</span> % (<span class="string">'trainData'</span>, params.stopTol, params.c))</div><div class="line">    <span class="keyword">for</span> idx <span class="keyword">in</span> range(len(trainLabel)):</div><div class="line">        data = trainData[idx]</div><div class="line">        <span class="keyword">if</span> int(trainLabel[idx]) &gt; <span class="number">0</span>:</div><div class="line">            plt.plot(data[<span class="number">0</span>], data[<span class="number">1</span>], <span class="string">'or'</span>)</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            plt.plot(data[<span class="number">0</span>], data[<span class="number">1</span>], <span class="string">'xg'</span>)</div><div class="line">    </div><div class="line">    w1 = <span class="number">0.0</span></div><div class="line">    w2 = <span class="number">0.0</span></div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(trainLabel)):</div><div class="line">        w1 += params.a[i] * trainLabel[i] * trainData[i][<span class="number">0</span>]</div><div class="line">        w2 += params.a[i] * trainLabel[i] * trainData[i][<span class="number">1</span>]</div><div class="line">    w = - w1 / w2</div><div class="line">    </div><div class="line">    b = - params.b / w2</div><div class="line">    r = <span class="number">1</span> / w2</div><div class="line">    lp_x1 = [<span class="number">10</span>, <span class="number">90</span>]</div><div class="line">    lp_x2 = []</div><div class="line">    lp_x2up = []</div><div class="line">    lp_x2down = []</div><div class="line">    <span class="keyword">for</span> x1 <span class="keyword">in</span> lp_x1:</div><div class="line">        lp_x2.append(w * x1 + b)</div><div class="line">        lp_x2up.append(w * x1 + b + r)</div><div class="line">        lp_x2down.append(w * x1 + b - r)</div><div class="line">    plt.plot(lp_x1, lp_x2, <span class="string">'b'</span>)</div><div class="line">    plt.plot(lp_x1, lp_x2up, <span class="string">'b--'</span>)</div><div class="line">    plt.plot(lp_x1, lp_x2down, <span class="string">'b--'</span>)</div><div class="line">    plt.show()</div><div class="line">    </div><div class="line">    </div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></div><div class="line"><span class="comment">####------------------------------------------</span></div><div class="line"><span class="comment">#     filePath = '../smo/train.txt'</span></div><div class="line"><span class="comment">#     fileType = 'txt'</span></div><div class="line"><span class="comment">#     trainData, trainLabel, testData, testLabel = loadData(filePath, fileType)</span></div><div class="line"><span class="comment">#     params = Params()</span></div><div class="line"><span class="comment">#     params.setKernel('linear')</span></div><div class="line">    </div><div class="line"><span class="comment">####------------------------------------------</span></div><div class="line">    filePath = <span class="string">'../smo/ionosphere_1.mat'</span></div><div class="line">    fileType = <span class="string">'mat'</span></div><div class="line">    trainData, trainLabel, testData, testLabel = loadData(filePath, fileType)</div><div class="line">    params = Params()</div><div class="line"><span class="comment">#     params.setKernel("gaussian", 0.5) #acc=0.902857  100步截断</span></div><div class="line">    params.setKernel(<span class="string">"gaussian"</span>, <span class="number">1</span>) <span class="comment"># acc = 0.942857  18步收敛</span></div><div class="line">    params.setMaxIter(<span class="number">500</span>) <span class="comment">##在230步左右收敛，精度为0.88,sv 太多</span></div><div class="line">    params.setEpsilon(<span class="number">0.01</span>)</div><div class="line"></div><div class="line"><span class="comment">####------------------------------------------</span></div><div class="line"></div><div class="line">    train(trainData, trainLabel, params)</div><div class="line">    <span class="keyword">print</span> <span class="string">'a= '</span>, params.a</div><div class="line">    <span class="keyword">print</span> <span class="string">'b= '</span>, params.b</div><div class="line">         </div><div class="line">    supportVector = getSupportVector(params)</div><div class="line">    <span class="keyword">print</span> <span class="string">'support vector = '</span>, supportVector</div><div class="line">    </div><div class="line"><span class="comment">#### 两维特征可以在样本空间中画出图来展示划分效果</span></div><div class="line"><span class="comment">#     draw(trainData, trainLabel, params)</span></div><div class="line"></div><div class="line"><span class="comment">#### 有测试集可以计算出预测精度</span></div><div class="line">    print(<span class="string">'test set accuracy: %f'</span> % predictAccuracy(trainData, trainLabel, testData, testLabel, params))</div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    main()</div></pre></td></tr></table></figure>
+<h1 id="实验结果分析"><a href="#实验结果分析" class="headerlink" title="实验结果分析"></a>实验结果分析</h1><ul>
+<li>线性核函数的分类效果图<br><img src="/img/blog/smo/smo.png" alt="linear kernel"></li>
+</ul>
+<p>这里可能跟博文[1]中的结果不太一样了，主要是由于改变了对于第二变量的选择</p>
+<ul>
+<li><p>高斯核函数</p>
+<blockquote>
+<p><strong>dataset: ionosphere(trainingSet : testingSet = 1:1)</strong><br>sigma = 5 accuracy = 0.46 iteration &lt;=100<br>sigma = 1 accuracy = 0.942857 iteration = 18<br>sigma = 0.5 accuracy = 0.902857 iteration = 100+<br>sigma = 0.05 accuracy = 0.645714 iteration &lt;=100</p>
+</blockquote>
+<p>  可以看出sigma的选择对于精度的影响还是很大的。这里只列出了sigma的影响，还有其他的参数对于精度和训练的迭代步数都有影响。</p>
+</li>
+</ul>
+<h1 id="一些想法"><a href="#一些想法" class="headerlink" title="一些想法"></a>一些想法</h1><ol>
+<li><p>刚开始看的时候有这样一个疑问：</p>
+<blockquote>
+<p>如果有多组解都满足kkt条件，那么smo算法不一定会找到使得目标函数取最小值的解</p>
+</blockquote>
+<p> 然而有：KKT条件是最优化问题的充分必要条件，不禁感叹这样的理论是多么的强大！！！于是可以放心大胆的用smo了</p>
+</li>
+<li><p>对于核函数的选择，高斯核是很常用的，但是对于sigma的选取却很有讲究，在上面的实验结果也能够看出，不同的sigma的选择，对预测精度和迭代步数都有影响，于是搜索了一下，高斯核参数sigma对svm的影响，发现有不少关于这方面的讨论，不过还有一些暂时还消化不了，先总结下来。</p>
+<blockquote>
+<p>这里面大家需要注意的就是gamma的物理意义，大家提到很多的RBF的幅宽，它会影响每个支持向量对应的高斯的作用范围，从而影响泛化性能。我的理解：如果设的<strong>太大</strong>，则会造成<strong>只会作用于支持向量样本附近，对于未知样本分类效果很差</strong>，存在训练准确率可以很高，而测试准确率不高的可能，就是通常说的过训练；而如果设的<strong>过小</strong>，则会<strong>造成平滑效应太大，无法在训练集上得到特别高的准确率，也会影响测试集的准确率</strong>。</p>
+</blockquote>
+<p> 此外大家注意RBF公式里面的$\sigma$和$\gamma$的关系如下：</p>
+<p> The rbf kernel is typically defined as</p>
+<p> $$k(x,z) = e^{\frac{-d(x,z)^2}{2*\sigma^2}}$$ </p>
+<p> which can be re-defined in terms of gamma as </p>
+<p> $$k(x,z) = e^{-\gamma *d(x,z)^2}$$</p>
+<p> where $\gamma = \frac{1}{2*\sigma^2}$.</p>
+<blockquote>
+<p>$\gamma$越大，支持向量越少，$\gamma$值越小，支持向量越多。<br>RBF核应该可以得到与线性核相近的效果（按照理论，RBF核可以模拟线性核），可能好于线性核，也可能差于，但是，不应该相差太多。</p>
+</blockquote>
+<p> 当然，很多问题中，比如维度过高，或者样本海量的情况下，大家更倾向于用线性核，因为效果相当，但是在速度和模型大小方面，线性核会有更好的表现。</p>
+</li>
+<li><p>smo名字的由来，未知~求解答~~</p>
+</li>
+</ol>
+<h1 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h1><ol>
+<li><a href="http://liuhongjiang.github.io/tech/blog/2012/12/28/svm-smo/" target="_blank" rel="external">SMO序列最小最优化算法</a> 这篇博文写的很赞，里面对KKT条件的推导规约很好</li>
+<li><a href="http://blog.csdn.net/lujiandong1/article/details/46386201" target="_blank" rel="external">SVM的两个参数 C 和 gamma</a> </li>
+<li><a href="http://blog.sina.com.cn/s/blog_6ae183910101cxbv.html" target="_blank" rel="external">使用svm的一个常见错误</a> 及博主的<a href="http://weibo.com/facerecog?source=blog&amp;is_all=1&amp;noscale_head=1&amp;is_search=1&amp;key_word=rbf#_rnd1462087315345" target="_blank" rel="external">微博</a> 啊，里面还是有一些暂时不能看懂的东西，核方法很强大，需要进一步学习！</li>
+<li><a href="http://cs231n.github.io/python-numpy-tutorial/" target="_blank" rel="external">Python Numpy Tutorial</a> 这个是stanford的一个教程，很赞！</li>
+</ol>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Machine-Learning/">Machine Learning</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/machine-learning/">machine learning</a><a href="/tags/python/">python</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://heimignx.cn/2016/05/01/smo-algorithm/" data-title="SMO算法实现 | Heiming Xu" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/05/03/sigmoid-function-and-sigmoid-kernel/" title="sigmoid function 和 sigmoid kernel">
+  <strong>上一篇：</strong><br/>
+  <span>
+  sigmoid function 和 sigmoid kernel</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/04/30/python-runtime-error-exp-overflow/"  title="python中RuntimeWarning overflow encountered in exp">
+ <strong>下一篇：</strong><br/> 
+ <span>python中RuntimeWarning overflow encountered in exp
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/05/01/smo-algorithm/" data-title="SMO算法实现" data-url="http://heimignx.cn/2016/05/01/smo-algorithm/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#一些理解"><span class="toc-number">1.</span> <span class="toc-text">一些理解</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Python实现"><span class="toc-number">2.</span> <span class="toc-text">Python实现</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#实验结果分析"><span class="toc-number">3.</span> <span class="toc-text">实验结果分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#一些想法"><span class="toc-number">4.</span> <span class="toc-text">一些想法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#reference"><span class="toc-number">5.</span> <span class="toc-text">reference</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Hexo/" title="Hexo">Hexo<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Latex/" title="Latex">Latex<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Lintcode/" title="Lintcode">Lintcode<sup>16</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/MATLAB/" title="MATLAB">MATLAB<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Machine-Learning/" title="Machine Learning">Machine Learning<sup>14</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Mathematics/" title="Mathematics">Mathematics<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Optimization/" title="Optimization">Optimization<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Python/" title="Python">Python<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Tattle/" title="Tattle">Tattle<sup>3</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/algorithm/" title="algorithm">algorithm<sup>16</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/lintcode/" title="lintcode">lintcode<sup>16</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Machine-Learning/" title="Machine Learning">Machine Learning<sup>10</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/python/" title="python">python<sup>10</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c/" title="c++">c++<sup>9</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/CS231n笔记/" title="CS231n笔记">CS231n笔记<sup>7</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/matlab/" title="matlab">matlab<sup>6</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/machine-learning/" title="machine learning">machine learning<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Hexo/" title="Hexo">Hexo<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mathematics/" title="mathematics">mathematics<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/tattle/" title="tattle">tattle<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/code-optimize/" title="code optimize">code optimize<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Optimization/" title="Optimization">Optimization<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Tattle/" title="Tattle">Tattle<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Latex/" title="Latex">Latex<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www.lifuhao.cn/" target="_blank" title="李狗蛋师兄">李狗蛋师兄</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://zhikaizhang.cn/" target="_blank" title="张致恺博客">张致恺博客</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/heimingx" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:heimingx@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="heimingx">heimingx</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+        getSize();
+        if (myWidth >= 1024) {
+          c.click();
+        }
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"ming"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End --><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="custom_mathjax_source">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+  </body>
+</html>

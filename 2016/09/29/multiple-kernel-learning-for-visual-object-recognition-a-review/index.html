@@ -1,0 +1,802 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?7087845a301293ae16f515623150d1a9";
+      var s = document.getElementsByTagName("script")[0]; 
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+    <title>A Review of Multiple Kernel Learning | Heiming Xu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="heimingx">
+    
+
+    
+    <meta name="description" content="今天花了一整天的时间看了一篇关于Multiple kernel Learning的综述文章，他是以Visual object recognition作为应用背景来分析的。文章：Multiple Kernel Learning for Visual Object Recognition：A Review，发在TPAMI’14.
+文章的出发点是发现在多篇文章中关于MKL的阐述是有冲突的（文章中表1&amp;a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="A Review of Multiple Kernel Learning">
+<meta property="og:url" content="http://heimignx.cn/2016/09/29/multiple-kernel-learning-for-visual-object-recognition-a-review/index.html">
+<meta property="og:site_name" content="Heiming Xu">
+<meta property="og:description" content="今天花了一整天的时间看了一篇关于Multiple kernel Learning的综述文章，他是以Visual object recognition作为应用背景来分析的。文章：Multiple Kernel Learning for Visual Object Recognition：A Review，发在TPAMI’14.
+文章的出发点是发现在多篇文章中关于MKL的阐述是有冲突的（文章中表1&amp;a">
+<meta property="og:image" content="http://heimignx.cn/img/blog/mkl/mkl_map_scores.png">
+<meta property="og:image" content="http://heimignx.cn/img/blog/mkl/map_score_wrt_kernels.png">
+<meta property="og:image" content="http://heimignx.cn/img/blog/mkl/training_time.png">
+<meta property="og:updated_time" content="2016-10-15T14:06:53.928Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="A Review of Multiple Kernel Learning">
+<meta name="twitter:description" content="今天花了一整天的时间看了一篇关于Multiple kernel Learning的综述文章，他是以Visual object recognition作为应用背景来分析的。文章：Multiple Kernel Learning for Visual Object Recognition：A Review，发在TPAMI’14.
+文章的出发点是发现在多篇文章中关于MKL的阐述是有冲突的（文章中表1&amp;a">
+<meta name="twitter:image" content="http://heimignx.cn/img/blog/mkl/mkl_map_scores.png">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Heiming Xu" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/titanicCats.ico">
+    
+    
+    <link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+  <body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Heiming Xu">Heiming Xu</a></h1>
+				<h2 class="blog-motto">Optimize Life</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/reference">Reference</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:heimignx.cn">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/09/29/multiple-kernel-learning-for-visual-object-recognition-a-review/" title="A Review of Multiple Kernel Learning" itemprop="url">A Review of Multiple Kernel Learning</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
+		
+  <p class="article-time">
+    <time datetime="2016-09-29T05:31:56.000Z" itemprop="datePublished"> 发表于 2016-09-29</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Overview-of-MKL"><span class="toc-number">1.</span> <span class="toc-text">Overview of MKL</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#relationship-to-other-approaches"><span class="toc-number">2.</span> <span class="toc-text">relationship to other approaches</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#MKL-optimization-techniques-two-groups"><span class="toc-number">3.</span> <span class="toc-text">MKL optimization techniques: two groups</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#experiments"><span class="toc-number">4.</span> <span class="toc-text">experiments:</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#classification-performance"><span class="toc-number">4.1.</span> <span class="toc-text">classification performance</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Number-of-kernels-vs-classification-accuracy"><span class="toc-number">4.2.</span> <span class="toc-text">Number of kernels vs classification accuracy</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#computational-efficiency"><span class="toc-number">4.3.</span> <span class="toc-text">computational efficiency</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#evaluation-of-sparseness"><span class="toc-number">4.4.</span> <span class="toc-text">evaluation of sparseness</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#reference"><span class="toc-number">5.</span> <span class="toc-text">reference</span></a></li></ol>
+		
+		</div>
+		
+		<p>今天花了一整天的时间看了一篇关于Multiple kernel Learning的综述文章，他是以Visual object recognition作为应用背景来分析的。文章：Multiple Kernel Learning for Visual Object Recognition：A Review，发在TPAMI’14.</p>
+<p>文章的出发点是发现在多篇文章中关于MKL的阐述是有冲突的（文章中表1&amp;2）：</p>
+<ol>
+<li>在有些文章中说MKL方法优于平均核权重的MKL方法[8,39,48]，而另一些文章中却给出了相反的结论[13,24,30,31]。</li>
+<li>MKL与single kernel SVM之间的比较</li>
+<li>L1-MKL与Lp-MKL之间的比较</li>
+<li>不同MKL方法在的computational efficiency的比较，由于不同文章中的实验结果评价不一致，比如有些是以迭代步数作为收敛的衡量，而有些是以消耗的时间作为衡量[11,30],有些基于支持向量的个数[8,47]<br>其实，这主要跟相关文章中的实验设置、核函数的数量及数据集有关，在这篇文章的实验部分给出了详细的分析。</li>
+</ol>
+<p>MKL方法围绕两类问题展开：</p>
+<ol>
+<li>利用不同的MKL形式来提高分类精度</li>
+<li>利用不同的优化方法来提升MKL的学习效率</li>
+</ol>
+<h1 id="Overview-of-MKL"><a href="#Overview-of-MKL" class="headerlink" title="Overview of MKL"></a>Overview of MKL</h1><ul>
+<li><p>另一篇关于MKL的综述：[32]M. Gönen and E. Alpaydin, “Multiple kernel learning algorithms,” J. Mach. Learn. Res., vol. 12, pp. 2211–2268, Jul. 2011.</p>
+</li>
+<li><p>MKL的首次提出：[33]G. Lanckriet, N. Cristianini, P. Bartlett, and L. E. Ghaoui, “Learning the kernel matrix with semi-definite programming,” J. Mach. Learn. Res., vol. 5, pp. 27–72, Jan. 2004.</p>
+</li>
+<li><p>SMO for MKL: </p>
+</li>
+</ul>
+<ol>
+<li>[9]S. Vishwanathan, Z. Sun, N. Ampornpunt, and M. Varma, “Multiple kernel learning and the SMO algorithm,” in Proc. NIPS, Nottingham, U.K., 2010, pp. 2361–2369.</li>
+<li>[16]F. R. Bach, G. R. G. Lanckriet, and M. I. Jordan, “Multiple kernel learning, conic duality, and the SMO algorithm,” in Proc. 21st ICML, New York, NY, USA, 2004.</li>
+</ol>
+<ul>
+<li><p>L1-norm MKL: [34]S. Sonnenburg, G. Rätsch, and C. Schäfer, “A general and efficient multiple kernel learning algorithm,” in Proc. NIPS, 2006, pp. 1273–1280.</p>
+</li>
+<li><p>Lp-norm MKL: </p>
+</li>
+</ul>
+<ol>
+<li>[10]M. Kloft, U. Brefeld, S. Sonnenburg, and A. Zien, “lp-Norm multiple kernel learning,” J. Mach. Learn. Res., vol. 12, pp. 953–997, Mar. 2011. </li>
+<li>[31]R. Tomioka and T. Suzuki, “Sparsity-accuracy trade-off in MKL,” in Proc. NIPS Workshop Understanding Multiple Kernel Learning Methods, 2009.</li>
+<li>[40]F. Yan, K. Mikolajczyk, J. Kittler, and A. Tahir, “A comparison of L1 norm and L2 norm multiple kernel SVMs in image and video classification,” in Proc. Int. Workshop CBMI, 2009.</li>
+</ol>
+<ul>
+<li><p>negative entropy based MKL: [30]Z. Xu, R. Jin, S. Zhu, M. Lyu, and I. King, “Smooth optimization for effective multiple kernel learning,” in Proc. AAAI Artif. Intell., 2010.</p>
+</li>
+<li><p>mixed norms MKL: </p>
+</li>
+</ul>
+<ol>
+<li>[35]M. Kowalski, M. Szafranski, and L. Ralaivola, “Multiple indefinite kernel learning with mixed norm regularization,” in Proc. 26th ICML, Montreal, QC, Canada, 2009, pp. 545–552.</li>
+<li>[15]C. Longworth and M. J. Gales, “Multiple kernel learning for speaker verification,” in Proc. ICASSP, Las Vegas, NV, USA, 2008, pp. 1581–1584.</li>
+<li>[72]V. Sindhwani and A. C. Lozano, “Non-parametric group orthogonal matching pursuit for sparse learning with multiple kernels,” in Proc. NIPS, 2011, pp. 414–431.</li>
+</ol>
+<ul>
+<li><p>Bregman divergence: [9]S. Vishwanathan, Z. Sun, N. Ampornpunt, and M. Varma, “Multiple kernel learning and the SMO algorithm,” in Proc. NIPS, Nottingham, U.K., 2010, pp. 2361–2369.</p>
+</li>
+<li><p>theoretical studies show that L1 norm will result in a small generalization error: </p>
+</li>
+</ul>
+<ol>
+<li>[36]C. Cortes, M. Mohri, and A. Rostamizadeh, “Generalization bounds for learning kernels,” in Proc. 27th ICML, Haifa, Israel, 2010.</li>
+<li>[37]Z. Hussain and J. Shawe-Taylor, “A note on improved loss bounds for multiple kernel learning,” CoRR abs/1106.6258, 2011.</li>
+</ol>
+<ul>
+<li>a nonlinear combination of base kernels: <strong>[non-convex optimization problems]</strong></li>
+</ul>
+<ol>
+<li>[12]M. Varma and B. R. Babu, “More generality in efficient multiple kernel learning,” in Proc. 26th ICML, New York, NY, USA, Jun. 2009, pp. 1065–1072. <strong>[polynomial combination]</strong></li>
+<li>[23]J. Saketha Nath et al., “On the algorithmics and applications of a mixed-norm based kernel learning formulation,” in Proc. NIPS, 2009.</li>
+<li>[28]C. Cortes, M. Mohri, and A. Rostamizadeh, “Learning non-linear combinations of kernels,” in Proc. NIPS, 2009, pp. 396–404.<strong>[polynomial combination]</strong></li>
+<li>[44]J. Aflalo, A. Ben-Tal, C. Bhattacharyya, J. S. Nath, and S. Raman, “Variable sparsity kernel learning,” J. Mach. Learn. Res., vol. 12, pp. 565–592, Feb. 2011.</li>
+<li>[45]F. Bach, “Exploring large feature spaces with hierarchical multiple kernel learning,” in Proc. NIPS, 2009.</li>
+<li>[17]D. P. Lewis, T. Jebara, and W. S. Noble, “Nonstationary kernel combination,” in Proc. 23rd ICML, New York, NY, USA, 2006, pp. 553–560.</li>
+</ol>
+<ul>
+<li>an instance-dependent linear combination: <strong>[non-convex optimization problems]</strong></li>
+</ul>
+<ol>
+<li>[6]J. Yang, Y. Li, Y. Tian, L. Duan, and W. Gao, “Group-sensitive multiple kernel learning for object categorization,” in Proc. 12th ICCV, Kyoto, Japan, 2009.</li>
+<li>[46]J. Yang, Y. Li, Y. Tian, L.-Y. Duan, and W. Gao, “Per-Sample multiple kernel approach for visual concept learning,” EURASIP J. Image Video Process., vol. 2010, pp. 1–13, Jan. 2010.</li>
+<li>[47]M. Gönen and E. Alpaydin, “Localized multiple kernel learning,” in Proc. 25th ICML, New York, NY, USA, 2008.</li>
+</ol>
+<ul>
+<li><p>subgradient descent (SD) algorithms: [43]A. Rakotomamonjy, F. Bach, Y. Grandvalet, and S. Canu, “SimpleMKL,” J. Mach. Learn. Res., 9(11), pp. 2491–2521, 2008.</p>
+</li>
+<li><p>semi-infinite linear programming (SILP) based algorithm: [50]S. Sonnenburg, G. Rätsch, C. Schäfer, and B. Schölkopf, “Large scale multiple kernel learning,” J. Mach. Learn. Res., vol. 7, pp. 1531–1565, Jul. 2006. </p>
+</li>
+<li><p>SD优于SILP：</p>
+</li>
+</ul>
+<ol>
+<li>[8]Z. Xu, R. Jin, H. Yang, I. King, and M. R. Lyu, “Simple and efficient multiple kernel learning by group lasso,” in Proc. 27th ICML, Haifa, Israel, 2010</li>
+<li>[41]A. Rakotomamonjy, F. Bach, S. Canu, and Y. Grandvalet, “More efficiency in multiple kernel learning,” in Proc. 24th ICML, Corvallis, OR, USA, 2007.</li>
+<li>[42]Z. Xu, R. Jin, I. King, and M. R. Lyu, “An extended level method for efficient multiple kernel learning,” in Proc. NIPS, 2009, pp. 1825–1832.</li>
+</ol>
+<ul>
+<li>SILP优于SD：[11]M. Kloft et al., “Efficient and accurate lp-norm multiple kernel learning,” in Proc. NIPS, 2009, pp. 997–1005.</li>
+</ul>
+<h1 id="relationship-to-other-approaches"><a href="#relationship-to-other-approaches" class="headerlink" title="relationship to other approaches"></a>relationship to other approaches</h1><ul>
+<li>feature selection: </li>
+</ul>
+<ol>
+<li>[51]H. Liu and L. Yu, “Toward integrating feature selection algorithms for classification and clustering,” IEEE Trans. Knowl. Data Eng., vol. 17, no. 4, pp. 491–502, Apr. 2005.</li>
+<li>[52]F. R. Bach, “Consistency of the group Lasso and multiple kernel learning,” J. Mach. Learn. Res., vol. 9, pp. 1179–1225, Jun. 2008.<strong>[group lasso]</strong></li>
+</ol>
+<ul>
+<li><p>metric learning: [53]T. Hertz, “Learning distance functions: Algorithms and applications,” Ph.D. dissertation, Hebrew Univ. Jerusalem, Jerusalem, Israel, 2006.</p>
+</li>
+<li><p>kernel alignment: [54]N. Cristianini, J. Kandola, A. Elisseeff, and J. Shawe-Taylor, “On kernel-target alignment,” in Proc. NIPS, 2002, pp. 367–373.</p>
+</li>
+<li><p>parametric kernel learning: </p>
+</li>
+</ul>
+<ol>
+<li>[55]O. Chapelle, J. Weston, and B. Schölkopf, “Cluster kernels for semi-supervised learning,” in Proc. NIPS, 2003, pp. 585–592.</li>
+<li>[56]R. I. Kondor and J. Lafferty, “Diffusion kernels on graphs and other discrete structures,” in Proc. ICML, 2002, pp. 315–322.</li>
+</ol>
+<ul>
+<li>non-parametric kernel learning:<strong>[high computational cost]</strong></li>
+</ul>
+<ol>
+<li>[54]</li>
+<li>[57]J. Zhuang, I. W. Tsang, and S. C. H. Hoi, “SimpleNPKL: Simple non-parametric kernel learning,” in Proc. 26th ICML, Montreal, QC, Canada, 2009.</li>
+<li>[58]B. Kulis, M. Sustik, and I. Dhillon, “Learning low-rank kernel matrices,” in Proc. 23rd ICML, Pittsburgh, PA, USA, 2006, pp. 505–512.</li>
+</ol>
+<ul>
+<li>semi-supervised and unsupervised kernel learning:</li>
+</ul>
+<ol>
+<li>[54]</li>
+<li>[56]</li>
+<li>[59]S. C. H. Hoi and R. Jin, “Active kernel learning,” in Proc. 25th ICML, Helsinki, Finland, 2008, pp. 400–407.</li>
+</ol>
+<ul>
+<li>multi-label MKL based on OvA:</li>
+</ul>
+<ol>
+<li>[74]L. Tang, J. Chen, and J. Ye, “On multiple kernel learning with multiple labels,” in Proc. IJCAI, 2009.</li>
+<li>[22]S. Bucak, R. Jin, and A. Jain, “Multi-label multiple kernel learning by stochastic approximation: Application to visual object recognition,” in Proc. NIPS, 2010, pp. 325–333.</li>
+<li>[75]A. Zien and S. Cheng, “Multiclass multiple kernel learning,” in Proc. 24th ICML, Corvallis, OR, USA, 2007.</li>
+<li>[48]S. Ji, L. Sun, R. Jin, and J. Ye, “Multi-label multiple kernel learning,” in Proc. NIPS, 2009.</li>
+</ol>
+<h1 id="MKL-optimization-techniques-two-groups"><a href="#MKL-optimization-techniques-two-groups" class="headerlink" title="MKL optimization techniques: two groups"></a>MKL optimization techniques: two groups</h1><ul>
+<li>group 1: directly solve the primal problem or the dual problem</li>
+</ul>
+<ol>
+<li>[33]</li>
+<li>[16]</li>
+<li>[30]</li>
+<li>[9]</li>
+</ol>
+<ul>
+<li>group 2: solve the convex-concave optimization problem by alternating between two steps: the step for updating the kernel combination weights and the step for solving the SVM classifier for the given combination weights.</li>
+</ul>
+<ol>
+<li>[50] <strong>SILP</strong> problem</li>
+<li>[43] simpleMKL: <strong>Subgradient Descent</strong> approaches for MKL; <strong>MKL-GL</strong></li>
+<li>[12] <strong>MKL-SD</strong></li>
+<li>[39] K. Gai, G. Chen, and C. Zhang, “Learning kernels with radiuses of minimum enclosing balls,” in Proc. NIPS, 2010, pp. 649–657. <strong>[MKL-SD]</strong></li>
+<li>[23] <strong>MKL-MD</strong> (a mirror descent method)</li>
+<li>[42] <strong>MKL-level</strong> (an extended level method)</li>
+<li>[10] <strong>MKL-GL</strong> (group lasso)</li>
+</ol>
+<ul>
+<li>online learning algorithms for MKL: process one training example at each iteration</li>
+</ul>
+<ol>
+<li>[78] R. Jin, S. C. H. Hoi, and T. Yang, “Online multiple kernel learning: Algorithms and mistake bounds,” in Proc. Int. Conf. ALT, Canberra, ACT, Australia, 2010, pp. 390–404.</li>
+<li>[21] L. Jie, F. Orabona, M. Fornoni, B. Caputo, and N. Cesa-Bianchi, “OM-2: An online multi-class multi-kernel learning algorithm,” in Proc. IEEE CVPRW, San Francisco, CA, USA, 2010, pp. 43–50.</li>
+</ol>
+<h1 id="experiments"><a href="#experiments" class="headerlink" title="experiments:"></a>experiments:</h1><p>three datasets: Caltech 101; Pascal VOC 2007; a subset of ImageNet</p>
+<p>AVG： average kernel approach</p>
+<h2 id="classification-performance"><a href="#classification-performance" class="headerlink" title="classification performance"></a>classification performance</h2><ol>
+<li>MKL和AVG都优于单核 SVM</li>
+<li>当训练集样本很小时（每类有10或20个样本），与AVG相比，L1-MKL性能最差，Lp-MKL与AVG相当；当训练集样本量增大到一定程度时（每类有30个样本），L1-MKL的性能明显优于其他方法</li>
+<li>不同的分类算法在迭代过程中的精度变化不一样（文章中图3）<ul>
+<li>simpleMKL迭代很小的步数就收敛了，但是在线性搜索步需要很多迭代，因此总的耗时却很大</li>
+<li>MKL-SILP震荡比较明显，这由于其贪婪的本质，每次总是选择the most violated constraints 来优化<br><img src="/img/blog/mkl/mkl_map_scores.png" alt="mean average precision for MKLs"></li>
+</ul>
+</li>
+</ol>
+<h2 id="Number-of-kernels-vs-classification-accuracy"><a href="#Number-of-kernels-vs-classification-accuracy" class="headerlink" title="Number of kernels vs classification accuracy"></a>Number of kernels vs classification accuracy</h2><p>文章中实验的做法：先用L1-MKL来得到所有kernel的权重并排序，然后通过逐步加入权重有序的核来验证MKL方法的性能。（文章中图4）<br><img src="/img/blog/mkl/map_score_wrt_kernels.png" alt="Change in MAP score with respect to the number of base kernels"><br>上图表明随着核的数量的增加，L2-MKL和AVG方法的精度反而下降了，这表明后面加入的一些week kernels起到的是坏作用，而L1-MKL方法到一定程度之后，就饱和了，精度变化不大了，从另一方面来说，L1-MKL更加的鲁棒。</p>
+<h2 id="computational-efficiency"><a href="#computational-efficiency" class="headerlink" title="computational efficiency"></a>computational efficiency</h2><p>实验结果：<br><img src="/img/blog/mkl/training_time.png" alt="Total Training Time (Secs), Number of Iterations, and Total Time Spent on Combining the Base Kernels (Secs) for Different MKL Algorithms vs Number of Training Examples"><br>上表表明</p>
+<ol>
+<li>与L1-MKL方法相比，Lp-MKL需要很小的步数，主要原因在于Lp-MKL拥有光滑的目标函数，更方便优化。</li>
+<li>大量的时间主要花费在kernel matrix的组合上，而对于不同的L1-MKL方法而言，差异主要体现在他们在迭代过程中的稀疏性的体现。比如MKL-SILP在优化过程中就产生了稀疏解，因此其实最有效的wrapper algorithm，而SimpleMKL就不用有这样的性质了，所以需要更多的时间。</li>
+</ol>
+<h2 id="evaluation-of-sparseness"><a href="#evaluation-of-sparseness" class="headerlink" title="evaluation of sparseness"></a>evaluation of sparseness</h2><p>明显L1-MKL是具有很好的稀疏性的，而AVG和Lp-MKL就不具有稀疏性了。</p>
+<h1 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h1><ol>
+<li>Multiple Kernel Learning for Visual Object Recognition：A Review</li>
+<li>作者的<a href="http://www.cse.msu.edu/~bucakser/" target="_blank" rel="external">个人主页</a>, 里面提供了与本文相关的代码及一些作者的个人信息。</li>
+</ol>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Machine-Learning/">Machine Learning</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Machine-Learning/">Machine Learning</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://heimignx.cn/2016/09/29/multiple-kernel-learning-for-visual-object-recognition-a-review/" data-title="A Review of Multiple Kernel Learning | Heiming Xu" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/09/29/indefinite-kernel-svms/" title="Indefinite Kernel SVMs">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Indefinite Kernel SVMs</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/09/27/conclusion-for-first-year-of-master/"  title="研一小结">
+ <strong>下一篇：</strong><br/> 
+ <span>研一小结
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/09/29/multiple-kernel-learning-for-visual-object-recognition-a-review/" data-title="A Review of Multiple Kernel Learning" data-url="http://heimignx.cn/2016/09/29/multiple-kernel-learning-for-visual-object-recognition-a-review/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Overview-of-MKL"><span class="toc-number">1.</span> <span class="toc-text">Overview of MKL</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#relationship-to-other-approaches"><span class="toc-number">2.</span> <span class="toc-text">relationship to other approaches</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#MKL-optimization-techniques-two-groups"><span class="toc-number">3.</span> <span class="toc-text">MKL optimization techniques: two groups</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#experiments"><span class="toc-number">4.</span> <span class="toc-text">experiments:</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#classification-performance"><span class="toc-number">4.1.</span> <span class="toc-text">classification performance</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Number-of-kernels-vs-classification-accuracy"><span class="toc-number">4.2.</span> <span class="toc-text">Number of kernels vs classification accuracy</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#computational-efficiency"><span class="toc-number">4.3.</span> <span class="toc-text">computational efficiency</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#evaluation-of-sparseness"><span class="toc-number">4.4.</span> <span class="toc-text">evaluation of sparseness</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#reference"><span class="toc-number">5.</span> <span class="toc-text">reference</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Hexo/" title="Hexo">Hexo<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Latex/" title="Latex">Latex<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Lintcode/" title="Lintcode">Lintcode<sup>16</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/MATLAB/" title="MATLAB">MATLAB<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Machine-Learning/" title="Machine Learning">Machine Learning<sup>14</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Mathematics/" title="Mathematics">Mathematics<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Optimization/" title="Optimization">Optimization<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Python/" title="Python">Python<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Tattle/" title="Tattle">Tattle<sup>3</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/algorithm/" title="algorithm">algorithm<sup>16</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/lintcode/" title="lintcode">lintcode<sup>16</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Machine-Learning/" title="Machine Learning">Machine Learning<sup>10</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/python/" title="python">python<sup>10</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c/" title="c++">c++<sup>9</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/CS231n笔记/" title="CS231n笔记">CS231n笔记<sup>7</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/matlab/" title="matlab">matlab<sup>6</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/machine-learning/" title="machine learning">machine learning<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Hexo/" title="Hexo">Hexo<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mathematics/" title="mathematics">mathematics<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/tattle/" title="tattle">tattle<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/code-optimize/" title="code optimize">code optimize<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Optimization/" title="Optimization">Optimization<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Tattle/" title="Tattle">Tattle<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Latex/" title="Latex">Latex<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www.lifuhao.cn/" target="_blank" title="李狗蛋师兄">李狗蛋师兄</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://zhikaizhang.cn/" target="_blank" title="张致恺博客">张致恺博客</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/heimingx" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:heimingx@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="heimingx">heimingx</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+        getSize();
+        if (myWidth >= 1024) {
+          c.click();
+        }
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"ming"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End --><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="custom_mathjax_source">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+  </body>
+</html>
