@@ -14,23 +14,23 @@
     })();
   </script>
 
-    <title>lintcode[17] 子集 | Heiming Xu</title>
+    <title>Euclidean Projection onto the Simplex | Heiming Xu</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="heimingx">
     
 
     
-    <meta name="description" content="如题~">
+    <meta name="description" content="在欧式空间将向量投影到Simplex">
 <meta property="og:type" content="article">
-<meta property="og:title" content="lintcode[17] 子集">
-<meta property="og:url" content="http://heimignx.cn/2016/04/20/lintcode17-subsets/index.html">
+<meta property="og:title" content="Euclidean Projection onto the Simplex">
+<meta property="og:url" content="http://heimignx.cn/2016/10/15/euclidean-projection-onto-the-simplex/index.html">
 <meta property="og:site_name" content="Heiming Xu">
-<meta property="og:description" content="如题~">
-<meta property="og:updated_time" content="2016-10-15T14:06:53.924Z">
+<meta property="og:description" content="在欧式空间将向量投影到Simplex">
+<meta property="og:updated_time" content="2016-10-18T03:24:25.501Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="lintcode[17] 子集">
-<meta name="twitter:description" content="如题~">
+<meta name="twitter:title" content="Euclidean Projection onto the Simplex">
+<meta name="twitter:description" content="在欧式空间将向量投影到Simplex">
 
     
     <link rel="alternative" href="/atom.xml" title="Heiming Xu" type="application/atom+xml">
@@ -85,14 +85,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2016/04/20/lintcode17-subsets/" title="lintcode[17] 子集" itemprop="url">lintcode[17] 子集</a>
+      <a href="/2016/10/15/euclidean-projection-onto-the-simplex/" title="Euclidean Projection onto the Simplex" itemprop="url">Euclidean Projection onto the Simplex</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
 		
   <p class="article-time">
-    <time datetime="2016-04-20T13:34:34.000Z" itemprop="datePublished"> 发表于 2016-04-20</time>
+    <time datetime="2016-10-15T12:30:47.000Z" itemprop="datePublished"> 发表于 2016-10-15</time>
     
   </p>
 </header>
@@ -101,16 +101,42 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#题目描述"><span class="toc-number">1.</span> <span class="toc-text">题目描述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#思路"><span class="toc-number">2.</span> <span class="toc-text">思路</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#代码"><span class="toc-number">3.</span> <span class="toc-text">代码</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#model-1：-Euclidean-Projection-onto-the-Simplex"><span class="toc-number">1.</span> <span class="toc-text">model 1： Euclidean Projection onto the Simplex</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#model-2-Euclidean-Projection-onto-the-ℓ1-Ball"><span class="toc-number">2.</span> <span class="toc-text">model 2: Euclidean Projection onto the ℓ1-Ball</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#references"><span class="toc-number">3.</span> <span class="toc-text">references</span></a></li></ol>
 		
 		</div>
 		
-		<h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><p>给定一个含不同整数的集合，返回其所有的子集</p>
+		<p>在ML中，通常通过L1范数约束来达到稀疏性，而对于L1范数约束的求解常用的解法是内点法，这种算法虽然通用，但是针对这一问题有其效率的问题，最近在阅读到一篇文章专门研究在欧式空间下投影到Simplex上的做法，这里总结下来以备忘。</p>
+<h1 id="model-1：-Euclidean-Projection-onto-the-Simplex"><a href="#model-1：-Euclidean-Projection-onto-the-Simplex" class="headerlink" title="model 1： Euclidean Projection onto the Simplex"></a>model 1： Euclidean Projection onto the Simplex</h1><p>首先确定一下要求解的模型：<br>$$\min_w \frac{1}{2}|w-v|^2_2\quad s.t. \quad \sum_{i=1}^nw_i = z, w_i \geq 0$$</p>
 <blockquote>
-<p>如果 S = [1,2,3]，有如下的解：<br>    [<br>          [3],<br>          [1],<br>          [2],<br>          [1,2,3],<br>          [1,3],<br>          [2,3],<br>          [1,2],<br>          []<br>    ]</p>
+<p><strong>注</strong>：这里啰嗦一句，上式中的$v$便是我们在欧式空间中待投影的向量，而$w$便是我们要求解的在simplex上与$v$对应的那个向量</p>
 </blockquote>
-<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>这题与全排列的题目有点类似，不过子集需要把所有排列的情况都列出来<br>这里参考了<a href="http://www.cnblogs.com/theskulls/p/5099745.html" target="_blank" rel="external">lintcode 中等题：subSets 子集</a>的解法，感谢博主！</p>
-<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    @param S: The set of numbers.</div><div class="line">    @return: A list of lists. See example.</div><div class="line">    """</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">subsets</span><span class="params">(self, S)</span>:</span></div><div class="line">        S.sort()</div><div class="line">        res = []</div><div class="line">        self.mydfs(res, S, <span class="number">0</span>, <span class="number">0</span>, [])</div><div class="line">        <span class="keyword">return</span> res</div><div class="line">        </div><div class="line">        </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">mydfs</span><span class="params">(self, res, S, depth, start, valuelist)</span>:</span></div><div class="line">        res.append(valuelist)</div><div class="line">        <span class="keyword">print</span> res</div><div class="line">        <span class="keyword">if</span> depth == len(S): <span class="keyword">return</span></div><div class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(start, len(S)):</div><div class="line">            self.mydfs(res, S, depth+<span class="number">1</span>, i+<span class="number">1</span>, valuelist+[S[i]])</div></pre></td></tr></table></figure>
+<p>下面需要对这个模型进行求解，常用套路便是对上式求Lagrange问题：<br>$$L(w, \zeta) = \frac{1}{2}|w-v|^2 + \theta(\sum_{i=1}^n w_i - z) - \zeta \cdot w, \theta\in\mathbb R, \zeta\in \mathbb R_+^n$$</p>
+<p>上式对$w$求偏导得到：<br>$$\frac{dL}{dw_i}=w_i-v_i+\theta-\zeta_i=0$$</p>
+<p>这里运用到Lagrange变量的性质：当$w_i\gt 0$的时候，我们一定有$\zeta_i = 0$。因此，当$w_i\gt 0$时，我们有<br>$$w_i = v_i - \theta + \zeta_i = v_i - \theta$$</p>
+<p>接着，在一篇文章中(Shalev-Shwartz &amp; Singer, 2006)给出了一个Lemma：对于原始模型，如果有$v_s\gt v_j$,那么当$w_s=0$时，就一定有$w_j=0$。</p>
+<blockquote>
+<p><strong>注：</strong>这里其实揭示了$w$与$v$之间的关系，而下面正是巧妙的运用了这个关系解析的求得了$w$.</p>
+</blockquote>
+<p>根据上面的这个Lemma，我们首先定义一个$\rho$,这里$\rho$表示最终的最优解$w$中大于0的个数，因此有</p>
+<p>$$\sum_{i=1}^n w_i = \sum_{i=1}^{\rho} w_i = \sum_{i=1}^{\rho}(v_i - \theta) = z$$</p>
+<p>因此，$\theta = \frac{1}{\rho} (\sum_{i=1}^{\rho} v_i - z)$.那么，最终的$w$可以得到</p>
+<p>$$w_i = \max\{v_i - \theta, 0\}$$</p>
+<p>接下来，我们需要确定的就是上式中的$\rho$了，同样文章(Shalev-Shwartz &amp; Singer, 2006)中给出了求$\rho$的方法：<br>对于给定的$v$,按照降序来重新排列得到新的序列$\mu$,那么与之对应的$\rho$有以下公式：<br>$$\rho(z,\mu)=\max\{j\in[n]:\mu_j - \frac{1}{j}(\sum_{r=1}^j \mu_r - z) &gt; 0\}$$</p>
+<p>那么到这里，这个Model的解析解就得到了。</p>
+<h1 id="model-2-Euclidean-Projection-onto-the-ℓ1-Ball"><a href="#model-2-Euclidean-Projection-onto-the-ℓ1-Ball" class="headerlink" title="model 2: Euclidean Projection onto the ℓ1-Ball"></a>model 2: Euclidean Projection onto the ℓ1-Ball</h1><p>首先确定一下要求解的模型：<br>$$\min_w \frac{1}{2}|w-v|^2_2\quad s.t. \quad |w|_1 \leq z$$</p>
+<p>在这里，我们可以明确两点：</p>
+<ol>
+<li><p>对于给定的$v$，其对应的1范数应该满足$|v|_1\gt z$,要不然最优的$w$便是$v$本身.</p>
+</li>
+<li><p>基于1，最优的$w$应该在约束集的边界上取得，因此，可以将原Model中的约束换成$|w|_1 = z$</p>
+</li>
+</ol>
+<p>同时， 这里模型与上面的一个的差异就在于对于$w$的约束不再是大于0了，而是最终的1范数在一个区间内。但是，对于非零的$w$与其对应的$v$之间存在一个巧妙的关系就是：$w_iv_i\geq 0$.（这里就不放证明了，可以自行参考论文）</p>
+<p>根据上面的这个关系，我们可以先认为设定$u_i = |v_i|$, 可以将原模型变换成：<br>$$\min_{\beta\in\mathbb R^n}|\beta-u|_2^2 \quad s.t. \quad |\beta|_1 = z \quad \text{and}\quad \beta \geq 0$$<br>这里的模型就与第一个一样了，然后再求得$\beta$之后，我们就可以得到与之对应的$w_i = sign(v_i)\beta_i$.</p>
+<h1 id="references"><a href="#references" class="headerlink" title="references"></a>references</h1><ol>
+<li>Efficient Projections onto the ℓ1-Ball for Learning in High Dimensions(ICML’08)</li>
+<li>Efficient learning of label ranking by soft projections onto polyhedra(JMLR’06)</li>
+</ol>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -118,13 +144,13 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/Lintcode/">Lintcode</a>
+  <a class="article-category-link" href="/categories/Optimization/">Optimization</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/python/">python</a><a href="/tags/lintcode/">lintcode</a><a href="/tags/algorithm/">algorithm</a>
+  <span></span> <a href="/tags/Machine-Learning/">Machine Learning</a><a href="/tags/Optimization/">Optimization</a>
   </div>
 
 </div>
@@ -133,7 +159,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://heimignx.cn/2016/04/20/lintcode17-subsets/" data-title="lintcode[17] 子集 | Heiming Xu" data-tsina="null" class="share clearfix">
+	  <div data-url="http://heimignx.cn/2016/10/15/euclidean-projection-onto-the-simplex/" data-title="Euclidean Projection onto the Simplex | Heiming Xu" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -146,19 +172,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2016/04/29/semi-continuity/" title="半连续">
-  <strong>上一篇：</strong><br/>
-  <span>
-  半连续</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2016/04/18/lintcode16-permute-unique/"  title="lintcode[16] 带重复元素的排列">
+<a href="/2016/09/29/indefinite-kernel-svms/"  title="Indefinite Kernel SVMs">
  <strong>下一篇：</strong><br/> 
- <span>lintcode[16] 带重复元素的排列
+ <span>Indefinite Kernel SVMs
 </span>
 </a>
 </div>
@@ -167,7 +185,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2016/04/20/lintcode17-subsets/" data-title="lintcode[17] 子集" data-url="http://heimignx.cn/2016/04/20/lintcode17-subsets/"></div>
+	<div class="ds-thread" data-thread-key="2016/10/15/euclidean-projection-onto-the-simplex/" data-title="Euclidean Projection onto the Simplex" data-url="http://heimignx.cn/2016/10/15/euclidean-projection-onto-the-simplex/"></div>
 </section>
 
 
@@ -177,7 +195,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#题目描述"><span class="toc-number">1.</span> <span class="toc-text">题目描述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#思路"><span class="toc-number">2.</span> <span class="toc-text">思路</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#代码"><span class="toc-number">3.</span> <span class="toc-text">代码</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#model-1：-Euclidean-Projection-onto-the-Simplex"><span class="toc-number">1.</span> <span class="toc-text">model 1： Euclidean Projection onto the Simplex</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#model-2-Euclidean-Projection-onto-the-ℓ1-Ball"><span class="toc-number">2.</span> <span class="toc-text">model 2: Euclidean Projection onto the ℓ1-Ball</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#references"><span class="toc-number">3.</span> <span class="toc-text">references</span></a></li></ol>
  
   </div>
 
