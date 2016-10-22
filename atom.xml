@@ -65,9 +65,9 @@
       <category term="Optimization" scheme="http://heimignx.cn/categories/Optimization/"/>
     
     
-      <category term="Machine Learning" scheme="http://heimignx.cn/tags/Machine-Learning/"/>
-    
       <category term="Optimization" scheme="http://heimignx.cn/tags/Optimization/"/>
+    
+      <category term="Machine Learning" scheme="http://heimignx.cn/tags/Machine-Learning/"/>
     
   </entry>
   
@@ -828,6 +828,33 @@
   </entry>
   
   <entry>
+    <title>LaTex中空格的用法</title>
+    <link href="http://heimignx.cn/2016/06/28/use-space-in-Latex/"/>
+    <id>http://heimignx.cn/2016/06/28/use-space-in-Latex/</id>
+    <published>2016-06-28T15:21:47.000Z</published>
+    <updated>2016-10-15T14:06:53.930Z</updated>
+    
+    <content type="html"><![CDATA[<p>两个quad空格&ensp;<code>a \qquad b</code>&ensp;$a \qquad b$&ensp;两个m的宽度<br>quad空格&ensp;&ensp;&ensp;&ensp;&ensp;<code>a \quad b</code>&ensp;$a \quad b$&ensp;一个m的宽度<br>大空格&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;<code>a\ b</code>&ensp;$a\ b$&ensp;1/3m宽度<br>中等空格&ensp;&ensp;&ensp;&ensp;&ensp;<code>a\;b</code>&ensp;$a\;b$&ensp;2/7m宽度<br>小空格&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;<code>a\,b</code>&ensp;$a\,b$&ensp;1/6m宽度<br>没有空格&ensp;&ensp;&ensp;&ensp;&ensp;<code>ab</code>&ensp;$ab\,$<br>紧贴&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;<code>a\!b</code>&ensp;$a\!b$&ensp;缩进1/6m宽度(在hexo中需要写成<code>a\\!b</code>)</p>
+<blockquote>
+<p>approximately the width of an “M” in the current font</p>
+</blockquote>
+<p><code>m</code> 代表当前字体下接近字符‘M’的宽度</p>
+]]></content>
+    
+    <summary type="html">
+    
+      Letex中空格的用法
+    
+    </summary>
+    
+      <category term="Latex" scheme="http://heimignx.cn/categories/Latex/"/>
+    
+    
+      <category term="Latex" scheme="http://heimignx.cn/tags/Latex/"/>
+    
+  </entry>
+  
+  <entry>
     <title>LibSVM在MATLAB中应用及一些问题</title>
     <link href="http://heimignx.cn/2016/06/28/use-LibSVM-in-MATLAB/"/>
     <id>http://heimignx.cn/2016/06/28/use-LibSVM-in-MATLAB/</id>
@@ -999,33 +1026,6 @@
     
     
       <category term="matlab" scheme="http://heimignx.cn/tags/matlab/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>LaTex中空格的用法</title>
-    <link href="http://heimignx.cn/2016/06/28/use-space-in-Latex/"/>
-    <id>http://heimignx.cn/2016/06/28/use-space-in-Latex/</id>
-    <published>2016-06-28T15:21:47.000Z</published>
-    <updated>2016-10-15T14:06:53.930Z</updated>
-    
-    <content type="html"><![CDATA[<p>两个quad空格&ensp;<code>a \qquad b</code>&ensp;$a \qquad b$&ensp;两个m的宽度<br>quad空格&ensp;&ensp;&ensp;&ensp;&ensp;<code>a \quad b</code>&ensp;$a \quad b$&ensp;一个m的宽度<br>大空格&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;<code>a\ b</code>&ensp;$a\ b$&ensp;1/3m宽度<br>中等空格&ensp;&ensp;&ensp;&ensp;&ensp;<code>a\;b</code>&ensp;$a\;b$&ensp;2/7m宽度<br>小空格&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;<code>a\,b</code>&ensp;$a\,b$&ensp;1/6m宽度<br>没有空格&ensp;&ensp;&ensp;&ensp;&ensp;<code>ab</code>&ensp;$ab\,$<br>紧贴&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;<code>a\!b</code>&ensp;$a\!b$&ensp;缩进1/6m宽度(在hexo中需要写成<code>a\\!b</code>)</p>
-<blockquote>
-<p>approximately the width of an “M” in the current font</p>
-</blockquote>
-<p><code>m</code> 代表当前字体下接近字符‘M’的宽度</p>
-]]></content>
-    
-    <summary type="html">
-    
-      Letex中空格的用法
-    
-    </summary>
-    
-      <category term="Latex" scheme="http://heimignx.cn/categories/Latex/"/>
-    
-    
-      <category term="Latex" scheme="http://heimignx.cn/tags/Latex/"/>
     
   </entry>
   

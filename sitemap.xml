@@ -9,6 +9,13 @@
   </url>
   
   <url>
+    <loc>http://heimignx.cn/reference/index.html</loc>
+    
+    <lastmod>2016-10-15T14:06:53.931Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://heimignx.cn/about/index.html</loc>
     
     <lastmod>2016-10-15T14:06:53.931Z</lastmod>
@@ -16,9 +23,9 @@
   </url>
   
   <url>
-    <loc>http://heimignx.cn/reference/index.html</loc>
+    <loc>http://heimignx.cn/2016/03/11/use-Mosek-in-cvx/</loc>
     
-    <lastmod>2016-10-15T14:06:53.931Z</lastmod>
+    <lastmod>2016-10-15T14:06:53.930Z</lastmod>
     
   </url>
   
@@ -37,20 +44,6 @@
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/05/01/smo-algorithm/</loc>
-    
-    <lastmod>2016-10-15T14:06:53.930Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://heimignx.cn/2016/03/11/use-Mosek-in-cvx/</loc>
-    
-    <lastmod>2016-10-15T14:06:53.930Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://heimignx.cn/2016/06/28/use-LibSVM-in-MATLAB/</loc>
     
     <lastmod>2016-10-15T14:06:53.930Z</lastmod>
@@ -58,14 +51,21 @@
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/04/29/semi-continuity/</loc>
+    <loc>http://heimignx.cn/2016/05/01/smo-algorithm/</loc>
+    
+    <lastmod>2016-10-15T14:06:53.930Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://heimignx.cn/2016/05/03/sigmoid-function-and-sigmoid-kernel/</loc>
     
     <lastmod>2016-10-15T14:06:53.929Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/05/24/reproducing-kernel-hilbert-spaces/</loc>
+    <loc>http://heimignx.cn/2016/04/29/semi-continuity/</loc>
     
     <lastmod>2016-10-15T14:06:53.929Z</lastmod>
     
@@ -79,16 +79,9 @@
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/05/03/sigmoid-function-and-sigmoid-kernel/</loc>
+    <loc>http://heimignx.cn/2016/05/24/reproducing-kernel-hilbert-spaces/</loc>
     
     <lastmod>2016-10-15T14:06:53.929Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://heimignx.cn/2016/03/10/parallel-compute-in-matlab/</loc>
-    
-    <lastmod>2016-10-15T14:06:53.928Z</lastmod>
     
   </url>
   
@@ -107,16 +100,16 @@
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2015/11/25/manifold-learning/</loc>
+    <loc>http://heimignx.cn/2016/03/10/parallel-compute-in-matlab/</loc>
     
     <lastmod>2016-10-15T14:06:53.928Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/03/02/machine-lerning-reference/</loc>
+    <loc>http://heimignx.cn/2015/11/25/manifold-learning/</loc>
     
-    <lastmod>2016-10-15T14:06:53.927Z</lastmod>
+    <lastmod>2016-10-15T14:06:53.928Z</lastmod>
     
   </url>
   
@@ -135,9 +128,30 @@
   </url>
   
   <url>
+    <loc>http://heimignx.cn/2016/03/02/machine-lerning-reference/</loc>
+    
+    <lastmod>2016-10-15T14:06:53.927Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://heimignx.cn/2016/04/08/lintcode9-fizz-buzz/</loc>
     
     <lastmod>2016-10-15T14:06:53.926Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://heimignx.cn/2016/04/05/lintcode6-merge-order-array/</loc>
+    
+    <lastmod>2016-10-15T14:06:53.925Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://heimignx.cn/2016/04/04/lintcode5-kth-large-number/</loc>
+    
+    <lastmod>2016-10-15T14:06:53.925Z</lastmod>
     
   </url>
   
@@ -156,30 +170,9 @@
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/04/05/lintcode6-merge-order-array/</loc>
-    
-    <lastmod>2016-10-15T14:06:53.925Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://heimignx.cn/2016/04/03/lintcode4-ugly-number/</loc>
     
     <lastmod>2016-10-15T14:06:53.925Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://heimignx.cn/2016/04/04/lintcode5-kth-large-number/</loc>
-    
-    <lastmod>2016-10-15T14:06:53.925Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://heimignx.cn/2016/04/20/lintcode17-subsets/</loc>
-    
-    <lastmod>2016-10-15T14:06:53.924Z</lastmod>
     
   </url>
   
@@ -198,16 +191,9 @@
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/04/10/lintcode12-min-stack/</loc>
+    <loc>http://heimignx.cn/2016/04/20/lintcode17-subsets/</loc>
     
-    <lastmod>2016-10-15T14:06:53.923Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://heimignx.cn/2016/04/12/lintcode14-binary-search/</loc>
-    
-    <lastmod>2016-10-15T14:06:53.923Z</lastmod>
+    <lastmod>2016-10-15T14:06:53.924Z</lastmod>
     
   </url>
   
@@ -219,14 +205,7 @@
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/04/09/lintcode11-search-range/</loc>
-    
-    <lastmod>2016-10-15T14:06:53.923Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://heimignx.cn/2016/04/17/lintcode15-permutation/</loc>
+    <loc>http://heimignx.cn/2016/04/10/lintcode12-min-stack/</loc>
     
     <lastmod>2016-10-15T14:06:53.923Z</lastmod>
     
@@ -240,14 +219,28 @@
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/04/17/hexo-build/</loc>
+    <loc>http://heimignx.cn/2016/04/17/lintcode15-permutation/</loc>
     
-    <lastmod>2016-10-15T14:06:53.922Z</lastmod>
+    <lastmod>2016-10-15T14:06:53.923Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/04/01/lintcode1-aplusb/</loc>
+    <loc>http://heimignx.cn/2016/04/12/lintcode14-binary-search/</loc>
+    
+    <lastmod>2016-10-15T14:06:53.923Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://heimignx.cn/2016/04/09/lintcode11-search-range/</loc>
+    
+    <lastmod>2016-10-15T14:06:53.923Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://heimignx.cn/2016/04/17/hexo-build/</loc>
     
     <lastmod>2016-10-15T14:06:53.922Z</lastmod>
     
@@ -261,6 +254,20 @@
   </url>
   
   <url>
+    <loc>http://heimignx.cn/2016/04/01/lintcode1-aplusb/</loc>
+    
+    <lastmod>2016-10-15T14:06:53.922Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://heimignx.cn/2016/02/24/duplicate-matrix-from-vector-in-matlab/</loc>
+    
+    <lastmod>2016-10-15T14:06:53.921Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://heimignx.cn/2016/04/08/hello-world/</loc>
     
     <lastmod>2016-10-15T14:06:53.921Z</lastmod>
@@ -269,13 +276,6 @@
   
   <url>
     <loc>http://heimignx.cn/2016/08/15/cs231n-optimization-sgd/</loc>
-    
-    <lastmod>2016-10-15T14:06:53.921Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://heimignx.cn/2016/02/24/duplicate-matrix-from-vector-in-matlab/</loc>
     
     <lastmod>2016-10-15T14:06:53.921Z</lastmod>
     
@@ -296,14 +296,14 @@
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/08/19/cs231n-neural-networks-part-3-learning-and-evaluation/</loc>
+    <loc>http://heimignx.cn/2016/08/17/cs231n-neural-networks-part%20-1-setting-up-the-architecture/</loc>
     
     <lastmod>2016-10-15T14:06:53.920Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/08/17/cs231n-neural-networks-part%20-1-setting-up-the-architecture/</loc>
+    <loc>http://heimignx.cn/2016/08/19/cs231n-neural-networks-part-3-learning-and-evaluation/</loc>
     
     <lastmod>2016-10-15T14:06:53.920Z</lastmod>
     
@@ -317,21 +317,7 @@
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/09/27/conclusion-for-first-year-of-master/</loc>
-    
-    <lastmod>2016-10-15T14:06:53.919Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://heimignx.cn/2016/03/08/code-optimize-in-matlab/</loc>
-    
-    <lastmod>2016-10-15T14:06:53.919Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://heimignx.cn/2016/08/16/cs231n-backpropagation-intuitions/</loc>
     
     <lastmod>2016-10-15T14:06:53.919Z</lastmod>
     
@@ -345,14 +331,28 @@
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/06/28/Goldstein-Armijo-Rule-and-backtracking-line-search/</loc>
+    <loc>http://heimignx.cn/2016/08/16/cs231n-backpropagation-intuitions/</loc>
+    
+    <lastmod>2016-10-15T14:06:53.919Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://heimignx.cn/2016/09/27/conclusion-for-first-year-of-master/</loc>
+    
+    <lastmod>2016-10-15T14:06:53.919Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://heimignx.cn/2016/02/01/about-shaoshuai/</loc>
     
     <lastmod>2016-10-15T14:06:53.918Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/02/01/about-shaoshuai/</loc>
+    <loc>http://heimignx.cn/2016/06/28/Goldstein-Armijo-Rule-and-backtracking-line-search/</loc>
     
     <lastmod>2016-10-15T14:06:53.918Z</lastmod>
     
