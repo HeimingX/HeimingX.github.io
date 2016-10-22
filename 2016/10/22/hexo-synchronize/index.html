@@ -21,16 +21,19 @@
     
 
     
-    <meta name="description" content="hexo在不同机器上进行更新博文">
+    <meta name="description" content="Hexo搭建博客目前已经非常流行了，各种教程在网上可以找到一大推，但是，由于不是B/S类型的，对于异地更新博文就比较麻烦了，需要预先搭建相关的环境，另外由于版本的更新还会遇到各种问题，最近就因为重装了一下系统，需要重新搭建环境也就淌过了不少的坑，现在总结下来以备忘。
+新机器环境搭建首先，就像刚开始搭建hexo一样，我们需要安装node.js和git的环境，去相关主页上下载最新的安装包傻瓜式安装即可">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hexo异地同步更新博文">
 <meta property="og:url" content="http://heimignx.cn/2016/10/22/hexo-synchronize/index.html">
 <meta property="og:site_name" content="Heiming Xu">
-<meta property="og:description" content="hexo在不同机器上进行更新博文">
-<meta property="og:updated_time" content="2016-10-22T12:57:57.946Z">
+<meta property="og:description" content="Hexo搭建博客目前已经非常流行了，各种教程在网上可以找到一大推，但是，由于不是B/S类型的，对于异地更新博文就比较麻烦了，需要预先搭建相关的环境，另外由于版本的更新还会遇到各种问题，最近就因为重装了一下系统，需要重新搭建环境也就淌过了不少的坑，现在总结下来以备忘。
+新机器环境搭建首先，就像刚开始搭建hexo一样，我们需要安装node.js和git的环境，去相关主页上下载最新的安装包傻瓜式安装即可">
+<meta property="og:updated_time" content="2016-10-22T14:08:30.015Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hexo异地同步更新博文">
-<meta name="twitter:description" content="hexo在不同机器上进行更新博文">
+<meta name="twitter:description" content="Hexo搭建博客目前已经非常流行了，各种教程在网上可以找到一大推，但是，由于不是B/S类型的，对于异地更新博文就比较麻烦了，需要预先搭建相关的环境，另外由于版本的更新还会遇到各种问题，最近就因为重装了一下系统，需要重新搭建环境也就淌过了不少的坑，现在总结下来以备忘。
+新机器环境搭建首先，就像刚开始搭建hexo一样，我们需要安装node.js和git的环境，去相关主页上下载最新的安装包傻瓜式安装即可">
 
     
     <link rel="alternative" href="/atom.xml" title="Heiming Xu" type="application/atom+xml">
@@ -101,11 +104,49 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#新机器环境搭建"><span class="toc-number">1.</span> <span class="toc-text">新机器环境搭建</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Hexo安装和博客的clone"><span class="toc-number">2.</span> <span class="toc-text">Hexo安装和博客的clone</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#踩过的坑"><span class="toc-number">3.</span> <span class="toc-text">踩过的坑</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#references"><span class="toc-number">4.</span> <span class="toc-text">references</span></a></li></ol>
 		
 		</div>
 		
-		<p>hexo在不同机器上进行更新博文</p>
+		<p>Hexo搭建博客目前已经非常流行了，各种教程在网上可以找到一大推，但是，由于不是B/S类型的，对于异地更新博文就比较麻烦了，需要预先搭建相关的环境，另外由于版本的更新还会遇到各种问题，最近就因为重装了一下系统，需要重新搭建环境也就淌过了不少的坑，现在总结下来以备忘。</p>
+<h1 id="新机器环境搭建"><a href="#新机器环境搭建" class="headerlink" title="新机器环境搭建"></a>新机器环境搭建</h1><p>首先，就像刚开始搭建hexo一样，我们需要安装node.js和git的环境，去相关主页上下载最新的安装包傻瓜式安装即可。</p>
+<ol>
+<li><p><a href="https://nodejs.org/en/" target="_blank" rel="external">node.js环境安装</a></p>
+</li>
+<li><p><a href="https://github.com/git-for-windows/git/releases" target="_blank" rel="external">git环境安装</a></p>
+</li>
+</ol>
+<p>这里需要注意，关于github的配置，需要将新机器的SSH公钥添加到github的[Account settings -&gt; SSH Keys -&gt; Add SSH Key]中去。首先，在本地为git配置用户名和邮箱</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">git config --global user.email &quot;heimingx@gmail.com&quot;</div><div class="line">git config --global user.name &quot;Heimingx&quot;</div></pre></td></tr></table></figure>
+<p>接着生成密钥：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ssh-keygen -t rsa -C &quot;heimingx@gmail.com&quot;</div></pre></td></tr></table></figure>
+<p>一路回车，通常会在<code>/.ssh/</code>目录下生成两个文件id_rsa和id_rsa.pub，将id_rsa.pub文件中的内容复制到github的key文本框中。</p>
+<p>最后，我们可以通过</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ssh -T git@github.com</div></pre></td></tr></table></figure>
+<p>来验证一下。</p>
+<h1 id="Hexo安装和博客的clone"><a href="#Hexo安装和博客的clone" class="headerlink" title="Hexo安装和博客的clone"></a>Hexo安装和博客的clone</h1><p>首先，我们在准备存放blog的文件夹内执行clone命令，将事先在github上单独存储的所有blog文件clone到本地。</p>
+<blockquote>
+<p>注：这里我们可以在github上另建一个单独的Repository来存储博客的所有原始文件，一方面保存，另一方面方便异地更新。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git clone https://github.com/HeimingX/hexoblog</div></pre></td></tr></table></figure>
+<p>然后，我们需要安装hexo，在该文件夹下执行安装命令 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install hexo-cli -g</div></pre></td></tr></table></figure>
+<p>接着，安装hexo的相关插件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install hexo --save</div></pre></td></tr></table></figure>
+<p>可以通过 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo -v</div></pre></td></tr></table></figure>
+<p>来检查是否安装成功。</p>
+<p>此时，通常应该就OK了，可以尝试一系列熟悉的hexo命令来进行创作博文了。</p>
+<h1 id="踩过的坑"><a href="#踩过的坑" class="headerlink" title="踩过的坑"></a>踩过的坑</h1><p>在上面的操作都按部就班的完成之后，我们通常可以执行hexo的相关命令了，但是，不知道什么原因，其他的命令都可以顺利执行，本地也能起Server预览，唯独<code>hexo deploy</code>不行，报错：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">bash: /dev/tty: No such device or address</div><div class="line">error: failed to execute prompt script (exit code 1)</div><div class="line">fatal: could not read Username for &apos;https://github.com&apos;: Invalid argument</div><div class="line">FATAL Something&apos;s wrong. Maybe you can find the solution here: http://hexo.io/docs/troubleshooting.html</div><div class="line">Error: bash: /dev/tty: No such device or address</div><div class="line">error: failed to execute prompt script (exit code 1)</div><div class="line">fatal: could not read Username for &apos;https://github.com&apos;: Invalid argument</div></pre></td></tr></table></figure>
+<p>在网上查了很多相关的资料，发现也有同学遇到过之类的问题，不过给出的答案比较多，一一试了也木有能够解决。最终，我的解决方案是修改了本地的_config.yml文件的deploy配置。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">deploy: </div><div class="line">  type: git</div><div class="line">  repository: git@github.com:Heimingx/Heimingx.github.io.git</div><div class="line">  branch: master</div></pre></td></tr></table></figure>
+<p>之前的repository配置的是 <code>https://github.com/Heimingx/Heimingx.github.io.git</code>，具体的原因还有待探究。<br>这里改完之后，就可以顺畅的操作各种hexo命令了，另外发现还不需要每次都输入用户名和密码了，虽然第一反应是不安全，不过这样也方便了很多，毕竟每次输密码还是挺烦的。</p>
+<h1 id="references"><a href="#references" class="headerlink" title="references"></a>references</h1><ol>
+<li><a href="https://segmentfault.com/q/1010000003823346" target="_blank" rel="external">hexo 3.0 为什么无法部署到github上</a></li>
+<li><a href="https://www.v2ex.com/t/289610" target="_blank" rel="external">hexo d 的问题</a></li>
+<li><a href="http://ibruce.info/2013/11/22/hexo-your-blog/" target="_blank" rel="external">hexo 你的博客</a></li>
+</ol>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -164,7 +205,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#新机器环境搭建"><span class="toc-number">1.</span> <span class="toc-text">新机器环境搭建</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Hexo安装和博客的clone"><span class="toc-number">2.</span> <span class="toc-text">Hexo安装和博客的clone</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#踩过的坑"><span class="toc-number">3.</span> <span class="toc-text">踩过的坑</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#references"><span class="toc-number">4.</span> <span class="toc-text">references</span></a></li></ol>
  
   </div>
 
@@ -271,11 +312,11 @@
 			
 		
 			
-				<li><a href="/tags/code-optimize/" title="code optimize">code optimize<sup>1</sup></a></li>
+				<li><a href="/tags/Tattle/" title="Tattle">Tattle<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Tattle/" title="Tattle">Tattle<sup>1</sup></a></li>
+				<li><a href="/tags/code-optimize/" title="code optimize">code optimize<sup>1</sup></a></li>
 			
 		
 			
