@@ -86,6 +86,87 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2016/04/01/lintcode2-wei-bu-de-ling/" title="lintcode[2] 尾部的零" itemprop="url">lintcode[2] 尾部的零</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
+		
+  <p class="article-time">
+    <time datetime="2016-04-01T04:55:32.000Z" itemprop="datePublished"> 发表于 2016-04-01</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><p>设计一个算法，计算出n阶乘中尾部零的个数</p>
+<blockquote>
+<p>11! = 39916800，因此应该返回 2</p>
+</blockquote>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>主要思路就是看10的组成2和5，然后含有5的数远远小于含有2的数的数量，于是我们只要统计出含有5的数的数量，同时，对于不同的数，对于5的贡献不一样，5,15,20均只贡献1个5，而25会贡献2个5，所以要计算两次，递归找下去</p>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><pre><code class="c++"><span class="keyword">class</span> Solution {
+ <span class="keyword">public</span>:
+    <span class="comment">// param n : description of n</span>
+    <span class="comment">// return: description of return </span>
+    <span class="function"><span class="keyword">long</span> <span class="keyword">long</span> <span class="title">trailingZeros</span><span class="params">(<span class="keyword">long</span> <span class="keyword">long</span> n)</span> </span>{
+        <span class="keyword">long</span> <span class="keyword">long</span> num = <span class="number">0</span>;
+        <span class="keyword">while</span>(n){
+            num += n / <span class="number">5</span>;
+            n /= <span class="number">5</span>;  
+        }
+        <span class="keyword">return</span> num;
+    }
+};
+</code></pre>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Lintcode/">Lintcode</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/lintcode/">lintcode</a><a href="/tags/c/">c++</a><a href="/tags/algorithm/">algorithm</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/04/01/lintcode2-wei-bu-de-ling/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/01/lintcode2-wei-bu-de-ling/" data-count-type="comments">&nbsp;Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2016/04/01/lintcode1-aplusb/" title="lintcode[1] a + b" itemprop="url">lintcode[1] a + b</a>
   </h1>
   <p class="article-author">By
@@ -878,73 +959,9 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/10/28/liu-tieyan-zishu/" title="刘铁岩自述" itemprop="url">刘铁岩自述</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
-		
-  <p class="article-time">
-    <time datetime="2015-10-28T15:35:57.000Z" itemprop="datePublished"> 发表于 2015-10-28</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>这篇转载自一个博客，主要讲了一些关于刘铁岩老师个人的学习经历，觉得很好，故转载学习！<a href="http://www.cnblogs.com/blessw/archive/2010/03/27/1698636.html">原文</a><br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/10/28/liu-tieyan-zishu/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Tattle/">Tattle</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/tattle/">tattle</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/10/28/liu-tieyan-zishu/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/28/liu-tieyan-zishu/" data-count-type="comments">&nbsp;Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
-    <a class="extend prev" rel="prev" href="/page/4/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span>
+    <a class="extend prev" rel="prev" href="/page/4/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/6/">Next<span></span></a>
   </nav>
 
 </div>
@@ -976,7 +993,7 @@
 		  
 		
 		  
-			<li><a href="/categories/Machine-Learning/" title="Machine Learning">Machine Learning<sup>14</sup></a></li>
+			<li><a href="/categories/Machine-Learning/" title="Machine Learning">Machine Learning<sup>15</sup></a></li>
 		  
 		
 		  
@@ -1013,7 +1030,7 @@
 			
 		
 			
-				<li><a href="/tags/Machine-Learning/" title="Machine Learning">Machine Learning<sup>11</sup></a></li>
+				<li><a href="/tags/Machine-Learning/" title="Machine Learning">Machine Learning<sup>12</sup></a></li>
 			
 		
 			
@@ -1041,11 +1058,11 @@
 			
 		
 			
-				<li><a href="/tags/mathematics/" title="mathematics">mathematics<sup>3</sup></a></li>
+				<li><a href="/tags/Optimization/" title="Optimization">Optimization<sup>3</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Optimization/" title="Optimization">Optimization<sup>2</sup></a></li>
+				<li><a href="/tags/mathematics/" title="mathematics">mathematics<sup>3</sup></a></li>
 			
 		
 			
@@ -1053,11 +1070,11 @@
 			
 		
 			
-				<li><a href="/tags/Tattle/" title="Tattle">Tattle<sup>1</sup></a></li>
+				<li><a href="/tags/code-optimize/" title="code optimize">code optimize<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/code-optimize/" title="code optimize">code optimize<sup>1</sup></a></li>
+				<li><a href="/tags/Tattle/" title="Tattle">Tattle<sup>1</sup></a></li>
 			
 		
 			

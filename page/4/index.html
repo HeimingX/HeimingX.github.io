@@ -86,6 +86,76 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2016/04/10/lintcode12-min-stack/" title="lintcode[12] min stack" itemprop="url">lintcode[12] min stack</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
+		
+  <p class="article-time">
+    <time datetime="2016-04-10T13:15:33.000Z" itemprop="datePublished"> 发表于 2016-04-10</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><p>实现一个带有取最小值min方法的栈，min方法将返回当前栈中的最小值。</p>
+<p>你实现的栈将支持push，pop 和 min 操作，所有操作要求都在O(1)时间内完成。</p>
+<blockquote>
+<p>如下操作：push(1)，pop()，push(2)，push(3)，min()， push(1)，min() 返回1，2，1</p>
+</blockquote>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>搞两个list，一个放原序数，另一个存前i个数的最小值<br>这边一开始多想了，在minstack中并不需要把所有的数都放进去，要真正理解存前i个数的最小值得意义</p>
+<p>对了今天发现lintcode一个非常恶心的bug，居然不能有中文注释！！！！！搞了好久wtf</p>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MinStack</span><span class="params">(object)</span>:</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="comment"># do some intialize if necessary</span></div><div class="line">        self.stack = []</div><div class="line">        <span class="comment"># the ith number is the min of the numbers哈哈</span></div><div class="line">        self.minstack = []</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">push</span><span class="params">(self, number)</span>:</span></div><div class="line">        <span class="comment"># write yout code here</span></div><div class="line">        self.stack.append(number)</div><div class="line">        <span class="keyword">if</span> len(self.minstack) == <span class="number">0</span> <span class="keyword">or</span> self.minstack[<span class="number">-1</span>] &gt;= number:</div><div class="line">            self.minstack.append(number)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">pop</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="comment"># pop and return the top item in stack</span></div><div class="line">        <span class="keyword">if</span> self.stack[<span class="number">-1</span>] == self.minstack[<span class="number">-1</span>]:</div><div class="line">            self.minstack.pop()</div><div class="line">        <span class="keyword">return</span> self.stack.pop()</div><div class="line">        </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">min</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="comment"># return the minimum number in stack</span></div><div class="line">        <span class="keyword">return</span> self.minstack[<span class="number">-1</span>]</div></pre></td></tr></table></figure>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Lintcode/">Lintcode</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/python/">python</a><a href="/tags/lintcode/">lintcode</a><a href="/tags/algorithm/">algorithm</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/04/10/lintcode12-min-stack/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/10/lintcode12-min-stack/" data-count-type="comments">&nbsp;Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2016/04/09/lintcode11-search-range/" title="lintcode[11] 二叉查找树中搜索区间" itemprop="url">lintcode[11] 二叉查找树中搜索区间</a>
   </h1>
   <p class="article-author">By
@@ -708,90 +778,9 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/04/01/lintcode2-wei-bu-de-ling/" title="lintcode[2] 尾部的零" itemprop="url">lintcode[2] 尾部的零</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
-		
-  <p class="article-time">
-    <time datetime="2016-04-01T04:55:32.000Z" itemprop="datePublished"> 发表于 2016-04-01</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><p>设计一个算法，计算出n阶乘中尾部零的个数</p>
-<blockquote>
-<p>11! = 39916800，因此应该返回 2</p>
-</blockquote>
-<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>主要思路就是看10的组成2和5，然后含有5的数远远小于含有2的数的数量，于是我们只要统计出含有5的数的数量，同时，对于不同的数，对于5的贡献不一样，5,15,20均只贡献1个5，而25会贡献2个5，所以要计算两次，递归找下去</p>
-<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><pre><code class="c++"><span class="keyword">class</span> Solution {
- <span class="keyword">public</span>:
-    <span class="comment">// param n : description of n</span>
-    <span class="comment">// return: description of return </span>
-    <span class="function"><span class="keyword">long</span> <span class="keyword">long</span> <span class="title">trailingZeros</span><span class="params">(<span class="keyword">long</span> <span class="keyword">long</span> n)</span> </span>{
-        <span class="keyword">long</span> <span class="keyword">long</span> num = <span class="number">0</span>;
-        <span class="keyword">while</span>(n){
-            num += n / <span class="number">5</span>;
-            n /= <span class="number">5</span>;  
-        }
-        <span class="keyword">return</span> num;
-    }
-};
-</code></pre>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Lintcode/">Lintcode</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/lintcode/">lintcode</a><a href="/tags/c/">c++</a><a href="/tags/algorithm/">algorithm</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/04/01/lintcode2-wei-bu-de-ling/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/01/lintcode2-wei-bu-de-ling/" data-count-type="comments">&nbsp;Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
-    <a class="extend prev" rel="prev" href="/page/3/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/5/">Next<span></span></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/5/">Next<span></span></a>
   </nav>
 
 </div>
@@ -823,7 +812,7 @@
 		  
 		
 		  
-			<li><a href="/categories/Machine-Learning/" title="Machine Learning">Machine Learning<sup>14</sup></a></li>
+			<li><a href="/categories/Machine-Learning/" title="Machine Learning">Machine Learning<sup>15</sup></a></li>
 		  
 		
 		  
@@ -860,7 +849,7 @@
 			
 		
 			
-				<li><a href="/tags/Machine-Learning/" title="Machine Learning">Machine Learning<sup>11</sup></a></li>
+				<li><a href="/tags/Machine-Learning/" title="Machine Learning">Machine Learning<sup>12</sup></a></li>
 			
 		
 			
@@ -888,11 +877,11 @@
 			
 		
 			
-				<li><a href="/tags/mathematics/" title="mathematics">mathematics<sup>3</sup></a></li>
+				<li><a href="/tags/Optimization/" title="Optimization">Optimization<sup>3</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Optimization/" title="Optimization">Optimization<sup>2</sup></a></li>
+				<li><a href="/tags/mathematics/" title="mathematics">mathematics<sup>3</sup></a></li>
 			
 		
 			
@@ -900,11 +889,11 @@
 			
 		
 			
-				<li><a href="/tags/Tattle/" title="Tattle">Tattle<sup>1</sup></a></li>
+				<li><a href="/tags/code-optimize/" title="code optimize">code optimize<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/code-optimize/" title="code optimize">code optimize<sup>1</sup></a></li>
+				<li><a href="/tags/Tattle/" title="Tattle">Tattle<sup>1</sup></a></li>
 			
 		
 			

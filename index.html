@@ -86,6 +86,127 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2016/11/03/methods-optimize-large-scale-SVM-problems/" title="methods on optimizing large-scale SVM problems" itemprop="url">methods on optimizing large-scale SVM problems</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
+		
+  <p class="article-time">
+    <time datetime="2016-11-03T03:14:47.000Z" itemprop="datePublished"> 发表于 2016-11-03</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="Backgrounds"><a href="#Backgrounds" class="headerlink" title="Backgrounds"></a>Backgrounds</h1><p>首先，直入主题，SVM原问题模型：</p>
+<p>\begin{align}<br>\min_{w, b} \quad &amp; \frac{1}{2} |w|^2 + C\sum_{i=1}^n\eta_i\\<br>s.t. \quad &amp; y_i (w^T \phi(x_i)+b) \geq 1-\eta_i,\\<br>&amp; \eta_i\geq 0, \quad i=1,2,…,n<br>\end{align}</p>
+<p>接着，我们对原模型求Lagrange对偶问题，并对$w,b$分别求偏导，置为0，得到结果带到对偶问题中得到对应的对偶问题：</p>
+<p>\begin{align}<br>\min_{\alpha} \quad &amp; \frac{1}{2} \alpha^T Q \alpha - e^T \alpha \\<br>s.t. \quad &amp; y\alpha = 0,\\<br>&amp; 0 \leq \alpha_i\leq C, \quad i=1,2,…,n<br>\end{align}<br>其中$Q_{i,j}=y_iy_jK(x_i, x_j)$.</p>
+<p>到这里，我们得到的问题就是一个凸二次规划问题。通常我们可以用通用的优化工具包来求解，但是当样本规模很大时，一方面核矩阵会变得非常的大（核的维度与样本个数相关），其实对于工业界而言百万级的数据量是正常的，而这对于svm来说是很可怕的，所以这也是svm在工业界用的很少的主要原因；另一方面需要求解的变量也会随之增加，求解的时效性也是一个问题。所以，这个时候就产生了很多针对SVM问题的优化方法，比如著名的<strong>SMO算法</strong>！其实，关于SMO算法，是一类方法的一种极限情况，这一类方法的主要思想是：首先，我们从问题的本身出发，对于SVM原问题与其对偶问题，通常情况下，两者的解之间是存在一个对偶间隔的，只有当两者的对偶间隔消失时，对偶问题的解才与原问题的解是等价的，而对偶间隔的消失的充要条件是对偶问题的解都满足KKT条件，所以，大家就想，我们是不是可以判断对偶问题的解是否都满足了KKT条件来间接判断我们的目标是否已最小化。于是，这一类方法就是通过不断更新部分的$\alpha$来使他们都满足KKT条件。在每一次的更新中，都是选择一部分的$\alpha$来更新，这样就能很有效的减少了核矩阵的规模（只需要选择与这些$\alpha$相关的核矩阵值就可以）。这一类方法通常被称为<strong>Decomposition Methods</strong>.</p>
+<h1 id="Decomposition-Methods"><a href="#Decomposition-Methods" class="headerlink" title="Decomposition Methods"></a>Decomposition Methods</h1><p>Decompositon methods通常将需要求解的$\alpha$分解成两个部分：一个inactive部分，一个active部分（这一部分称为<strong>working set</strong>）。具体的算法流程为：</p>
+<blockquote>
+<p>while the optimality conditions are violated</p>
+<ol>
+<li>select q variables for the working set B. The remaining (l-q) variables are fixed at their current value.</li>
+<li>decompose problem and solve QP-subproblem: optimize $W(\alpha)$ on B.<br>terminate and return $\alpha$</li>
+</ol>
+</blockquote>
+<p>根绝上面的算法流程，我们主要需要完成两个任务：</p>
+<ol>
+<li>找到合理的working set</li>
+<li>求解分解后的子问题<br>下面逐个进行介绍。</li>
+</ol>
+<h2 id="分解后的子问题"><a href="#分解后的子问题" class="headerlink" title="分解后的子问题"></a>分解后的子问题</h2><p>对于这个问题，我们可以通过对偶问题的KKT条件来推导得到。</p>
+<p>对偶问题的KKT条件：<br>\begin{align}<br>&amp; g(\alpha) + (\lambda^{eq} \textbf{y} - \lambda^{lo} + \lambda^{up}) = 0 \\<br>\forall i \in [1,…,n]: \quad &amp; \lambda_i^{lo}(-\alpha_i) = 0\\<br>\forall i \in [1,…,n]: \quad &amp; \lambda_i^{up}(\alpha_i - C) = 0\\<br>&amp; \lambda^{lo}  \geq \textbf{0} \\<br>&amp; \lambda^{up}  \geq  \textbf{0} \\<br>&amp; \alpha^T\textbf{y} = 0 \\<br>&amp; 0 \leq\alpha \leq C\textbf{1}<br>\end{align}<br>其中$g(\alpha)$是对偶问题目标函数关于$\alpha$的偏导数。$g(\alpha) = -\textbf{1} + Q \alpha$。</p>
+<p>根据decomposition methods的算法，我们将$\alpha$分解为两个set:<br>$$\alpha =<br>\begin{vmatrix}<br>\alpha_B \\<br>\alpha_N<br>\end{vmatrix}<br>$$<br>其中，$\alpha_B$是active set，即为需要更新的set；$\alpha_N$是inactive set，即为暂时固定的set。那么对应的$\textbf{y}, Q$分解为：<br>$$\textbf{y}=<br>\begin{vmatrix}<br>\textbf{y}_B\\<br>\textbf{y}_N<br>\end{vmatrix}<br>$$<br>$$Q =<br>\begin{vmatrix}<br>Q_{BB} &amp; Q_{BN} \\<br>Q_{NB} &amp; Q_{NN}<br>\end{vmatrix}<br>$$<br>由于$Q$ 是对称的，所以这里有$Q_{BN} = Q_{NB}^T$.将上面分解的形式代入到对偶问题中得到：<br>\begin{align}<br>\min_{\alpha} \quad &amp; - \alpha_B^T(\textbf{1} - Q_{BN} \alpha_N) + \frac{1}{2}\alpha^T_B Q_{BB} \alpha_B + \frac{1}{2}\alpha^T_N Q_{NN} \alpha_N - \alpha_N^T \textbf{1} \\<br>s.t. \quad &amp; \alpha_B^Ty_B + \alpha_N^T y_N = 0 \\<br>&amp; 0\leq \alpha \leq C \textbf{1}<br>\end{align}<br>这里由于$\alpha_N$是固定的，所以$\frac{1}{2}\alpha^T_N Q_{NN} \alpha_N$ 和 $\alpha_N^T \textbf{1}$都是固定的值，可以省去。所以上式可以化简为：<br>\begin{align}<br>\min_{\alpha} \quad &amp; \frac{1}{2}\alpha^T_B Q_{BB} \alpha_B - \alpha_B^T(\textbf{e}_B - Q_{BN} \alpha_N) \\<br>s.t. \quad &amp; \alpha_B^Ty_B + \alpha_N^T y_N = 0 \\<br>&amp; 0 \leq (\alpha_B)_i \leq C, \quad i = 1,\cdots, q<br>\end{align}<br>此时，我们需要求解上面一个缩小版的对偶问题，来更新$\alpha_B$。这样就解决了数据量很大时不能求解的问题。</p>
+<h2 id="合理的working-set的选择"><a href="#合理的working-set的选择" class="headerlink" title="合理的working set的选择"></a>合理的working set的选择</h2><p>对于working set的选择，我们的目标是希望选择一个working set使得当前的迭代能够让目标函数有尽量大的下降。<a href="https://www.amazon.com/Methods-feasible-directions-nonlinear-programming/dp/B0006AWLPG" target="_blank" rel="external">Zoutendijk (1970)</a>提出了一个一阶近似的方法。他的思想主要是找到一个下降最陡峭的可行方向集$d$，其中仅有$q$个非零元素。那个对这些非零$d$对应的点即表示该轮被选中的working set中的元素。<br>优化目标：<br>\begin{align}<br>\min \quad &amp; V(d) =  g(\alpha^{(t)})^T\textbf{d} \\<br>s.t. \quad &amp; \textbf{y}^T\textbf{d} = 0 \\<br>&amp; d_i  \geq  0 \quad \forall i:\alpha_i = 0\\<br>&amp; d_i\leq 0 \quad \forall i: \alpha_i = C \\<br>&amp; -\textbf{1} \leq \textbf{d} \leq \textbf{1} \\<br>&amp; |{d_i : d_i\neq 0}| = q<br>\end{align}<br>其中，$\alpha^{(t)}$表示第t轮的$\alpha$值。下面的前三个约束确保了下降的方向是沿着对偶问题中的等式约束进行投影的，并且遵循了active bound constraints.倒数第二个约束对d进行了规范化，确保优化问题well-posed.最后一个约束确保了这个求解的方向只能包含q个激活变量。这里需要约束$q$是一个偶数。</p>
+<p>这一选择working set的方法最早是由<a href="https://www.cs.cornell.edu/people/tj/publications/joachims_99a.pdf" target="_blank" rel="external">Joachims（1998）</a>提出，后来<a href="http://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=857780" target="_blank" rel="external">Change等人(2000)</a>指出上面最后一个约束并不是总是满足，因此将其改成了：<br>$$|{d_i : d_i\neq 0}| \leq q$$<br>这也是SVM开源工具包 <a href="http://svmlight.joachims.org/" target="_blank" rel="external">$\text{SVM}^{light}$</a> 的求解方案。</p>
+<p>至此， 这里decomposition methods的两个任务就都介绍完了。当然，或许对于working set的选择，还是会感到很迷惑，不知道为什么要这么选择，下面我就依照<a href="http://china.tandfonline.com/doi/pdf/10.1080/10556780512331318209?needAccess=true&amp;" target="_blank" rel="external">PALAGI et al.</a>里面的讲解思路来复述一下。</p>
+<p>首先，对于一个满足条件的$\alpha$，我们可以表示出其对应的上下界的集合：</p>
+<p>$$L(\alpha) = \{i:\alpha_i=0\},\quad U(\alpha) = \{i:\alpha_i=C\}$$</p>
+<p>对于一个可行解 $\alpha^*$ ,必存在一个标量 $\lambda^*$ ,结合上面对偶问题的KKT条件，我们有：</p>
+<p>$$<br>(\nabla f(\alpha^*))_i + \lambda^* y_i =<br>\begin{cases}<br>\geq 0 &amp; \text{if} \quad i \in L(\alpha^*) \\<br>\leq 0 &amp; \text{if} \quad i \in U(\alpha^*) \\<br>= 0 &amp; \text{if} \quad i \notin L(\alpha^*)\cup U(\alpha^*)<br>\end{cases}<br>$$</p>
+<blockquote>
+<p><strong>注：</strong><br>这里根绝上面对偶问题的KKT条件：<br>\begin{align}<br>&amp; g(\alpha) + (\lambda^{eq} \textbf{y} - \lambda^{lo} + \lambda^{up}) = 0 \\<br>\forall i \in [1,…,n]: \quad &amp; \lambda_i^{lo}(-\alpha_i) = 0\\<br>\forall i \in [1,…,n]: \quad &amp; \lambda_i^{up}(\alpha_i - C) = 0\\<br>&amp; \lambda^{lo}  \geq \textbf{0} \\<br>&amp; \lambda^{up}  \geq  \textbf{0} \\<br>\end{align}<br>所以，当$i \in L(\alpha^*)$时，有$\alpha_i=0$.所以，$\lambda^{lo}$可以是任意正值，且$\lambda_i^{up}=0$,那么我们有$g(\alpha) + \lambda^{eq} \textbf{y} = \lambda^{lo} \geq 0$，这就是上式的第一条结论。后面两个可以类似的推导得到。</p>
+</blockquote>
+<p>根据上面结论，我们可以变换一种写法：<br>$$L^-(\alpha) = {i\in L(\alpha): y_i\lt 0}, \quad L^+(\alpha) = {i\in L(\alpha): y_i \gt 0}$$<br>$$U^-(\alpha) = {i\in U(\alpha): y_i\lt 0}, \quad U^+(\alpha) = {i\in U(\alpha): y_i \gt 0}$$</p>
+<p>随之，我们就可以得到一个关于Optimality Conditions的定理：</p>
+<p>$$\lambda^*\geq -\frac{(\nabla f(\alpha^*))_i}{y_i} \quad \forall i \in L^+(\alpha^*)\cup U^-(\alpha^*)$$</p>
+<p>$$\lambda^*\leq -\frac{(\nabla f(\alpha^*))_i}{y_i} \quad \forall i \in L^-(\alpha^*)\cup U^+(\alpha^*)$$</p>
+<p>$$\lambda^* =  -\frac{(\nabla f(\alpha^*))_i}{y_i} \quad \forall i \notin L(\alpha^*)\cup U(\alpha^*)$$</p>
+<p>对应的，我们可以将上面定理中条件定义成：<br>$$R(\alpha) = L^+(\alpha^*)\cup U^-(\alpha^*) \cup {i: 0 \lt \alpha_i \lt C}$$<br>$$S(\alpha) = L^-(\alpha^*)\cup U^+(\alpha^*) \cup {i: 0 \lt \alpha_i \lt C}$$<br>其中，$R(\alpha)$被称为”bottom“ 候选集，$S(\alpha)$被称为”Top“候选集。这其实也就是选择working set元素的一个指导。</p>
+<p>根据上面的一个定理，我们可以得到另一个定理：<br>对于可行解$\alpha^*$,其中，$i\in R(\alpha^*), j\in S(\alpha^*)$,必然不会存在如下的形式<br>$$-\frac{(\nabla f(\alpha^*))_i}{y_i} \gt -\frac{(\nabla f(\alpha^*))_j}{y_j}$$</p>
+<p>接着，对于每一对$i \in R(\alpha),j \in S(\alpha)$,方向$d$有：<br>$$d_i = \frac{1}{y_i}, \quad d_j = -\frac{1}{y_j}, \text{and} \quad d_l \leq 0 \quad \text{for} \quad l\neq i,j$$</p>
+<p>另外，我们可以定义：<br>$$\mathcal I(\alpha) = \left \{ i: i=\arg \max_{t\in R(\alpha)} - \frac{\nabla f(\alpha)_t}{y_t} \right \}$$<br>$$\mathcal J(\alpha) = \left \{ j: j=\arg \max_{t\in S(\alpha)} - \frac{\nabla f(\alpha)_t}{y_t} \right \}$$</p>
+<p>最终，我们可以得到选择working set的算法：<br><img src="/img/blog/large_scale_svm/working_set_selection.png" alt="working set selection algorithm"></p>
+<h1 id="后序改进的工作"><a href="#后序改进的工作" class="headerlink" title="后序改进的工作"></a>后序改进的工作</h1><p>对于SVM优化问题的探讨，在2000年左右是一个高峰，有点类似现在deeplearning，基于这一个想法的相关改进工作也产生了很多的论文，其中，主要基于两个方向，一个是对分解子问题的改进，另一个就是对working set选择的改进。</p>
+<p>对于分解子问题的改进：</p>
+<ol>
+<li>shrinking：由于通常Support Vector是少量的，其中由于noise的因素，某些$\alpha_i$会到约束的上界$C$（这些点被称为”bounded support vectors”），假设先验的知道哪些点是BSV，那么我们就可以将这些点固定为$C$,这样，子问题就会进一步的缩小规模。<a href="https://www.cs.cornell.edu/people/tj/publications/joachims_99a.pdf" target="_blank" rel="external">Joachims 的工作</a></li>
+<li>关于 $\text{SVM}^{light}$ 的工作的渐进收敛性的证明，需要基于如下的假设：<br>$$\min_{I:|I|\leq q}\quad (eig_{\min}(Q_{II})) \gt 0$$<br>其中，$I$是一个样本子集index，$Q_{II}$为分界后的子矩阵。这一要求能够使得目标函数是强凸的，以满足定理证明的需要。后续的researcher将其进行了改进，应用了一个proximal point的技术，在目标函数后面添加了一项：$\tau|\alpha_B - \alpha_B^k|^2$.具体的证明可以参考<a href="http://china.tandfonline.com/doi/pdf/10.1080/10556780512331318209?needAccess=true&amp;" target="_blank" rel="external">Palagi et al.</a></li>
+</ol>
+<p>对于working set选择的改进</p>
+<ol>
+<li>前面的方法运用的是一阶信息，<a href="http://www.jmlr.org/papers/volume6/fan05a/fan05a.pdf" target="_blank" rel="external">Fan et al.</a>运用了二阶的信息</li>
+</ol>
+<h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ol>
+<li>Working set selection using second order information for training support vector machines</li>
+<li>On the convergence of a modified version of SVM light algorithm</li>
+<li>Making Large-Scale SVM Learning Practical</li>
+<li>On the Convergence of the Decomposition Method for Support Vector Machines</li>
+<li>Combining DC Algorithms (DCAs) and Decomposition Techniques for the Training of Nonpositive–Semidefinite Kernels</li>
+<li>The Analysis of Decomposition Methods for Support Vector Machines</li>
+</ol>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Machine-Learning/">Machine Learning</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Optimization/">Optimization</a><a href="/tags/Machine-Learning/">Machine Learning</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/11/03/methods-optimize-large-scale-SVM-problems/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/11/03/methods-optimize-large-scale-SVM-problems/" data-count-type="comments">&nbsp;Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2016/10/22/hexo-synchronize/" title="Hexo异地同步更新博文" itemprop="url">Hexo异地同步更新博文</a>
   </h1>
   <p class="article-author">By
@@ -1151,81 +1272,9 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/08/16/cs231n-backpropagation-intuitions/" title="CS231n:Backpropagation, Intuitions" itemprop="url">CS231n:Backpropagation, Intuitions</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
-		
-  <p class="article-time">
-    <time datetime="2016-08-16T13:22:45.000Z" itemprop="datePublished"> 发表于 2016-08-16</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>这一节主要介绍了反馈网络中的链式求导法则，非常的基础。</p>
-<h1 id="Simple-expressions-and-interpretation-of-the-gradient"><a href="#Simple-expressions-and-interpretation-of-the-gradient" class="headerlink" title="Simple expressions and interpretation of the gradient"></a>Simple expressions and interpretation of the gradient</h1><p>这段通过一个简单的栗子来解释梯度的意义，其实在高数中有学过，物理意义是：一个函数在某一点沿着某个方向的梯度方向便是上升最快的地方，所以，要使得目标函数值能够下降最快，便是沿着负梯度方向就好了。<br>课程中的解释是通过具体的数字来体现的：<br>函数：$$f(x, y) = xy$$<br>所以，该函数在 $x, y$ 方向上的梯度是 $$\frac{\partial f}{\partial x} = y;\quad \frac{\partial f}{\partial y} = x$$<br>当取$x=4, y=-3$时，函数$f(x, y) = -12$,且在 $x$ 上的导数是$\frac{\partial f}{\partial x} = -3$，这表明当我们给 $x$ 值增加一个很小的值，目标函数值就会下降（导数值是负的），且下降的幅度为 $3$。所以，函数在某个变量上的导数告诉了我们整个函数对于这个变量的敏感程度。<br>课程中还举了一个加法和max的例子，这里就不赘述了。</p>
-<h1 id="Compound-expressions-with-chain-rule"><a href="#Compound-expressions-with-chain-rule" class="headerlink" title="Compound expressions with chain rule"></a>Compound expressions with chain rule</h1><p>主要介绍链式法则。<br>函数：<br>$$f(x, y, z) = (x + y)z$$<br>将这个函数拆分成两个表达式：$q = x + y;\quad f = qz$，接着，分别对这两个子表达式中变量进行求导：$\frac{\partial f}{\partial q} = z; \quad \frac{\partial f}{\partial z} = q$, $\frac{\partial q}{\partial x} = 1; \quad \frac{\partial q}{\partial y} = 1$.那么要求函数$f$对$x$的导数便易得：$\frac{\partial f}{\partial x} = \frac{\partial f}{\partial q} \frac{\partial q}{\partial x}$。<br>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># set some inputs</span></div><div class="line">x = <span class="number">-2</span>; y = <span class="number">5</span>; z = <span class="number">-4</span></div><div class="line"></div><div class="line"><span class="comment"># perform the forward pass</span></div><div class="line">q = x + y <span class="comment"># q becomes 3</span></div><div class="line">f = q * z <span class="comment"># f becomes -12</span></div><div class="line"></div><div class="line"><span class="comment"># perform the backward pass (backpropagation) in reverse order:</span></div><div class="line"><span class="comment"># first backprop through f = q * z</span></div><div class="line">dfdz = q <span class="comment"># df/dz = q, so gradient on z becomes 3</span></div><div class="line">dfdq = z <span class="comment"># df/dq = z, so gradient on q becomes -4</span></div><div class="line"><span class="comment"># now backprop through q = x + y</span></div><div class="line">dfdx = <span class="number">1.0</span> * dfdq <span class="comment"># dq/dx = 1. And the multiplication here is the chain rule!</span></div><div class="line">dfdy = <span class="number">1.0</span> * dfdq <span class="comment"># dq/dy = 1</span></div></pre></td></tr></table></figure></p>
-<h1 id="Intuitive-understanding-of-backpropagation"><a href="#Intuitive-understanding-of-backpropagation" class="headerlink" title="Intuitive understanding of backpropagation"></a>Intuitive understanding of backpropagation</h1><p>对于反馈网络的理解，课程中是通过网络中每个门(gate)来解释的，每个门在接受输入后，完成两件事：1.给出输出；2.给出关于输出的，输入的局部梯度。<br>所以，整个反馈网络都是通过着一些个门来互相交流的，比如他们是想要更高或是更低的输出，最终对整个函数的结果产生影响。</p>
-<p>后面课程中有举了两个复杂一点的函数例子，这里就不搬过来了。</p>
-<h1 id="Patterns-in-backward-flow"><a href="#Patterns-in-backward-flow" class="headerlink" title="Patterns in backward flow"></a>Patterns in backward flow</h1><p>课程介绍了三种门的特性：<br><strong>add gate</strong>: distribute gradients equally to all its inputs<br><strong>max gate</strong>: routes the gradients to the higher input<br><strong>multiply gate</strong>: take the input activations, swap them and multiplies by its gradient</p>
-<p>对样本数据预处理的理解：<br>一般函数中都会有 $W^T x_i$ , 由于这样乘法的形式，如果给样本数据 $x_i * 1000$, 那么权重 $W$ 的梯度就会增加1000倍，变化率是很大的了，此时，就需要更低的学习率来中和这样的影响，所以，预处理要将样本数据进行规范化，以便不再出现上面奇怪的问题。</p>
-<h1 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h1><ol>
-<li><a href="http://cs231n.github.io/optimization-2/" target="_blank" rel="external">CS231n: Backpropagation, Intuitions</a></li>
-</ol>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Machine-Learning/">Machine Learning</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Machine-Learning/">Machine Learning</a><a href="/tags/CS231n笔记/">CS231n笔记</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/08/16/cs231n-backpropagation-intuitions/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/08/16/cs231n-backpropagation-intuitions/" data-count-type="comments">&nbsp;Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
   </nav>
 
 </div>
@@ -1257,7 +1306,7 @@
 		  
 		
 		  
-			<li><a href="/categories/Machine-Learning/" title="Machine Learning">Machine Learning<sup>14</sup></a></li>
+			<li><a href="/categories/Machine-Learning/" title="Machine Learning">Machine Learning<sup>15</sup></a></li>
 		  
 		
 		  
@@ -1294,7 +1343,7 @@
 			
 		
 			
-				<li><a href="/tags/Machine-Learning/" title="Machine Learning">Machine Learning<sup>11</sup></a></li>
+				<li><a href="/tags/Machine-Learning/" title="Machine Learning">Machine Learning<sup>12</sup></a></li>
 			
 		
 			
@@ -1322,11 +1371,11 @@
 			
 		
 			
-				<li><a href="/tags/mathematics/" title="mathematics">mathematics<sup>3</sup></a></li>
+				<li><a href="/tags/Optimization/" title="Optimization">Optimization<sup>3</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Optimization/" title="Optimization">Optimization<sup>2</sup></a></li>
+				<li><a href="/tags/mathematics/" title="mathematics">mathematics<sup>3</sup></a></li>
 			
 		
 			
@@ -1334,11 +1383,11 @@
 			
 		
 			
-				<li><a href="/tags/Tattle/" title="Tattle">Tattle<sup>1</sup></a></li>
+				<li><a href="/tags/code-optimize/" title="code optimize">code optimize<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/code-optimize/" title="code optimize">code optimize<sup>1</sup></a></li>
+				<li><a href="/tags/Tattle/" title="Tattle">Tattle<sup>1</sup></a></li>
 			
 		
 			

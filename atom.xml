@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://heimignx.cn/"/>
-  <updated>2016-10-22T14:08:30.015Z</updated>
+  <updated>2016-11-03T03:39:19.467Z</updated>
   <id>http://heimignx.cn/</id>
   
   <author>
@@ -14,6 +14,89 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>methods on optimizing large-scale SVM problems</title>
+    <link href="http://heimignx.cn/2016/11/03/methods-optimize-large-scale-SVM-problems/"/>
+    <id>http://heimignx.cn/2016/11/03/methods-optimize-large-scale-SVM-problems/</id>
+    <published>2016-11-03T03:14:47.000Z</published>
+    <updated>2016-11-03T03:39:19.467Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="Backgrounds"><a href="#Backgrounds" class="headerlink" title="Backgrounds"></a>Backgrounds</h1><p>首先，直入主题，SVM原问题模型：</p>
+<p>\begin{align}<br>\min_{w, b} \quad &amp; \frac{1}{2} |w|^2 + C\sum_{i=1}^n\eta_i\\<br>s.t. \quad &amp; y_i (w^T \phi(x_i)+b) \geq 1-\eta_i,\\<br>&amp; \eta_i\geq 0, \quad i=1,2,…,n<br>\end{align}</p>
+<p>接着，我们对原模型求Lagrange对偶问题，并对$w,b$分别求偏导，置为0，得到结果带到对偶问题中得到对应的对偶问题：</p>
+<p>\begin{align}<br>\min_{\alpha} \quad &amp; \frac{1}{2} \alpha^T Q \alpha - e^T \alpha \\<br>s.t. \quad &amp; y\alpha = 0,\\<br>&amp; 0 \leq \alpha_i\leq C, \quad i=1,2,…,n<br>\end{align}<br>其中$Q_{i,j}=y_iy_jK(x_i, x_j)$.</p>
+<p>到这里，我们得到的问题就是一个凸二次规划问题。通常我们可以用通用的优化工具包来求解，但是当样本规模很大时，一方面核矩阵会变得非常的大（核的维度与样本个数相关），其实对于工业界而言百万级的数据量是正常的，而这对于svm来说是很可怕的，所以这也是svm在工业界用的很少的主要原因；另一方面需要求解的变量也会随之增加，求解的时效性也是一个问题。所以，这个时候就产生了很多针对SVM问题的优化方法，比如著名的<strong>SMO算法</strong>！其实，关于SMO算法，是一类方法的一种极限情况，这一类方法的主要思想是：首先，我们从问题的本身出发，对于SVM原问题与其对偶问题，通常情况下，两者的解之间是存在一个对偶间隔的，只有当两者的对偶间隔消失时，对偶问题的解才与原问题的解是等价的，而对偶间隔的消失的充要条件是对偶问题的解都满足KKT条件，所以，大家就想，我们是不是可以判断对偶问题的解是否都满足了KKT条件来间接判断我们的目标是否已最小化。于是，这一类方法就是通过不断更新部分的$\alpha$来使他们都满足KKT条件。在每一次的更新中，都是选择一部分的$\alpha$来更新，这样就能很有效的减少了核矩阵的规模（只需要选择与这些$\alpha$相关的核矩阵值就可以）。这一类方法通常被称为<strong>Decomposition Methods</strong>.</p>
+<h1 id="Decomposition-Methods"><a href="#Decomposition-Methods" class="headerlink" title="Decomposition Methods"></a>Decomposition Methods</h1><p>Decompositon methods通常将需要求解的$\alpha$分解成两个部分：一个inactive部分，一个active部分（这一部分称为<strong>working set</strong>）。具体的算法流程为：</p>
+<blockquote>
+<p>while the optimality conditions are violated</p>
+<ol>
+<li>select q variables for the working set B. The remaining (l-q) variables are fixed at their current value.</li>
+<li>decompose problem and solve QP-subproblem: optimize $W(\alpha)$ on B.<br>terminate and return $\alpha$</li>
+</ol>
+</blockquote>
+<p>根绝上面的算法流程，我们主要需要完成两个任务：</p>
+<ol>
+<li>找到合理的working set</li>
+<li>求解分解后的子问题<br>下面逐个进行介绍。</li>
+</ol>
+<h2 id="分解后的子问题"><a href="#分解后的子问题" class="headerlink" title="分解后的子问题"></a>分解后的子问题</h2><p>对于这个问题，我们可以通过对偶问题的KKT条件来推导得到。</p>
+<p>对偶问题的KKT条件：<br>\begin{align}<br>&amp; g(\alpha) + (\lambda^{eq} \textbf{y} - \lambda^{lo} + \lambda^{up}) = 0 \\<br>\forall i \in [1,…,n]: \quad &amp; \lambda_i^{lo}(-\alpha_i) = 0\\<br>\forall i \in [1,…,n]: \quad &amp; \lambda_i^{up}(\alpha_i - C) = 0\\<br>&amp; \lambda^{lo}  \geq \textbf{0} \\<br>&amp; \lambda^{up}  \geq  \textbf{0} \\<br>&amp; \alpha^T\textbf{y} = 0 \\<br>&amp; 0 \leq\alpha \leq C\textbf{1}<br>\end{align}<br>其中$g(\alpha)$是对偶问题目标函数关于$\alpha$的偏导数。$g(\alpha) = -\textbf{1} + Q \alpha$。</p>
+<p>根据decomposition methods的算法，我们将$\alpha$分解为两个set:<br>$$\alpha =<br>\begin{vmatrix}<br>\alpha_B \\<br>\alpha_N<br>\end{vmatrix}<br>$$<br>其中，$\alpha_B$是active set，即为需要更新的set；$\alpha_N$是inactive set，即为暂时固定的set。那么对应的$\textbf{y}, Q$分解为：<br>$$\textbf{y}=<br>\begin{vmatrix}<br>\textbf{y}_B\\<br>\textbf{y}_N<br>\end{vmatrix}<br>$$<br>$$Q =<br>\begin{vmatrix}<br>Q_{BB} &amp; Q_{BN} \\<br>Q_{NB} &amp; Q_{NN}<br>\end{vmatrix}<br>$$<br>由于$Q$ 是对称的，所以这里有$Q_{BN} = Q_{NB}^T$.将上面分解的形式代入到对偶问题中得到：<br>\begin{align}<br>\min_{\alpha} \quad &amp; - \alpha_B^T(\textbf{1} - Q_{BN} \alpha_N) + \frac{1}{2}\alpha^T_B Q_{BB} \alpha_B + \frac{1}{2}\alpha^T_N Q_{NN} \alpha_N - \alpha_N^T \textbf{1} \\<br>s.t. \quad &amp; \alpha_B^Ty_B + \alpha_N^T y_N = 0 \\<br>&amp; 0\leq \alpha \leq C \textbf{1}<br>\end{align}<br>这里由于$\alpha_N$是固定的，所以$\frac{1}{2}\alpha^T_N Q_{NN} \alpha_N$ 和 $\alpha_N^T \textbf{1}$都是固定的值，可以省去。所以上式可以化简为：<br>\begin{align}<br>\min_{\alpha} \quad &amp; \frac{1}{2}\alpha^T_B Q_{BB} \alpha_B - \alpha_B^T(\textbf{e}_B - Q_{BN} \alpha_N) \\<br>s.t. \quad &amp; \alpha_B^Ty_B + \alpha_N^T y_N = 0 \\<br>&amp; 0 \leq (\alpha_B)_i \leq C, \quad i = 1,\cdots, q<br>\end{align}<br>此时，我们需要求解上面一个缩小版的对偶问题，来更新$\alpha_B$。这样就解决了数据量很大时不能求解的问题。</p>
+<h2 id="合理的working-set的选择"><a href="#合理的working-set的选择" class="headerlink" title="合理的working set的选择"></a>合理的working set的选择</h2><p>对于working set的选择，我们的目标是希望选择一个working set使得当前的迭代能够让目标函数有尽量大的下降。<a href="https://www.amazon.com/Methods-feasible-directions-nonlinear-programming/dp/B0006AWLPG" target="_blank" rel="external">Zoutendijk (1970)</a>提出了一个一阶近似的方法。他的思想主要是找到一个下降最陡峭的可行方向集$d$，其中仅有$q$个非零元素。那个对这些非零$d$对应的点即表示该轮被选中的working set中的元素。<br>优化目标：<br>\begin{align}<br>\min \quad &amp; V(d) =  g(\alpha^{(t)})^T\textbf{d} \\<br>s.t. \quad &amp; \textbf{y}^T\textbf{d} = 0 \\<br>&amp; d_i  \geq  0 \quad \forall i:\alpha_i = 0\\<br>&amp; d_i\leq 0 \quad \forall i: \alpha_i = C \\<br>&amp; -\textbf{1} \leq \textbf{d} \leq \textbf{1} \\<br>&amp; |{d_i : d_i\neq 0}| = q<br>\end{align}<br>其中，$\alpha^{(t)}$表示第t轮的$\alpha$值。下面的前三个约束确保了下降的方向是沿着对偶问题中的等式约束进行投影的，并且遵循了active bound constraints.倒数第二个约束对d进行了规范化，确保优化问题well-posed.最后一个约束确保了这个求解的方向只能包含q个激活变量。这里需要约束$q$是一个偶数。</p>
+<p>这一选择working set的方法最早是由<a href="https://www.cs.cornell.edu/people/tj/publications/joachims_99a.pdf" target="_blank" rel="external">Joachims（1998）</a>提出，后来<a href="http://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=857780" target="_blank" rel="external">Change等人(2000)</a>指出上面最后一个约束并不是总是满足，因此将其改成了：<br>$$|{d_i : d_i\neq 0}| \leq q$$<br>这也是SVM开源工具包 <a href="http://svmlight.joachims.org/" target="_blank" rel="external">$\text{SVM}^{light}$</a> 的求解方案。</p>
+<p>至此， 这里decomposition methods的两个任务就都介绍完了。当然，或许对于working set的选择，还是会感到很迷惑，不知道为什么要这么选择，下面我就依照<a href="http://china.tandfonline.com/doi/pdf/10.1080/10556780512331318209?needAccess=true&amp;" target="_blank" rel="external">PALAGI et al.</a>里面的讲解思路来复述一下。</p>
+<p>首先，对于一个满足条件的$\alpha$，我们可以表示出其对应的上下界的集合：</p>
+<p>$$L(\alpha) = \{i:\alpha_i=0\},\quad U(\alpha) = \{i:\alpha_i=C\}$$</p>
+<p>对于一个可行解 $\alpha^*$ ,必存在一个标量 $\lambda^*$ ,结合上面对偶问题的KKT条件，我们有：</p>
+<p>$$<br>(\nabla f(\alpha^*))_i + \lambda^* y_i =<br>\begin{cases}<br>\geq 0 &amp; \text{if} \quad i \in L(\alpha^*) \\<br>\leq 0 &amp; \text{if} \quad i \in U(\alpha^*) \\<br>= 0 &amp; \text{if} \quad i \notin L(\alpha^*)\cup U(\alpha^*)<br>\end{cases}<br>$$</p>
+<blockquote>
+<p><strong>注：</strong><br>这里根绝上面对偶问题的KKT条件：<br>\begin{align}<br>&amp; g(\alpha) + (\lambda^{eq} \textbf{y} - \lambda^{lo} + \lambda^{up}) = 0 \\<br>\forall i \in [1,…,n]: \quad &amp; \lambda_i^{lo}(-\alpha_i) = 0\\<br>\forall i \in [1,…,n]: \quad &amp; \lambda_i^{up}(\alpha_i - C) = 0\\<br>&amp; \lambda^{lo}  \geq \textbf{0} \\<br>&amp; \lambda^{up}  \geq  \textbf{0} \\<br>\end{align}<br>所以，当$i \in L(\alpha^*)$时，有$\alpha_i=0$.所以，$\lambda^{lo}$可以是任意正值，且$\lambda_i^{up}=0$,那么我们有$g(\alpha) + \lambda^{eq} \textbf{y} = \lambda^{lo} \geq 0$，这就是上式的第一条结论。后面两个可以类似的推导得到。</p>
+</blockquote>
+<p>根据上面结论，我们可以变换一种写法：<br>$$L^-(\alpha) = {i\in L(\alpha): y_i\lt 0}, \quad L^+(\alpha) = {i\in L(\alpha): y_i \gt 0}$$<br>$$U^-(\alpha) = {i\in U(\alpha): y_i\lt 0}, \quad U^+(\alpha) = {i\in U(\alpha): y_i \gt 0}$$</p>
+<p>随之，我们就可以得到一个关于Optimality Conditions的定理：</p>
+<p>$$\lambda^*\geq -\frac{(\nabla f(\alpha^*))_i}{y_i} \quad \forall i \in L^+(\alpha^*)\cup U^-(\alpha^*)$$</p>
+<p>$$\lambda^*\leq -\frac{(\nabla f(\alpha^*))_i}{y_i} \quad \forall i \in L^-(\alpha^*)\cup U^+(\alpha^*)$$</p>
+<p>$$\lambda^* =  -\frac{(\nabla f(\alpha^*))_i}{y_i} \quad \forall i \notin L(\alpha^*)\cup U(\alpha^*)$$</p>
+<p>对应的，我们可以将上面定理中条件定义成：<br>$$R(\alpha) = L^+(\alpha^*)\cup U^-(\alpha^*) \cup {i: 0 \lt \alpha_i \lt C}$$<br>$$S(\alpha) = L^-(\alpha^*)\cup U^+(\alpha^*) \cup {i: 0 \lt \alpha_i \lt C}$$<br>其中，$R(\alpha)$被称为”bottom“ 候选集，$S(\alpha)$被称为”Top“候选集。这其实也就是选择working set元素的一个指导。</p>
+<p>根据上面的一个定理，我们可以得到另一个定理：<br>对于可行解$\alpha^*$,其中，$i\in R(\alpha^*), j\in S(\alpha^*)$,必然不会存在如下的形式<br>$$-\frac{(\nabla f(\alpha^*))_i}{y_i} \gt -\frac{(\nabla f(\alpha^*))_j}{y_j}$$</p>
+<p>接着，对于每一对$i \in R(\alpha),j \in S(\alpha)$,方向$d$有：<br>$$d_i = \frac{1}{y_i}, \quad d_j = -\frac{1}{y_j}, \text{and} \quad d_l \leq 0 \quad \text{for} \quad l\neq i,j$$</p>
+<p>另外，我们可以定义：<br>$$\mathcal I(\alpha) = \left \{ i: i=\arg \max_{t\in R(\alpha)} - \frac{\nabla f(\alpha)_t}{y_t} \right \}$$<br>$$\mathcal J(\alpha) = \left \{ j: j=\arg \max_{t\in S(\alpha)} - \frac{\nabla f(\alpha)_t}{y_t} \right \}$$</p>
+<p>最终，我们可以得到选择working set的算法：<br><img src="/img/blog/large_scale_svm/working_set_selection.png" alt="working set selection algorithm"></p>
+<h1 id="后序改进的工作"><a href="#后序改进的工作" class="headerlink" title="后序改进的工作"></a>后序改进的工作</h1><p>对于SVM优化问题的探讨，在2000年左右是一个高峰，有点类似现在deeplearning，基于这一个想法的相关改进工作也产生了很多的论文，其中，主要基于两个方向，一个是对分解子问题的改进，另一个就是对working set选择的改进。</p>
+<p>对于分解子问题的改进：</p>
+<ol>
+<li>shrinking：由于通常Support Vector是少量的，其中由于noise的因素，某些$\alpha_i$会到约束的上界$C$（这些点被称为”bounded support vectors”），假设先验的知道哪些点是BSV，那么我们就可以将这些点固定为$C$,这样，子问题就会进一步的缩小规模。<a href="https://www.cs.cornell.edu/people/tj/publications/joachims_99a.pdf" target="_blank" rel="external">Joachims 的工作</a></li>
+<li>关于 $\text{SVM}^{light}$ 的工作的渐进收敛性的证明，需要基于如下的假设：<br>$$\min_{I:|I|\leq q}\quad (eig_{\min}(Q_{II})) \gt 0$$<br>其中，$I$是一个样本子集index，$Q_{II}$为分界后的子矩阵。这一要求能够使得目标函数是强凸的，以满足定理证明的需要。后续的researcher将其进行了改进，应用了一个proximal point的技术，在目标函数后面添加了一项：$\tau|\alpha_B - \alpha_B^k|^2$.具体的证明可以参考<a href="http://china.tandfonline.com/doi/pdf/10.1080/10556780512331318209?needAccess=true&amp;" target="_blank" rel="external">Palagi et al.</a></li>
+</ol>
+<p>对于working set选择的改进</p>
+<ol>
+<li>前面的方法运用的是一阶信息，<a href="http://www.jmlr.org/papers/volume6/fan05a/fan05a.pdf" target="_blank" rel="external">Fan et al.</a>运用了二阶的信息</li>
+</ol>
+<h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ol>
+<li>Working set selection using second order information for training support vector machines</li>
+<li>On the convergence of a modified version of SVM light algorithm</li>
+<li>Making Large-Scale SVM Learning Practical</li>
+<li>On the Convergence of the Decomposition Method for Support Vector Machines</li>
+<li>Combining DC Algorithms (DCAs) and Decomposition Techniques for the Training of Nonpositive–Semidefinite Kernels</li>
+<li>The Analysis of Decomposition Methods for Support Vector Machines</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      大规模SVM问题的求解
+    
+    </summary>
+    
+      <category term="Machine Learning" scheme="http://heimignx.cn/categories/Machine-Learning/"/>
+    
+    
+      <category term="Optimization" scheme="http://heimignx.cn/tags/Optimization/"/>
+    
+      <category term="Machine Learning" scheme="http://heimignx.cn/tags/Machine-Learning/"/>
+    
+  </entry>
   
   <entry>
     <title>Hexo异地同步更新博文</title>
@@ -780,53 +863,6 @@
   </entry>
   
   <entry>
-    <title>CS231n:Optimization: Stochastic Gradient Descent</title>
-    <link href="http://heimignx.cn/2016/08/15/cs231n-optimization-sgd/"/>
-    <id>http://heimignx.cn/2016/08/15/cs231n-optimization-sgd/</id>
-    <published>2016-08-15T12:20:45.000Z</published>
-    <updated>2016-10-15T14:06:53.921Z</updated>
-    
-    <content type="html"><![CDATA[<p>这一节主要介绍一种优化方法，随机梯度下降，用于求解前面章节提到的目标函数中的权重矩阵$W$.</p>
-<h1 id="Visualizing-the-loss-function"><a href="#Visualizing-the-loss-function" class="headerlink" title="Visualizing the loss function"></a>Visualizing the loss function</h1><p>这里主要通过一些简单的例子来表明，我们所要求解的目标函数是一个凸问题，通过形象化的图形来体会优化的过程。同时，课程中也提到如果在神经网络中，目标函数就不再是凸的了，所以需要新的求解方法。</p>
-<h1 id="Optimization"><a href="#Optimization" class="headerlink" title="Optimization"></a>Optimization</h1><h2 id="Strategy-1-Random-Search"><a href="#Strategy-1-Random-Search" class="headerlink" title="Strategy 1: Random Search"></a>Strategy 1: Random Search</h2><p>首先限定一个最大迭代步数，然后在每一次迭代中都将随机的$W$值代入求得目标函数值，并记录下使得目标函数值取得当前最小的$W$作为最终的输出</p>
-<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> num <span class="keyword">in</span> xrange(<span class="number">1000</span>):</div><div class="line">    W = np.random.randn(<span class="number">10</span>, <span class="number">3073</span>) * <span class="number">0.0001</span> <span class="comment"># generate random parameters</span></div><div class="line">    loss = L(X_train, Y_train, W) <span class="comment"># get the loss over the entire training set</span></div><div class="line">    <span class="keyword">if</span> loss &lt; bestloss: <span class="comment"># keep track of the best solution</span></div><div class="line">        bestloss = loss</div><div class="line">        bestW = W</div><div class="line">    <span class="keyword">print</span> <span class="string">'in attempt %d the loss was %f, best %f'</span> % (num, loss, bestloss)</div></pre></td></tr></table></figure></p>
-<h2 id="Strategy-2-Random-Local-Search"><a href="#Strategy-2-Random-Local-Search" class="headerlink" title="Strategy 2: Random Local Search"></a>Strategy 2: Random Local Search</h2><p>对上面方法的一个改进，就是不是在每次的迭代中都给$W$赋随机值，而是根据初始赋随机值进行微调，如果能够使得目标函数值下降，则记录下该微调之后的$W$，直到迭代步数达到设定的值。</p>
-<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">W = np.random.randn(<span class="number">10</span>, <span class="number">3073</span>) * <span class="number">0.001</span> <span class="comment"># generate random starting W</span></div><div class="line">bestloss = float(<span class="string">"inf"</span>)</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="number">1000</span>):</div><div class="line">    step_size = <span class="number">0.0001</span></div><div class="line">    Wtry = W + np.random.randn(<span class="number">10</span>, <span class="number">3073</span>) * step_size</div><div class="line">    loss = L(Xtr_cols, Ytr, Wtry)</div><div class="line">    <span class="keyword">if</span> loss &lt; bestloss:</div><div class="line">        W = Wtry</div><div class="line">        bestloss = loss</div><div class="line">    <span class="keyword">print</span> <span class="string">'iter %d loss is %f'</span> % (i, bestloss)</div></pre></td></tr></table></figure></p>
-<h2 id="Strategy-3-Following-the-gradient"><a href="#Strategy-3-Following-the-gradient" class="headerlink" title="Strategy 3: Following the gradient"></a>Strategy 3: Following the gradient</h2><p>显然，策略2已经很接近通用的梯度下降方法了，唯一的区别是，我们在每一步迭代中都是取使目标函数下降最大的方向进行优化的，而要想能够找到使得目标函数下降最大的方向，就需要用到梯度了。</p>
-<h1 id="Computing-the-gradient"><a href="#Computing-the-gradient" class="headerlink" title="Computing the gradient"></a>Computing the gradient</h1><p>对于梯度的计算，课程中提供了两种方法</p>
-<h2 id="Numerically-with-finite-differences"><a href="#Numerically-with-finite-differences" class="headerlink" title="Numerically with finite differences"></a>Numerically with finite differences</h2><p>标签：a slow, approximate，but easy way</p>
-<p>公式：<br>$$\frac{d f(x)}{d x}=\lim_{x\to 0} \frac{f(x+h)-f(x)}{h}$$</p>
-<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">fx = f(x) <span class="comment"># evaluate function value at original point</span></div><div class="line">grad = np.zeros(x.shape)</div><div class="line">h = <span class="number">0.00001</span></div><div class="line"></div><div class="line"><span class="comment"># iterate over all indexes in x</span></div><div class="line">it = np.nditer(x, flags=[<span class="string">'multi_index'</span>], op_flags=[<span class="string">'readwrite'</span>])</div><div class="line"><span class="keyword">while</span> <span class="keyword">not</span> it.finished:</div><div class="line"></div><div class="line">    <span class="comment"># evaluate function at x+h</span></div><div class="line">    ix = it.multi_index</div><div class="line">    old_value = x[ix]</div><div class="line">    x[ix] = old_value + h <span class="comment"># increment by h</span></div><div class="line">    fxh = f(x) <span class="comment"># evalute f(x + h)</span></div><div class="line">    x[ix] = old_value <span class="comment"># restore to previous value (very important!)</span></div><div class="line"></div><div class="line">    <span class="comment"># compute the partial derivative</span></div><div class="line">    grad[ix] = (fxh - fx) / h <span class="comment"># the slope</span></div><div class="line">    it.iternext() <span class="comment"># step to next dimension</span></div></pre></td></tr></table></figure></p>
-<h2 id="Analytically-with-calculus"><a href="#Analytically-with-calculus" class="headerlink" title="Analytically with calculus"></a>Analytically with calculus</h2><p>标签： a fast, exact but more error-prone way</p>
-<p>以SVM损失函数在某个样本下的形式为例：<br>$$L_i = \sum_{j\neq y_i} \left [\max(0, w_j^T x_i - w_{y_i}^T x_i + \Delta) \right ]$$<br>计算上式对 $w_{y_i}$ 的梯度：<br>$$\nabla_{w_{y_i}}L_i = -\left (\sum_{j\neq y_i} \mathbb{I} (w_j^T x_i - w_{y_i}^T x_i + \Delta &gt; 0)\right )x_i$$<br>计算上式对 $j\neq y_i$ 的 $W_j$ 的梯度：<br>$$\nabla_{w_j}L_i = \mathbb{I} (w_j^T x_i - w_{y_i}^T x_i + \Delta &gt; 0)x_i$$</p>
-<h1 id="Gradient-Descent"><a href="#Gradient-Descent" class="headerlink" title="Gradient Descent"></a>Gradient Descent</h1><p>梯度下降方法的主要思路是，在梯度方向上，进行某一步长的移动以使得目标函数呈不增的趋势。</p>
-<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">  weights_grad = evaluate_gradient(loss_fun, data, weights)</div><div class="line">  weights += - step_size * weights_grad <span class="comment"># perform parameter updat</span></div></pre></td></tr></table></figure></p>
-<p><strong>Mini-batch gradient descent</strong><br>当数据集非常的大时，机器资源可能不能一次性的加载进所有的数据，所以可以每次只选择其中的一小部分进行处理。</p>
-<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">  data_batch = sample_training_data(data, <span class="number">256</span>) <span class="comment"># sample 256 examples</span></div><div class="line">  weights_grad = evaluate_gradient(loss_fun, data_batch, weights)</div><div class="line">  weights += - step_size * weights_grad <span class="comment"># perform parameter update</span></div></pre></td></tr></table></figure></p>
-<p>对于Mini-batch的大小，通常不用交叉验证的方式来选择，通常是根据经验提前设定的（根据计算资源而定）：$[32, 64, 128,…]$,通常选择的是2的倍数，因为这符合计算机的二进制计数原理。</p>
-<p><strong>Stochastic Gradient Descent (SGD)</strong><br>当Mini-batch gradient descent取极限时，即每次只取所有样本中的一个样例用于训练。但是由于在实践中发现，计算100个样本的梯度往往要优于计算某一个样本100次所得到的权重矩阵，所以Mini-batch gradient descent较为常用，而SGD有时也指Mini-batch gradient descent。</p>
-<h1 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h1><ol>
-<li><a href="http://cs231n.github.io/optimization-1" target="_blank" rel="external">CS231n: Optimization: Stochastic Gradient Descent</a></li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;这一节主要介绍一种优化方法，随机梯度下降，用于求解前面章节提到的目标函数中的权重矩阵$W$.&lt;/p&gt;
-&lt;h1 id=&quot;Visualizing-the-loss-function&quot;&gt;&lt;a href=&quot;#Visualizing-the-loss-function&quot; class=
-    
-    </summary>
-    
-      <category term="Machine Learning" scheme="http://heimignx.cn/categories/Machine-Learning/"/>
-    
-    
-      <category term="Machine Learning" scheme="http://heimignx.cn/tags/Machine-Learning/"/>
-    
-      <category term="CS231n笔记" scheme="http://heimignx.cn/tags/CS231n%E7%AC%94%E8%AE%B0/"/>
-    
-  </entry>
-  
-  <entry>
     <title>CS231n:Linear classification: Support Vector Machine, Softmax</title>
     <link href="http://heimignx.cn/2016/08/15/cs231n-linear-classification/"/>
     <id>http://heimignx.cn/2016/08/15/cs231n-linear-classification/</id>
@@ -889,51 +925,49 @@
   </entry>
   
   <entry>
-    <title>Goldstein-Armijo Rule and backtracking line search</title>
-    <link href="http://heimignx.cn/2016/06/28/Goldstein-Armijo-Rule-and-backtracking-line-search/"/>
-    <id>http://heimignx.cn/2016/06/28/Goldstein-Armijo-Rule-and-backtracking-line-search/</id>
-    <published>2016-06-28T15:21:47.000Z</published>
-    <updated>2016-10-15T14:06:53.918Z</updated>
+    <title>CS231n:Optimization: Stochastic Gradient Descent</title>
+    <link href="http://heimignx.cn/2016/08/15/cs231n-optimization-sgd/"/>
+    <id>http://heimignx.cn/2016/08/15/cs231n-optimization-sgd/</id>
+    <published>2016-08-15T12:20:45.000Z</published>
+    <updated>2016-10-15T14:06:53.921Z</updated>
     
-    <content type="html"><![CDATA[<p>在迭代型算法的优化问题中，我们经常会看到用Armijo Rule来更新步长，找到一个可行点进入下一次迭代。下面将我对Armijo的理解整理下来。</p>
-<h1 id="Goldstein-Armijo-Rule"><a href="#Goldstein-Armijo-Rule" class="headerlink" title="Goldstein-Armijo Rule"></a>Goldstein-Armijo Rule</h1><p>我们这里以梯度方法为例：</p>
-<blockquote>
-<p>初始点 $x_0 \in R^n$<br>迭代 ： $ x_{k+1} = x_k - h_k f’(x_k), k=0,1,… $</p>
-</blockquote>
-<p>这里$h_k$表示步长（大于0），$f’(x_k)$表示函数$f(x)$在$x_k$这一点的梯度方向。前面为负表示负梯度方向为函数下降最快的方向，至于为什么在这一点会下降最快，其实是有很好的理论证明的，后面有时间整理出来。<br>那么，对于步长的确定可以有很多方法，最简单的一种便是提前预定义好：<br>$$h_k = h &gt; 0$$<br>$$h_k = \frac{h}{\sqrt{k+1}}$$<br>这种方法在凸优化的框架下使用较多，主要由于凸优化函数的变化趋势是可预测的。<br>另外还有一种非常理想化的方法：<br>$$h_k = arg \min_{h\geq0}f(x_k - h f’(x_k))$$<br>显然，这种方法在实际的运用中属于空中楼阁，并没有可操作性。<br>下面最最常用的便是Armijo Rule了：</p>
-<blockquote>
-<p>Find $x_{k+1} = x_k - h f’(x_k)$ such that</p>
-<p>$$\alpha &lt;f’(x_k), x_k - x_{k+1}&gt; \quad \leq \quad f(x_k) - f(x_{k+1}) \tag 1$$</p>
-<p>$$\beta &lt;f’(x_k), x_k - x_{k+1}&gt; \quad \geq \quad f(x_k) - f(x_{k+1}) \tag 2$$<br>where $0 &lt; \alpha &lt; \beta &lt; 1$ are some fixed parameters</p>
-</blockquote>
-<p>对于这个规则，可能咋看并不能理解他的意图，下面通过一段证明来看一下这个规则的作用。</p>
-<h1 id="证明"><a href="#证明" class="headerlink" title="证明"></a>证明</h1><p>假设有如下问题<br>$$\min_{x\in R^n} f(x)$$<br>其中$f\in C^{1,1}_L(R^n)$。并且，我们这里假设函数有下界。</p>
-<blockquote>
-<p>这里$f\in C^{1,1}_L(R^n)$表示函数$f(x)$在$R^n$上是一阶连续可微的，并且其一阶导满足Lipschitz 连续性，参数为L,具体的公式如下<br>$$|f(y)-f(x)-&lt;f’(x), y-x&gt;| \quad \leq \quad \frac{L}{2} ||y-x||^2$$</p>
-</blockquote>
-<p>对于一个gradient step，我们有</p>
-<p>\begin{align}<br>f(y) &amp; \leq  f(x) + &lt;f’(x), y-x&gt; + \frac{L}{2}|y-x|^2 \\<br>&amp; = f(x) - h|f’(x)|^2 + \frac{h^2}{2}L|f’(x)|^2 \\<br>&amp; = f(x) - h(1-\frac{h}{2}L)|f’(x)|^2 \tag 3<br>\end{align}</p>
-<p>所以，为了使得我们的目标函数值有尽大程度的减小，我们需要求解下面的一维问题：<br>$$\Delta(h) = -h(1-\frac{h}{2}L) \to \min_h$$<br>对上式求导，得到$\Delta’(h)=hL-1=0$,所以$h^* = \frac{1}{L}$,由于$\Delta’’(h)=L \gt 0$,所以此时取得最小值。这样，将其代入上式，我们就能够得到单步梯度下降，目标函数值至少下降多少的形式：<br>$$f(y)\leq f(x)-\frac{1}{2L}|f’(x)|^2 \tag 4$$</p>
-<p>下面，我们来看一下Armijo Rule规定的两个式子与这目标函数值最小下降之间的关系。<br>首先，令$x_{k+1} = x_k - h_k f’(x_k)$,对于固定步长策略$h_k = h$,我们有<br>$$f(x_k) - f(x_{k+1}) \geq h(1-\frac{h}{2}L)|f’(x)|^2$$<br>所以当我们选择$h_k = \frac{2\alpha}{L}, \alpha \in (0, 1)$时，有</p>
-<p>$$f(x_k) - f(x_{k+1}) \geq \frac{2}{L}\alpha (1-\alpha)|f’(x)|^2 \tag 5$$</p>
-<p>显然，当$\alpha = \frac{1}{2}$时，取得最大值，即为前面(4)式等价。<br>接着，我们考虑Armijo Rule提到的两个式子：<br>首先，我们考虑公式（2），有<br>$$f(x_k)-f(x_{k+1}) \quad \leq \quad \beta &lt;f’(x_k), x_k-x_{k+1}&gt;\quad = \quad\beta h_k |f’(x)|^2$$<br>结合公式（3），我们有<br>$$h_k \geq \frac{2}{L}(1-\beta) \tag 6$$<br>接着，我们考虑公式（1），有</p>
-<p>$$f(x_k)-f(x_{k+1}) \quad \geq \quad \alpha &lt;f’(x_k), x_k-x_{k+1}&gt;\quad = \quad\alpha h_k |f’(x)|^2$$</p>
-<p>结合不等式（6），我们有</p>
-<p>$$f(x_k)-f(x_{k+1}) \quad \geq \quad \frac{2}{L}\alpha(1-\beta)|f’(x_k)|^2 \tag 7$$</p>
-<p>结合公式（4）（5）（7），容易得到<br>$$\frac{2}{L}\alpha(1-\beta) \leq \frac{2}{L}\alpha(1-\alpha) \leq \frac{1}{2L}, 0\leq \alpha \leq \beta \leq 1$$<br>所以，这表明对于给定的$\alpha,\beta$，只要满足公式（1）（2），就至少有公式（7）的下降程度，也就更趋近于最大下降（相当于满足了我们期望的下降）。</p>
-<h1 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h1><p>[1] : introductory lectures on convex optimization: a basic course(26页), Yurii Nesterov</p>
+    <content type="html"><![CDATA[<p>这一节主要介绍一种优化方法，随机梯度下降，用于求解前面章节提到的目标函数中的权重矩阵$W$.</p>
+<h1 id="Visualizing-the-loss-function"><a href="#Visualizing-the-loss-function" class="headerlink" title="Visualizing the loss function"></a>Visualizing the loss function</h1><p>这里主要通过一些简单的例子来表明，我们所要求解的目标函数是一个凸问题，通过形象化的图形来体会优化的过程。同时，课程中也提到如果在神经网络中，目标函数就不再是凸的了，所以需要新的求解方法。</p>
+<h1 id="Optimization"><a href="#Optimization" class="headerlink" title="Optimization"></a>Optimization</h1><h2 id="Strategy-1-Random-Search"><a href="#Strategy-1-Random-Search" class="headerlink" title="Strategy 1: Random Search"></a>Strategy 1: Random Search</h2><p>首先限定一个最大迭代步数，然后在每一次迭代中都将随机的$W$值代入求得目标函数值，并记录下使得目标函数值取得当前最小的$W$作为最终的输出</p>
+<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> num <span class="keyword">in</span> xrange(<span class="number">1000</span>):</div><div class="line">    W = np.random.randn(<span class="number">10</span>, <span class="number">3073</span>) * <span class="number">0.0001</span> <span class="comment"># generate random parameters</span></div><div class="line">    loss = L(X_train, Y_train, W) <span class="comment"># get the loss over the entire training set</span></div><div class="line">    <span class="keyword">if</span> loss &lt; bestloss: <span class="comment"># keep track of the best solution</span></div><div class="line">        bestloss = loss</div><div class="line">        bestW = W</div><div class="line">    <span class="keyword">print</span> <span class="string">'in attempt %d the loss was %f, best %f'</span> % (num, loss, bestloss)</div></pre></td></tr></table></figure></p>
+<h2 id="Strategy-2-Random-Local-Search"><a href="#Strategy-2-Random-Local-Search" class="headerlink" title="Strategy 2: Random Local Search"></a>Strategy 2: Random Local Search</h2><p>对上面方法的一个改进，就是不是在每次的迭代中都给$W$赋随机值，而是根据初始赋随机值进行微调，如果能够使得目标函数值下降，则记录下该微调之后的$W$，直到迭代步数达到设定的值。</p>
+<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">W = np.random.randn(<span class="number">10</span>, <span class="number">3073</span>) * <span class="number">0.001</span> <span class="comment"># generate random starting W</span></div><div class="line">bestloss = float(<span class="string">"inf"</span>)</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="number">1000</span>):</div><div class="line">    step_size = <span class="number">0.0001</span></div><div class="line">    Wtry = W + np.random.randn(<span class="number">10</span>, <span class="number">3073</span>) * step_size</div><div class="line">    loss = L(Xtr_cols, Ytr, Wtry)</div><div class="line">    <span class="keyword">if</span> loss &lt; bestloss:</div><div class="line">        W = Wtry</div><div class="line">        bestloss = loss</div><div class="line">    <span class="keyword">print</span> <span class="string">'iter %d loss is %f'</span> % (i, bestloss)</div></pre></td></tr></table></figure></p>
+<h2 id="Strategy-3-Following-the-gradient"><a href="#Strategy-3-Following-the-gradient" class="headerlink" title="Strategy 3: Following the gradient"></a>Strategy 3: Following the gradient</h2><p>显然，策略2已经很接近通用的梯度下降方法了，唯一的区别是，我们在每一步迭代中都是取使目标函数下降最大的方向进行优化的，而要想能够找到使得目标函数下降最大的方向，就需要用到梯度了。</p>
+<h1 id="Computing-the-gradient"><a href="#Computing-the-gradient" class="headerlink" title="Computing the gradient"></a>Computing the gradient</h1><p>对于梯度的计算，课程中提供了两种方法</p>
+<h2 id="Numerically-with-finite-differences"><a href="#Numerically-with-finite-differences" class="headerlink" title="Numerically with finite differences"></a>Numerically with finite differences</h2><p>标签：a slow, approximate，but easy way</p>
+<p>公式：<br>$$\frac{d f(x)}{d x}=\lim_{x\to 0} \frac{f(x+h)-f(x)}{h}$$</p>
+<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">fx = f(x) <span class="comment"># evaluate function value at original point</span></div><div class="line">grad = np.zeros(x.shape)</div><div class="line">h = <span class="number">0.00001</span></div><div class="line"></div><div class="line"><span class="comment"># iterate over all indexes in x</span></div><div class="line">it = np.nditer(x, flags=[<span class="string">'multi_index'</span>], op_flags=[<span class="string">'readwrite'</span>])</div><div class="line"><span class="keyword">while</span> <span class="keyword">not</span> it.finished:</div><div class="line"></div><div class="line">    <span class="comment"># evaluate function at x+h</span></div><div class="line">    ix = it.multi_index</div><div class="line">    old_value = x[ix]</div><div class="line">    x[ix] = old_value + h <span class="comment"># increment by h</span></div><div class="line">    fxh = f(x) <span class="comment"># evalute f(x + h)</span></div><div class="line">    x[ix] = old_value <span class="comment"># restore to previous value (very important!)</span></div><div class="line"></div><div class="line">    <span class="comment"># compute the partial derivative</span></div><div class="line">    grad[ix] = (fxh - fx) / h <span class="comment"># the slope</span></div><div class="line">    it.iternext() <span class="comment"># step to next dimension</span></div></pre></td></tr></table></figure></p>
+<h2 id="Analytically-with-calculus"><a href="#Analytically-with-calculus" class="headerlink" title="Analytically with calculus"></a>Analytically with calculus</h2><p>标签： a fast, exact but more error-prone way</p>
+<p>以SVM损失函数在某个样本下的形式为例：<br>$$L_i = \sum_{j\neq y_i} \left [\max(0, w_j^T x_i - w_{y_i}^T x_i + \Delta) \right ]$$<br>计算上式对 $w_{y_i}$ 的梯度：<br>$$\nabla_{w_{y_i}}L_i = -\left (\sum_{j\neq y_i} \mathbb{I} (w_j^T x_i - w_{y_i}^T x_i + \Delta &gt; 0)\right )x_i$$<br>计算上式对 $j\neq y_i$ 的 $W_j$ 的梯度：<br>$$\nabla_{w_j}L_i = \mathbb{I} (w_j^T x_i - w_{y_i}^T x_i + \Delta &gt; 0)x_i$$</p>
+<h1 id="Gradient-Descent"><a href="#Gradient-Descent" class="headerlink" title="Gradient Descent"></a>Gradient Descent</h1><p>梯度下降方法的主要思路是，在梯度方向上，进行某一步长的移动以使得目标函数呈不增的趋势。</p>
+<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">  weights_grad = evaluate_gradient(loss_fun, data, weights)</div><div class="line">  weights += - step_size * weights_grad <span class="comment"># perform parameter updat</span></div></pre></td></tr></table></figure></p>
+<p><strong>Mini-batch gradient descent</strong><br>当数据集非常的大时，机器资源可能不能一次性的加载进所有的数据，所以可以每次只选择其中的一小部分进行处理。</p>
+<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">  data_batch = sample_training_data(data, <span class="number">256</span>) <span class="comment"># sample 256 examples</span></div><div class="line">  weights_grad = evaluate_gradient(loss_fun, data_batch, weights)</div><div class="line">  weights += - step_size * weights_grad <span class="comment"># perform parameter update</span></div></pre></td></tr></table></figure></p>
+<p>对于Mini-batch的大小，通常不用交叉验证的方式来选择，通常是根据经验提前设定的（根据计算资源而定）：$[32, 64, 128,…]$,通常选择的是2的倍数，因为这符合计算机的二进制计数原理。</p>
+<p><strong>Stochastic Gradient Descent (SGD)</strong><br>当Mini-batch gradient descent取极限时，即每次只取所有样本中的一个样例用于训练。但是由于在实践中发现，计算100个样本的梯度往往要优于计算某一个样本100次所得到的权重矩阵，所以Mini-batch gradient descent较为常用，而SGD有时也指Mini-batch gradient descent。</p>
+<h1 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h1><ol>
+<li><a href="http://cs231n.github.io/optimization-1" target="_blank" rel="external">CS231n: Optimization: Stochastic Gradient Descent</a></li>
+</ol>
 ]]></content>
     
     <summary type="html">
     
-      Goldstein-Armijo规则以及回溯线性搜索
+      &lt;p&gt;这一节主要介绍一种优化方法，随机梯度下降，用于求解前面章节提到的目标函数中的权重矩阵$W$.&lt;/p&gt;
+&lt;h1 id=&quot;Visualizing-the-loss-function&quot;&gt;&lt;a href=&quot;#Visualizing-the-loss-function&quot; class=
     
     </summary>
     
-      <category term="Optimization" scheme="http://heimignx.cn/categories/Optimization/"/>
+      <category term="Machine Learning" scheme="http://heimignx.cn/categories/Machine-Learning/"/>
     
     
-      <category term="Optimization" scheme="http://heimignx.cn/tags/Optimization/"/>
+      <category term="Machine Learning" scheme="http://heimignx.cn/tags/Machine-Learning/"/>
+    
+      <category term="CS231n笔记" scheme="http://heimignx.cn/tags/CS231n%E7%AC%94%E8%AE%B0/"/>
     
   </entry>
   
@@ -1113,6 +1147,55 @@
   </entry>
   
   <entry>
+    <title>Goldstein-Armijo Rule and backtracking line search</title>
+    <link href="http://heimignx.cn/2016/06/28/Goldstein-Armijo-Rule-and-backtracking-line-search/"/>
+    <id>http://heimignx.cn/2016/06/28/Goldstein-Armijo-Rule-and-backtracking-line-search/</id>
+    <published>2016-06-28T15:21:47.000Z</published>
+    <updated>2016-10-15T14:06:53.918Z</updated>
+    
+    <content type="html"><![CDATA[<p>在迭代型算法的优化问题中，我们经常会看到用Armijo Rule来更新步长，找到一个可行点进入下一次迭代。下面将我对Armijo的理解整理下来。</p>
+<h1 id="Goldstein-Armijo-Rule"><a href="#Goldstein-Armijo-Rule" class="headerlink" title="Goldstein-Armijo Rule"></a>Goldstein-Armijo Rule</h1><p>我们这里以梯度方法为例：</p>
+<blockquote>
+<p>初始点 $x_0 \in R^n$<br>迭代 ： $ x_{k+1} = x_k - h_k f’(x_k), k=0,1,… $</p>
+</blockquote>
+<p>这里$h_k$表示步长（大于0），$f’(x_k)$表示函数$f(x)$在$x_k$这一点的梯度方向。前面为负表示负梯度方向为函数下降最快的方向，至于为什么在这一点会下降最快，其实是有很好的理论证明的，后面有时间整理出来。<br>那么，对于步长的确定可以有很多方法，最简单的一种便是提前预定义好：<br>$$h_k = h &gt; 0$$<br>$$h_k = \frac{h}{\sqrt{k+1}}$$<br>这种方法在凸优化的框架下使用较多，主要由于凸优化函数的变化趋势是可预测的。<br>另外还有一种非常理想化的方法：<br>$$h_k = arg \min_{h\geq0}f(x_k - h f’(x_k))$$<br>显然，这种方法在实际的运用中属于空中楼阁，并没有可操作性。<br>下面最最常用的便是Armijo Rule了：</p>
+<blockquote>
+<p>Find $x_{k+1} = x_k - h f’(x_k)$ such that</p>
+<p>$$\alpha &lt;f’(x_k), x_k - x_{k+1}&gt; \quad \leq \quad f(x_k) - f(x_{k+1}) \tag 1$$</p>
+<p>$$\beta &lt;f’(x_k), x_k - x_{k+1}&gt; \quad \geq \quad f(x_k) - f(x_{k+1}) \tag 2$$<br>where $0 &lt; \alpha &lt; \beta &lt; 1$ are some fixed parameters</p>
+</blockquote>
+<p>对于这个规则，可能咋看并不能理解他的意图，下面通过一段证明来看一下这个规则的作用。</p>
+<h1 id="证明"><a href="#证明" class="headerlink" title="证明"></a>证明</h1><p>假设有如下问题<br>$$\min_{x\in R^n} f(x)$$<br>其中$f\in C^{1,1}_L(R^n)$。并且，我们这里假设函数有下界。</p>
+<blockquote>
+<p>这里$f\in C^{1,1}_L(R^n)$表示函数$f(x)$在$R^n$上是一阶连续可微的，并且其一阶导满足Lipschitz 连续性，参数为L,具体的公式如下<br>$$|f(y)-f(x)-&lt;f’(x), y-x&gt;| \quad \leq \quad \frac{L}{2} ||y-x||^2$$</p>
+</blockquote>
+<p>对于一个gradient step，我们有</p>
+<p>\begin{align}<br>f(y) &amp; \leq  f(x) + &lt;f’(x), y-x&gt; + \frac{L}{2}|y-x|^2 \\<br>&amp; = f(x) - h|f’(x)|^2 + \frac{h^2}{2}L|f’(x)|^2 \\<br>&amp; = f(x) - h(1-\frac{h}{2}L)|f’(x)|^2 \tag 3<br>\end{align}</p>
+<p>所以，为了使得我们的目标函数值有尽大程度的减小，我们需要求解下面的一维问题：<br>$$\Delta(h) = -h(1-\frac{h}{2}L) \to \min_h$$<br>对上式求导，得到$\Delta’(h)=hL-1=0$,所以$h^* = \frac{1}{L}$,由于$\Delta’’(h)=L \gt 0$,所以此时取得最小值。这样，将其代入上式，我们就能够得到单步梯度下降，目标函数值至少下降多少的形式：<br>$$f(y)\leq f(x)-\frac{1}{2L}|f’(x)|^2 \tag 4$$</p>
+<p>下面，我们来看一下Armijo Rule规定的两个式子与这目标函数值最小下降之间的关系。<br>首先，令$x_{k+1} = x_k - h_k f’(x_k)$,对于固定步长策略$h_k = h$,我们有<br>$$f(x_k) - f(x_{k+1}) \geq h(1-\frac{h}{2}L)|f’(x)|^2$$<br>所以当我们选择$h_k = \frac{2\alpha}{L}, \alpha \in (0, 1)$时，有</p>
+<p>$$f(x_k) - f(x_{k+1}) \geq \frac{2}{L}\alpha (1-\alpha)|f’(x)|^2 \tag 5$$</p>
+<p>显然，当$\alpha = \frac{1}{2}$时，取得最大值，即为前面(4)式等价。<br>接着，我们考虑Armijo Rule提到的两个式子：<br>首先，我们考虑公式（2），有<br>$$f(x_k)-f(x_{k+1}) \quad \leq \quad \beta &lt;f’(x_k), x_k-x_{k+1}&gt;\quad = \quad\beta h_k |f’(x)|^2$$<br>结合公式（3），我们有<br>$$h_k \geq \frac{2}{L}(1-\beta) \tag 6$$<br>接着，我们考虑公式（1），有</p>
+<p>$$f(x_k)-f(x_{k+1}) \quad \geq \quad \alpha &lt;f’(x_k), x_k-x_{k+1}&gt;\quad = \quad\alpha h_k |f’(x)|^2$$</p>
+<p>结合不等式（6），我们有</p>
+<p>$$f(x_k)-f(x_{k+1}) \quad \geq \quad \frac{2}{L}\alpha(1-\beta)|f’(x_k)|^2 \tag 7$$</p>
+<p>结合公式（4）（5）（7），容易得到<br>$$\frac{2}{L}\alpha(1-\beta) \leq \frac{2}{L}\alpha(1-\alpha) \leq \frac{1}{2L}, 0\leq \alpha \leq \beta \leq 1$$<br>所以，这表明对于给定的$\alpha,\beta$，只要满足公式（1）（2），就至少有公式（7）的下降程度，也就更趋近于最大下降（相当于满足了我们期望的下降）。</p>
+<h1 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h1><p>[1] : introductory lectures on convex optimization: a basic course(26页), Yurii Nesterov</p>
+]]></content>
+    
+    <summary type="html">
+    
+      Goldstein-Armijo规则以及回溯线性搜索
+    
+    </summary>
+    
+      <category term="Optimization" scheme="http://heimignx.cn/categories/Optimization/"/>
+    
+    
+      <category term="Optimization" scheme="http://heimignx.cn/tags/Optimization/"/>
+    
+  </entry>
+  
+  <entry>
     <title>LaTex中空格的用法</title>
     <link href="http://heimignx.cn/2016/06/28/use-space-in-Latex/"/>
     <id>http://heimignx.cn/2016/06/28/use-space-in-Latex/</id>
@@ -1144,7 +1227,7 @@
     <link href="http://heimignx.cn/2016/06/09/markdown-mathjax/"/>
     <id>http://heimignx.cn/2016/06/09/markdown-mathjax/</id>
     <published>2016-06-09T03:24:40.000Z</published>
-    <updated>2016-10-15T14:06:53.928Z</updated>
+    <updated>2016-11-03T03:40:58.332Z</updated>
     
     <content type="html"><![CDATA[<p>由于写的博客中有很多公式，在线下编辑的时候都能正常显示，可是发布了之后出现了各种蛋疼的效果，折腾了好久，总结下来以备忘。</p>
 <h1 id="多行公式显示"><a href="#多行公式显示" class="headerlink" title="多行公式显示"></a>多行公式显示</h1><p>\begin{align} \\<br>\max_{w,b} \quad &amp; \gamma \\<br>s.t. \quad &amp;y_i(\frac{w}{||w||}x_i+\frac{b}{||w||})\geq \gamma, i=1,2,…,N<br>\end{align}</p>
@@ -1153,8 +1236,8 @@
 <h1 id="对于下标的转义"><a href="#对于下标的转义" class="headerlink" title="对于下标的转义"></a>对于下标的转义</h1><p>$$L(w,b,\alpha) = \frac{1}{2}||w||^2 - \sum_{i=1}^N\alpha_i y_i (w \cdot x_i + b) + \sum_{i=1}^N\alpha_i$$</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">code:</div><div class="line">$$L(w,b,\alpha) = \frac&#123;1&#125;&#123;2&#125;||w||^2 - \sum\_&#123;i=1&#125;^N\alpha\_i y\_i (w \cdot x\_i + b) + \sum\_&#123;i=1&#125;^N\alpha\_i$$</div></pre></td></tr></table></figure>
 <p>这里出现了两个<code>\sum\_{i=1}^N</code>如果不对下标进行转义，写成<code>\sum_{i=1}^N</code>，就不能正常显示，不知道原因。只能先加上解决问题了</p>
-<p>其他的以后遇到了再添加吧</p>
-]]></content>
+<h1 id="对于-上标的转义"><a href="#对于-上标的转义" class="headerlink" title="对于$*$上标的转义"></a>对于$*$上标的转义</h1><p>$$\lambda^*$$</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">code:</div><div class="line">$$\lambda^\*$$</div></pre></td></tr></table></figure>]]></content>
     
     <summary type="html">
     
@@ -1326,35 +1409,6 @@
       <category term="machine learning" scheme="http://heimignx.cn/tags/machine-learning/"/>
     
       <category term="python" scheme="http://heimignx.cn/tags/python/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>sigmoid function 和 sigmoid kernel</title>
-    <link href="http://heimignx.cn/2016/05/03/sigmoid-function-and-sigmoid-kernel/"/>
-    <id>http://heimignx.cn/2016/05/03/sigmoid-function-and-sigmoid-kernel/</id>
-    <published>2016-05-03T14:31:56.000Z</published>
-    <updated>2016-10-15T14:06:53.929Z</updated>
-    
-    <content type="html"><![CDATA[<p>今天在跟老师讨论多核学习问题时，遇到sigmoid kernel，发现自己记忆的与老师说的好像不一样，然后查了一下，发现原来在形式上是有两种表示形式的，但是本质是相同的。</p>
-<h1 id="sigmoid-function"><a href="#sigmoid-function" class="headerlink" title="sigmoid function"></a>sigmoid function</h1><p>sigmoid function : $$sigmoid(x) = \frac{1}{1+e^{-x}}$$<br>sigmoid function在神经网络中是一种典型的神经元激活函数,图形为：<br><img src="/img/blog/sigmoid/sigmoidfunction.jpg" alt="sigmoid function"></p>
-<h1 id="sigmoid-kernel"><a href="#sigmoid-kernel" class="headerlink" title="sigmoid kernel"></a>sigmoid kernel</h1><p>sigmoid kernel : $$k(x, y) = \tanh(\alpha x^Ty + c)$$<br>其中$\tanh(x)$是双曲正切函数<br>$$\tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}} = \frac{1}{1+e^{-2x}} - \frac{1}{e^{2x} + 1}$$<br>图形为：<br><img src="/img/blog/sigmoid/tanhfunction.jpg" alt="tanh function"></p>
-<p>可以看到两者的曲线趋势都是差不多的，s型函数，只是值域不同。那么我们再来将tanh拆开画图看看效果：<br>$$\frac{1}{1+e^{-2x}}$$<br><img src="/img/blog/sigmoid/tanhfunction1.jpg" alt="tanh function 1"><br>$$- \frac{1}{e^{2x} + 1}$$<br><img src="/img/blog/sigmoid/tanhfunction2.jpg" alt="tanh function 2"></p>
-<p>我们可以看到这两个的图形趋势也是相同的，同样值域不一样，而且前者值域是$[0, 1]$,后者的值域是$[-1, 0]$，那么两者相加正好实现了原双曲正切的值域范围。<br>那么，我们平时所用的sigmoid函数只是取了前半部分。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      两者之间的联系与区别
-    
-    </summary>
-    
-      <category term="Mathematics" scheme="http://heimignx.cn/categories/Mathematics/"/>
-    
-    
-      <category term="machine learning" scheme="http://heimignx.cn/tags/machine-learning/"/>
-    
-      <category term="mathematics" scheme="http://heimignx.cn/tags/mathematics/"/>
     
   </entry>
   
