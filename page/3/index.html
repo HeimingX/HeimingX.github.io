@@ -86,6 +86,75 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2016/05/06/adaboost-algorithm/" title="Adaboost算法实现" itemprop="url">Adaboost算法实现</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
+		
+  <p class="article-time">
+    <time datetime="2016-05-06T14:31:56.000Z" itemprop="datePublished"> 发表于 2016-05-06</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>adaboost算法是经典的boosting算法，今天把李航统计学习方法上面的例8.1实现了一下，虽然看着挺简单的，但实现的时候还是有很多细节需要注意。由于代码是严格按照书上算法流程来敲的，这里就不放算法步骤了。直接上代码吧。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># coding: utf-8</span></div><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Params</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.w = []</div><div class="line">        self.alpha = []</div><div class="line">        self.threshold = []</div><div class="line">        self.g = []</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">setW</span><span class="params">(self, w)</span>:</span></div><div class="line">        self.w = w</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getThreshold</span><span class="params">(x, y, params)</span>:</span></div><div class="line">    <span class="string">"""获取当前权值分布下的误差率最小的阈值"""</span></div><div class="line">    threshold = np.zeros(len(x) + <span class="number">1</span>)</div><div class="line">    <span class="keyword">for</span> idx <span class="keyword">in</span> range(len(x)):</div><div class="line">        <span class="keyword">if</span> idx &gt; <span class="number">0</span>:</div><div class="line">            threshold[idx] = np.mean(x[idx<span class="number">-1</span> : idx+<span class="number">1</span>])</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            threshold[idx] = x[idx] - <span class="number">0.5</span> <span class="comment">## 延拓0.5</span></div><div class="line">    threshold[<span class="number">-1</span>] = x[<span class="number">-1</span>] + <span class="number">0.5</span>    </div><div class="line">    predict = np.ones(len(y)) * <span class="number">-1</span></div><div class="line">    minError = <span class="number">1000</span></div><div class="line">    minThreshold = <span class="number">0</span></div><div class="line">    ming = <span class="number">1</span> <span class="comment">## 表示小于阈值时取1 否则取-1</span></div><div class="line">    <span class="keyword">for</span> idx <span class="keyword">in</span> range(len(threshold)):</div><div class="line">        predict = map(<span class="keyword">lambda</span> x1: <span class="number">1</span> <span class="keyword">if</span> x1 == <span class="keyword">True</span> <span class="keyword">else</span> <span class="number">-1</span>, x &lt; threshold[idx])</div><div class="line">        error = np.sum(params.w[predict != y]) <span class="comment">##这里用样本权重来衡量误差率</span></div><div class="line">        <span class="keyword">if</span> error &lt; minError:</div><div class="line">            minThreshold = idx</div><div class="line">            minError = error</div><div class="line">    <span class="keyword">for</span> idx <span class="keyword">in</span> range(len(threshold)):</div><div class="line">        predict = map(<span class="keyword">lambda</span> x1: <span class="number">1</span> <span class="keyword">if</span> x1 == <span class="keyword">True</span> <span class="keyword">else</span> <span class="number">-1</span>, x &gt; threshold[idx])</div><div class="line">        error = np.sum(params.w[predict != y])</div><div class="line">        <span class="keyword">if</span> error &lt; minError:</div><div class="line">            minThreshold = idx</div><div class="line">            minError = error</div><div class="line">            ming = <span class="number">-1</span></div><div class="line">    params.threshold.append(threshold[minThreshold])</div><div class="line">    params.g.append(ming)</div><div class="line">    <span class="keyword">return</span> minError</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getGofx</span><span class="params">(idx, x, params)</span>:</span></div><div class="line">    <span class="string">"""获取第idx个分类器的预测值"""</span></div><div class="line">    <span class="keyword">if</span> params.g[idx] == <span class="number">1</span>:</div><div class="line">        G = map(<span class="keyword">lambda</span> x1: <span class="number">1</span> <span class="keyword">if</span> x1 == <span class="keyword">True</span> <span class="keyword">else</span> <span class="number">-1</span>, x &lt; params.threshold[idx])</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        G = map(<span class="keyword">lambda</span> x1: <span class="number">1</span> <span class="keyword">if</span> x1 == <span class="keyword">True</span> <span class="keyword">else</span> <span class="number">-1</span>, x &gt; params.threshold[idx])</div><div class="line">    <span class="keyword">return</span> np.array(G)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">updateWeight</span><span class="params">(x, y, params)</span>:</span></div><div class="line">    <span class="string">"""更新样本权重"""</span></div><div class="line">    G = getGofx(<span class="number">-1</span>, x, params)</div><div class="line">    normer = np.exp(- params.alpha[<span class="number">-1</span>] * y * G)</div><div class="line">    Z = np.dot(params.w, normer)</div><div class="line">    params.w = params.w * normer / Z</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getPredict</span><span class="params">(x, params)</span>:</span></div><div class="line">    <span class="string">"""获取当前分类器的预测"""</span></div><div class="line">    predict = np.zeros(len(x))</div><div class="line">    <span class="keyword">for</span> idx <span class="keyword">in</span> range(len(params.alpha)):</div><div class="line">        G = getGofx(idx, x, params)</div><div class="line">        predict += G * params.alpha[idx]</div><div class="line">    predict = np.sign(predict)</div><div class="line">    <span class="keyword">return</span> predict</div><div class="line">    </div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">adaboost</span><span class="params">(x, y, params)</span>:</span></div><div class="line">    <span class="string">"""adaboost训练过程"""</span></div><div class="line">    errorNum = len(y)</div><div class="line">    <span class="keyword">while</span>(errorNum &gt; <span class="number">0</span>):</div><div class="line">        errorRate = getThreshold(x, y, params)</div><div class="line">        </div><div class="line">        alpha = <span class="number">0.5</span> * np.log((<span class="number">1</span> - errorRate)/errorRate)</div><div class="line">        params.alpha.append(alpha)</div><div class="line">        </div><div class="line">        updateWeight(x, y, params)</div><div class="line">        predict = getPredict(x, params)</div><div class="line">        error = predict != y</div><div class="line">        errorNum = len(y[error])</div><div class="line">        <span class="keyword">print</span> <span class="string">"alpha:"</span>, params.alpha</div><div class="line">        <span class="keyword">print</span> <span class="string">"threshold:"</span>, params.threshold</div><div class="line">        <span class="keyword">print</span> <span class="string">"errorNum:"</span>, errorNum</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></div><div class="line">    x = np.array([<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>])</div><div class="line">    y = np.array([<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">-1</span>,<span class="number">-1</span>,<span class="number">-1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">-1</span>])</div><div class="line">    params = Params()</div><div class="line">    params.setW(np.ones(len(y)) * (<span class="number">1.0</span> / len(y)))</div><div class="line">    adaboost(x, y, params)</div><div class="line">    </div><div class="line">    predict = getPredict(x, params)</div><div class="line">    <span class="keyword">print</span> <span class="string">"y = "</span>, y</div><div class="line">    <span class="keyword">print</span> <span class="string">"predict = "</span>, predict</div><div class="line">    </div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    main()</div></pre></td></tr></table></figure>
+<ol>
+<li><a href="https://github.com/HeimingX/MLAlgorithms/tree/master/boosting/adaboost" target="_blank" rel="external">源代码下载</a> （如果有帮助记得点赞哦~~哈哈）</li>
+<li>接下来，要用AdaBoost来跑一个实际的数据集来体验一下，同时尝试不同的基分类器看一下他强大的效果。</li>
+<li>啊，Python用的还是不熟啊！！！</li>
+</ol>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Machine-Learning/">Machine Learning</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/machine-learning/">machine learning</a><a href="/tags/python/">python</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/05/06/adaboost-algorithm/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/05/06/adaboost-algorithm/" data-count-type="comments">&nbsp;Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2016/05/03/sigmoid-function-and-sigmoid-kernel/" title="sigmoid function 和 sigmoid kernel" itemprop="url">sigmoid function 和 sigmoid kernel</a>
   </h1>
   <p class="article-author">By
@@ -749,73 +818,6 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/04/11/lintcode13-strStr/" title="lintcode[13] 字符串查找" itemprop="url">lintcode[13] 字符串查找</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
-		
-  <p class="article-time">
-    <time datetime="2016-04-11T13:18:03.000Z" itemprop="datePublished"> 发表于 2016-04-11</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><p>对于一个给定的 source 字符串和一个 target 字符串，你应该在 source 字符串中找出 target 字符串出现的第一个位置(从0开始)。如果不存在，则返回 -1。</p>
-<blockquote>
-<p>如果 source = “source” 和 target = “target”，返回 -1。<br>如果 source = “abcdabcdefg” 和 target = “bcd”，返回 1。</p>
-</blockquote>
-<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>字符串匹配，有著名的KMP算法，这里咩有实现，只是用了暴力搜索<br>不过有很多小的细节需要注意</p>
-<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">strStr</span><span class="params">(self, source, target)</span>:</span></div><div class="line">        <span class="keyword">if</span> source == <span class="keyword">None</span> <span class="keyword">or</span> target == <span class="keyword">None</span>:</div><div class="line">            <span class="keyword">return</span> <span class="number">-1</span></div><div class="line">        sourceLen = len(source)</div><div class="line">        targetLen = len(target)</div><div class="line">        <span class="keyword">if</span> sourceLen == <span class="number">0</span> <span class="keyword">and</span> targetLen != <span class="number">0</span>:</div><div class="line">            <span class="keyword">return</span> <span class="number">-1</span></div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span>(sourceLen <span class="keyword">and</span> targetLen):</div><div class="line">            <span class="keyword">return</span> <span class="number">0</span></div><div class="line">        sourceIdx = <span class="number">0</span></div><div class="line">        <span class="keyword">while</span> sourceIdx &lt; sourceLen:</div><div class="line">            targetIdx = <span class="number">0</span></div><div class="line">            tmpIdx = sourceIdx</div><div class="line">            <span class="keyword">while</span> targetIdx &lt; targetLen <span class="keyword">and</span> source[tmpIdx] == target[targetIdx]:</div><div class="line">                    tmpIdx += <span class="number">1</span></div><div class="line">                    targetIdx += <span class="number">1</span></div><div class="line">            <span class="keyword">if</span> targetIdx == targetLen:</div><div class="line">                <span class="keyword">return</span> sourceIdx</div><div class="line">            <span class="keyword">else</span>:</div><div class="line">                sourceIdx += <span class="number">1</span></div><div class="line">        <span class="keyword">return</span> <span class="number">-1</span></div></pre></td></tr></table></figure>
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Lintcode/">Lintcode</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/python/">python</a><a href="/tags/lintcode/">lintcode</a><a href="/tags/algorithm/">algorithm</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/04/11/lintcode13-strStr/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/11/lintcode13-strStr/" data-count-type="comments">&nbsp;Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <a class="extend prev" rel="prev" href="/page/2/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/4/">Next<span></span></a>
@@ -850,7 +852,7 @@
 		  
 		
 		  
-			<li><a href="/categories/Machine-Learning/" title="Machine Learning">Machine Learning<sup>15</sup></a></li>
+			<li><a href="/categories/Machine-Learning/" title="Machine Learning">Machine Learning<sup>16</sup></a></li>
 		  
 		
 		  
@@ -887,7 +889,7 @@
 			
 		
 			
-				<li><a href="/tags/Machine-Learning/" title="Machine Learning">Machine Learning<sup>12</sup></a></li>
+				<li><a href="/tags/Machine-Learning/" title="Machine Learning">Machine Learning<sup>13</sup></a></li>
 			
 		
 			
@@ -915,11 +917,11 @@
 			
 		
 			
-				<li><a href="/tags/Optimization/" title="Optimization">Optimization<sup>3</sup></a></li>
+				<li><a href="/tags/mathematics/" title="mathematics">mathematics<sup>3</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/mathematics/" title="mathematics">mathematics<sup>3</sup></a></li>
+				<li><a href="/tags/Optimization/" title="Optimization">Optimization<sup>3</sup></a></li>
 			
 		
 			
@@ -927,11 +929,11 @@
 			
 		
 			
-				<li><a href="/tags/code-optimize/" title="code optimize">code optimize<sup>1</sup></a></li>
+				<li><a href="/tags/Tattle/" title="Tattle">Tattle<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Tattle/" title="Tattle">Tattle<sup>1</sup></a></li>
+				<li><a href="/tags/code-optimize/" title="code optimize">code optimize<sup>1</sup></a></li>
 			
 		
 			

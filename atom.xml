@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://heimignx.cn/"/>
-  <updated>2016-11-03T03:39:19.467Z</updated>
+  <updated>2016-12-11T14:54:29.265Z</updated>
   <id>http://heimignx.cn/</id>
   
   <author>
@@ -14,6 +14,66 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>混合范数初窥</title>
+    <link href="http://heimignx.cn/2016/12/11/mixed-norms-tec/"/>
+    <id>http://heimignx.cn/2016/12/11/mixed-norms-tec/</id>
+    <published>2016-12-11T12:32:45.000Z</published>
+    <updated>2016-12-11T14:54:29.265Z</updated>
+    
+    <content type="html"><![CDATA[<p>在机器学习里面，如何避免过拟合是一个永恒的话题，缓解该问题的一个有效方法就是在损失函数后面加上一个规则化项，而对于规则化项的不同选择便会带来不同的效果，下面就对他们进行简单的对比介绍。</p>
+<h1 id="L-p-范数"><a href="#L-p-范数" class="headerlink" title="$L_p$范数"></a>$L_p$范数</h1><p>常见$L_p$范数规则化的表达式为：</p>
+<p>$$||x||_p=\left (\sum_{i=1}^n|x_i|^p\right )^{\frac{1}{p}}$$</p>
+<p>对于这些范数的表达，先给两个比较经典的图一起来感受一下：</p>
+<p><img src="/img/blog/mixed_norms/norm.png" alt="different norms"></p>
+<p><img src="/img/blog/mixed_norms/Minkowski3.png" alt="Minkowski3"></p>
+<p>根据上面两个图，我们不难发现，当$p \leq 1$时，图形不是光滑的，在某些点是不可微的，而正是这一属性可以给解带来稀疏性，同时，我们也可以看出此时p值越小，解的稀疏性也就越大，极限情况便是$p=0$时，稀疏性达到最大，便是熟知的$L_0$范数,但是，由于此时，函数是离散的，不太好优化，所以，通常选择与其解近似的$L_1$范数来达到稀疏解的要求。当$p \geq 1$时，从图像中明显可以看出来，他们变得越来越光滑，相应的其约束的解也会变得相对平滑，也就不再具有稀疏性了，不过，通常$L_2$范数的性能会更好一点，因为毕竟解的分布范围比较的广，更加的泛化。</p>
+<p>鉴于这些范数有着各自不同的优缺点，有学者便想着将他们组合起来，以达到更加丰富的效果。</p>
+<h1 id="mixed-norms"><a href="#mixed-norms" class="headerlink" title="mixed norms"></a>mixed norms</h1><p>对于混合范数的研究已经有很多成果了，比如比较经典的<a href="http://pages.stat.wisc.edu/~myuan/papers/glasso.final.pdf" target="_blank" rel="external">Group Lasso</a> 和 <a href="http://link.springer.com/article/10.1007/s11760-008-0076-1" target="_blank" rel="external">Elitist Lasso</a>。这里先给自己挖一个大坑，后面有时间看一看这两篇文章~~~下面，我将从一个关于mixed norm的应用来切入，探究一下其奇特的效果。</p>
+<h2 id="文章标题"><a href="#文章标题" class="headerlink" title="文章标题"></a>文章标题</h2><p><strong>Multiple Indefinite Kernel Learning with Mixed Norm Regularization</strong> (ICML‘09)</p>
+<h2 id="主要内容"><a href="#主要内容" class="headerlink" title="主要内容"></a>主要内容</h2><p>这篇文章主要解决的是一个关于多核学习的问题，作者没有按照通用的思路，只在核函数的维度，来考虑不同核函数组合带来的效果，而是另辟蹊径，同时在样本和核函数两个维度去考虑，这也为引入 mixed norm 埋下了伏笔。</p>
+<blockquote>
+<p>注：<br>多核学习问题的通用思路为：多核核函数的线性组合，然后将这组合之后的核代入到原SVM问题<br>核函数线性组合：$$K(x, x’) = \sum_{m=1}^M d_m K_m(x, x’)$$<br>优化目标：<br>\begin{align}<br>\min_{f_m, b, \xi, d} &amp;\quad \frac{1}{2}\sum_m |f_m|_{\mathcal{H}_m}^2 + C\sum_i\xi_i \\<br>s.t. &amp;\quad y_i \sum_m f_m(x_i) + y_i b \geq 1 -\xi_i \quad \forall i \\<br>&amp;\quad \xi_i \geq 0 \\<br>&amp;\quad \sum_m d_m = 1, d_m \geq 0<br>\end{align}<br>(引用自Simple MKL)</p>
+</blockquote>
+<p>本文作者直接构造的核函数组合的形式为：</p>
+<p>$$\mathcal{F}_S = \left \{x \to \sum_{i,t=1}^{n,\tau} \alpha_{it} k_t(x_i, x): \alpha\in\mathbb{R}^{n\tau}, k_t \in \mathcal{K} \right \}$$</p>
+<p>其中，$\mathcal K = \{ k1, k2, \cdots , k_\tau\}$表示候选核函数集合。同时，作者也将该形式作为其最终预测的判别函数，即判别函数为<strong>$sign(f(x))$</strong>, $f\in \mathcal{F}_S$.</p>
+<p>因此，作者得到了其待优化的目标函数：<br>$$\min_{\alpha\in\mathbb{R}^{n\tau}}\quad \sum_{i=1}^n |1-y_ik_i^T\alpha|_+^2 + \frac{\lambda}{q} ||\alpha||_{pq;r}^q$$<br>这里，目标函数主要可以分两段来看，前半段为loss function，一个squared hinge loss，后半段为regularization term，即 mixed norm. 其中，mixed norm的具体形式为：<br>$$||\alpha||_{pq;1} = \left [\sum_{i=1}^n \left [ \sum_{t=1}^\tau |\alpha_{it}|^p\right ]^{q/p}\right ]^{1/q}$$<br>$$||\alpha||_{pq;2} = \left [\sum_{t=1}^\tau \left [ \sum_{i=1}^n |\alpha_{it}|^p\right ]^{q/p}\right ]^{1/q}$$<br>(<strong>注意，两个式子的求和顺序是不一样的！</strong>)</p>
+<p>对于这两个式子，文章中2.3节给出了详细的分析，并给出了四个简图来说明。<br><img src="/img/blog/mixed_norms/difference_of_mixed_norms.png" alt="difference of mixed norms"><br>对这四幅图简单的分析：</p>
+<ul>
+<li><p>第一幅图的mixed norm参数为$p=1,q=2$，表示在核函数的维度上具有稀疏性，样本维度上不单独具有，即对于不同的样本，其对应的核函数组合可以体现出不同的稀疏性。<br>$$||\alpha||_{12;1} = \left [\sum_{i=1}^n \left [ \sum_{t=1}^\tau |\alpha_{it}| \right ]^{2}\right ]^{1/2}$$</p>
+</li>
+<li><p>第二幅图 $p=2,q=1$，表示在核函数的维度上不具有单独的稀疏性，而是通过样本维度的稀疏性来传递到核函数组合整体上的稀疏，即对于样本维度而言，通过1范数来达到了稀疏性，当某个样本被选择稀疏表达，那么与该样本相关的所有核函数组合便都具有了稀疏性。<br>$$||\alpha||_{21;1} = \left [\sum_{i=1}^n \left [ \sum_{t=1}^\tau |\alpha_{it}|^2\right ]^{1/2}\right ]^{1}$$</p>
+</li>
+<li><p>第三幅图 $p=1,q=2$, 与第一幅图类似，表示在样本维度具有稀疏性，核函数维度不具有，即对于不同的核函数，其对应的所有涉及到的样本可以体现出不同的稀疏性（核内稀疏不同）。<br>$$||\alpha||_{12;2} = \left [\sum_{t=1}^\tau \left [ \sum_{i=1}^n |\alpha_{it}| \right ]^{2}\right ]^{1/2}$$</p>
+</li>
+<li><p>第四幅图 $p=2,q=1$，与第二幅图类似，表示在样本维度上不具有单独的稀疏性，而是通过核函数维度的稀疏性来传递到样本维度的稀疏，即对于核函数组合的维度而言，通过1范数来达到了稀疏性，当某一核函数被选择稀疏表达，那么与该核函数相关的所有样本的$\alpha$就都变得稀疏了。<br>$$||\alpha||_{21;2} = \left [\sum_{t=1}^\tau \left [ \sum_{i=1}^n |\alpha_{it}|^2\right ]^{1/2}\right ]^{1}$$</p>
+</li>
+</ul>
+<p>文章中表明，$||\cdot||_{12;r}$与Elitist Lasso相关，$||\cdot||_{21;r}$与Group Lasso相关。</p>
+<p>对于这个优化问题的求解，作者运用了proximal algotithm来求解，由于与本主题无关，详细的求解方法可以参考论文。</p>
+<p>最后，作者在$Titanic$数据集上进行了实验，并给出了与上面图类似的关于稀疏性的实验结果图：<br><img src="/img/blog/mixed_norms/experiment_on_mixed_norms.png" alt="experiments on titanic dataset"><br>这里对实验结果的分析就不再赘述了，文章中给出了详细的分析。</p>
+<h2 id="小评"><a href="#小评" class="headerlink" title="小评"></a>小评</h2><p>首先，这篇paper的作者在给出了一种比较巧妙的方法来解决多核学习的问题，没有按照常规思路从原始的SVM问题出发，通过对偶化来引入核函数，而是直接以核函数的组合来作为评价函数，同时，从样本和核函数组合两个维度进行了考虑，这也为后面引入混合函数做好了准备。总之，想法还是挺新颖的！不过，也有一些问题吧，其一，这个题目是Multiple <strong>Indefinite</strong> Kernel Learning，但是全篇只有在conclusion部分提到了Indefinite Kernel的问题，所以，给人一种全篇都在跑题的感觉Orz~，虽然，核函数是不定的时候，该模型也能work，但是好歹在实验的时候搞个不定的核吧！（仅个人看法~）其二，对于实验而言，发现Titanic数据集上线性核居然比高斯核效果要好，回头实验一把看看！还有就是多核的意义应该主要体现在了对于核函数的自动选择，而不再需要人为的靠经验选择了，与单核相比，实验精度并不一定会有提升。所以，对于多核学习的研究，应该重点放在对模型的改进，或是新思路的探讨吧，最后只需要与多核方法进行比较就可以了。</p>
+<h1 id="references"><a href="#references" class="headerlink" title="references"></a>references</h1><ol>
+<li><a href="http://www.machinelearning.org/archive/icml2009/papers/520.pdf" target="_blank" rel="external">Multiple Indefinite Kernel Learning with Mixed Norm Regularization</a></li>
+<li>Simple MKL</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在机器学习里面，如何避免过拟合是一个永恒的话题，缓解该问题的一个有效方法就是在损失函数后面加上一个规则化项，而对于规则化项的不同选择便会带来不同的效果，下面就对他们进行简单的对比介绍。&lt;/p&gt;
+&lt;h1 id=&quot;L-p-范数&quot;&gt;&lt;a href=&quot;#L-p-范数&quot; class=
+    
+    </summary>
+    
+      <category term="Machine Learning" scheme="http://heimignx.cn/categories/Machine-Learning/"/>
+    
+    
+      <category term="Machine Learning" scheme="http://heimignx.cn/tags/Machine-Learning/"/>
+    
+  </entry>
   
   <entry>
     <title>methods on optimizing large-scale SVM problems</title>
@@ -863,6 +923,53 @@
   </entry>
   
   <entry>
+    <title>CS231n:Optimization: Stochastic Gradient Descent</title>
+    <link href="http://heimignx.cn/2016/08/15/cs231n-optimization-sgd/"/>
+    <id>http://heimignx.cn/2016/08/15/cs231n-optimization-sgd/</id>
+    <published>2016-08-15T12:20:45.000Z</published>
+    <updated>2016-10-15T14:06:53.921Z</updated>
+    
+    <content type="html"><![CDATA[<p>这一节主要介绍一种优化方法，随机梯度下降，用于求解前面章节提到的目标函数中的权重矩阵$W$.</p>
+<h1 id="Visualizing-the-loss-function"><a href="#Visualizing-the-loss-function" class="headerlink" title="Visualizing the loss function"></a>Visualizing the loss function</h1><p>这里主要通过一些简单的例子来表明，我们所要求解的目标函数是一个凸问题，通过形象化的图形来体会优化的过程。同时，课程中也提到如果在神经网络中，目标函数就不再是凸的了，所以需要新的求解方法。</p>
+<h1 id="Optimization"><a href="#Optimization" class="headerlink" title="Optimization"></a>Optimization</h1><h2 id="Strategy-1-Random-Search"><a href="#Strategy-1-Random-Search" class="headerlink" title="Strategy 1: Random Search"></a>Strategy 1: Random Search</h2><p>首先限定一个最大迭代步数，然后在每一次迭代中都将随机的$W$值代入求得目标函数值，并记录下使得目标函数值取得当前最小的$W$作为最终的输出</p>
+<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> num <span class="keyword">in</span> xrange(<span class="number">1000</span>):</div><div class="line">    W = np.random.randn(<span class="number">10</span>, <span class="number">3073</span>) * <span class="number">0.0001</span> <span class="comment"># generate random parameters</span></div><div class="line">    loss = L(X_train, Y_train, W) <span class="comment"># get the loss over the entire training set</span></div><div class="line">    <span class="keyword">if</span> loss &lt; bestloss: <span class="comment"># keep track of the best solution</span></div><div class="line">        bestloss = loss</div><div class="line">        bestW = W</div><div class="line">    <span class="keyword">print</span> <span class="string">'in attempt %d the loss was %f, best %f'</span> % (num, loss, bestloss)</div></pre></td></tr></table></figure></p>
+<h2 id="Strategy-2-Random-Local-Search"><a href="#Strategy-2-Random-Local-Search" class="headerlink" title="Strategy 2: Random Local Search"></a>Strategy 2: Random Local Search</h2><p>对上面方法的一个改进，就是不是在每次的迭代中都给$W$赋随机值，而是根据初始赋随机值进行微调，如果能够使得目标函数值下降，则记录下该微调之后的$W$，直到迭代步数达到设定的值。</p>
+<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">W = np.random.randn(<span class="number">10</span>, <span class="number">3073</span>) * <span class="number">0.001</span> <span class="comment"># generate random starting W</span></div><div class="line">bestloss = float(<span class="string">"inf"</span>)</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="number">1000</span>):</div><div class="line">    step_size = <span class="number">0.0001</span></div><div class="line">    Wtry = W + np.random.randn(<span class="number">10</span>, <span class="number">3073</span>) * step_size</div><div class="line">    loss = L(Xtr_cols, Ytr, Wtry)</div><div class="line">    <span class="keyword">if</span> loss &lt; bestloss:</div><div class="line">        W = Wtry</div><div class="line">        bestloss = loss</div><div class="line">    <span class="keyword">print</span> <span class="string">'iter %d loss is %f'</span> % (i, bestloss)</div></pre></td></tr></table></figure></p>
+<h2 id="Strategy-3-Following-the-gradient"><a href="#Strategy-3-Following-the-gradient" class="headerlink" title="Strategy 3: Following the gradient"></a>Strategy 3: Following the gradient</h2><p>显然，策略2已经很接近通用的梯度下降方法了，唯一的区别是，我们在每一步迭代中都是取使目标函数下降最大的方向进行优化的，而要想能够找到使得目标函数下降最大的方向，就需要用到梯度了。</p>
+<h1 id="Computing-the-gradient"><a href="#Computing-the-gradient" class="headerlink" title="Computing the gradient"></a>Computing the gradient</h1><p>对于梯度的计算，课程中提供了两种方法</p>
+<h2 id="Numerically-with-finite-differences"><a href="#Numerically-with-finite-differences" class="headerlink" title="Numerically with finite differences"></a>Numerically with finite differences</h2><p>标签：a slow, approximate，but easy way</p>
+<p>公式：<br>$$\frac{d f(x)}{d x}=\lim_{x\to 0} \frac{f(x+h)-f(x)}{h}$$</p>
+<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">fx = f(x) <span class="comment"># evaluate function value at original point</span></div><div class="line">grad = np.zeros(x.shape)</div><div class="line">h = <span class="number">0.00001</span></div><div class="line"></div><div class="line"><span class="comment"># iterate over all indexes in x</span></div><div class="line">it = np.nditer(x, flags=[<span class="string">'multi_index'</span>], op_flags=[<span class="string">'readwrite'</span>])</div><div class="line"><span class="keyword">while</span> <span class="keyword">not</span> it.finished:</div><div class="line"></div><div class="line">    <span class="comment"># evaluate function at x+h</span></div><div class="line">    ix = it.multi_index</div><div class="line">    old_value = x[ix]</div><div class="line">    x[ix] = old_value + h <span class="comment"># increment by h</span></div><div class="line">    fxh = f(x) <span class="comment"># evalute f(x + h)</span></div><div class="line">    x[ix] = old_value <span class="comment"># restore to previous value (very important!)</span></div><div class="line"></div><div class="line">    <span class="comment"># compute the partial derivative</span></div><div class="line">    grad[ix] = (fxh - fx) / h <span class="comment"># the slope</span></div><div class="line">    it.iternext() <span class="comment"># step to next dimension</span></div></pre></td></tr></table></figure></p>
+<h2 id="Analytically-with-calculus"><a href="#Analytically-with-calculus" class="headerlink" title="Analytically with calculus"></a>Analytically with calculus</h2><p>标签： a fast, exact but more error-prone way</p>
+<p>以SVM损失函数在某个样本下的形式为例：<br>$$L_i = \sum_{j\neq y_i} \left [\max(0, w_j^T x_i - w_{y_i}^T x_i + \Delta) \right ]$$<br>计算上式对 $w_{y_i}$ 的梯度：<br>$$\nabla_{w_{y_i}}L_i = -\left (\sum_{j\neq y_i} \mathbb{I} (w_j^T x_i - w_{y_i}^T x_i + \Delta &gt; 0)\right )x_i$$<br>计算上式对 $j\neq y_i$ 的 $W_j$ 的梯度：<br>$$\nabla_{w_j}L_i = \mathbb{I} (w_j^T x_i - w_{y_i}^T x_i + \Delta &gt; 0)x_i$$</p>
+<h1 id="Gradient-Descent"><a href="#Gradient-Descent" class="headerlink" title="Gradient Descent"></a>Gradient Descent</h1><p>梯度下降方法的主要思路是，在梯度方向上，进行某一步长的移动以使得目标函数呈不增的趋势。</p>
+<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">  weights_grad = evaluate_gradient(loss_fun, data, weights)</div><div class="line">  weights += - step_size * weights_grad <span class="comment"># perform parameter updat</span></div></pre></td></tr></table></figure></p>
+<p><strong>Mini-batch gradient descent</strong><br>当数据集非常的大时，机器资源可能不能一次性的加载进所有的数据，所以可以每次只选择其中的一小部分进行处理。</p>
+<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">  data_batch = sample_training_data(data, <span class="number">256</span>) <span class="comment"># sample 256 examples</span></div><div class="line">  weights_grad = evaluate_gradient(loss_fun, data_batch, weights)</div><div class="line">  weights += - step_size * weights_grad <span class="comment"># perform parameter update</span></div></pre></td></tr></table></figure></p>
+<p>对于Mini-batch的大小，通常不用交叉验证的方式来选择，通常是根据经验提前设定的（根据计算资源而定）：$[32, 64, 128,…]$,通常选择的是2的倍数，因为这符合计算机的二进制计数原理。</p>
+<p><strong>Stochastic Gradient Descent (SGD)</strong><br>当Mini-batch gradient descent取极限时，即每次只取所有样本中的一个样例用于训练。但是由于在实践中发现，计算100个样本的梯度往往要优于计算某一个样本100次所得到的权重矩阵，所以Mini-batch gradient descent较为常用，而SGD有时也指Mini-batch gradient descent。</p>
+<h1 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h1><ol>
+<li><a href="http://cs231n.github.io/optimization-1" target="_blank" rel="external">CS231n: Optimization: Stochastic Gradient Descent</a></li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;这一节主要介绍一种优化方法，随机梯度下降，用于求解前面章节提到的目标函数中的权重矩阵$W$.&lt;/p&gt;
+&lt;h1 id=&quot;Visualizing-the-loss-function&quot;&gt;&lt;a href=&quot;#Visualizing-the-loss-function&quot; class=
+    
+    </summary>
+    
+      <category term="Machine Learning" scheme="http://heimignx.cn/categories/Machine-Learning/"/>
+    
+    
+      <category term="Machine Learning" scheme="http://heimignx.cn/tags/Machine-Learning/"/>
+    
+      <category term="CS231n笔记" scheme="http://heimignx.cn/tags/CS231n%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
+  
+  <entry>
     <title>CS231n:Linear classification: Support Vector Machine, Softmax</title>
     <link href="http://heimignx.cn/2016/08/15/cs231n-linear-classification/"/>
     <id>http://heimignx.cn/2016/08/15/cs231n-linear-classification/</id>
@@ -925,49 +1032,29 @@
   </entry>
   
   <entry>
-    <title>CS231n:Optimization: Stochastic Gradient Descent</title>
-    <link href="http://heimignx.cn/2016/08/15/cs231n-optimization-sgd/"/>
-    <id>http://heimignx.cn/2016/08/15/cs231n-optimization-sgd/</id>
-    <published>2016-08-15T12:20:45.000Z</published>
-    <updated>2016-10-15T14:06:53.921Z</updated>
+    <title>LaTex中空格的用法</title>
+    <link href="http://heimignx.cn/2016/06/28/use-space-in-Latex/"/>
+    <id>http://heimignx.cn/2016/06/28/use-space-in-Latex/</id>
+    <published>2016-06-28T15:21:47.000Z</published>
+    <updated>2016-10-15T14:06:53.930Z</updated>
     
-    <content type="html"><![CDATA[<p>这一节主要介绍一种优化方法，随机梯度下降，用于求解前面章节提到的目标函数中的权重矩阵$W$.</p>
-<h1 id="Visualizing-the-loss-function"><a href="#Visualizing-the-loss-function" class="headerlink" title="Visualizing the loss function"></a>Visualizing the loss function</h1><p>这里主要通过一些简单的例子来表明，我们所要求解的目标函数是一个凸问题，通过形象化的图形来体会优化的过程。同时，课程中也提到如果在神经网络中，目标函数就不再是凸的了，所以需要新的求解方法。</p>
-<h1 id="Optimization"><a href="#Optimization" class="headerlink" title="Optimization"></a>Optimization</h1><h2 id="Strategy-1-Random-Search"><a href="#Strategy-1-Random-Search" class="headerlink" title="Strategy 1: Random Search"></a>Strategy 1: Random Search</h2><p>首先限定一个最大迭代步数，然后在每一次迭代中都将随机的$W$值代入求得目标函数值，并记录下使得目标函数值取得当前最小的$W$作为最终的输出</p>
-<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> num <span class="keyword">in</span> xrange(<span class="number">1000</span>):</div><div class="line">    W = np.random.randn(<span class="number">10</span>, <span class="number">3073</span>) * <span class="number">0.0001</span> <span class="comment"># generate random parameters</span></div><div class="line">    loss = L(X_train, Y_train, W) <span class="comment"># get the loss over the entire training set</span></div><div class="line">    <span class="keyword">if</span> loss &lt; bestloss: <span class="comment"># keep track of the best solution</span></div><div class="line">        bestloss = loss</div><div class="line">        bestW = W</div><div class="line">    <span class="keyword">print</span> <span class="string">'in attempt %d the loss was %f, best %f'</span> % (num, loss, bestloss)</div></pre></td></tr></table></figure></p>
-<h2 id="Strategy-2-Random-Local-Search"><a href="#Strategy-2-Random-Local-Search" class="headerlink" title="Strategy 2: Random Local Search"></a>Strategy 2: Random Local Search</h2><p>对上面方法的一个改进，就是不是在每次的迭代中都给$W$赋随机值，而是根据初始赋随机值进行微调，如果能够使得目标函数值下降，则记录下该微调之后的$W$，直到迭代步数达到设定的值。</p>
-<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">W = np.random.randn(<span class="number">10</span>, <span class="number">3073</span>) * <span class="number">0.001</span> <span class="comment"># generate random starting W</span></div><div class="line">bestloss = float(<span class="string">"inf"</span>)</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="number">1000</span>):</div><div class="line">    step_size = <span class="number">0.0001</span></div><div class="line">    Wtry = W + np.random.randn(<span class="number">10</span>, <span class="number">3073</span>) * step_size</div><div class="line">    loss = L(Xtr_cols, Ytr, Wtry)</div><div class="line">    <span class="keyword">if</span> loss &lt; bestloss:</div><div class="line">        W = Wtry</div><div class="line">        bestloss = loss</div><div class="line">    <span class="keyword">print</span> <span class="string">'iter %d loss is %f'</span> % (i, bestloss)</div></pre></td></tr></table></figure></p>
-<h2 id="Strategy-3-Following-the-gradient"><a href="#Strategy-3-Following-the-gradient" class="headerlink" title="Strategy 3: Following the gradient"></a>Strategy 3: Following the gradient</h2><p>显然，策略2已经很接近通用的梯度下降方法了，唯一的区别是，我们在每一步迭代中都是取使目标函数下降最大的方向进行优化的，而要想能够找到使得目标函数下降最大的方向，就需要用到梯度了。</p>
-<h1 id="Computing-the-gradient"><a href="#Computing-the-gradient" class="headerlink" title="Computing the gradient"></a>Computing the gradient</h1><p>对于梯度的计算，课程中提供了两种方法</p>
-<h2 id="Numerically-with-finite-differences"><a href="#Numerically-with-finite-differences" class="headerlink" title="Numerically with finite differences"></a>Numerically with finite differences</h2><p>标签：a slow, approximate，but easy way</p>
-<p>公式：<br>$$\frac{d f(x)}{d x}=\lim_{x\to 0} \frac{f(x+h)-f(x)}{h}$$</p>
-<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">fx = f(x) <span class="comment"># evaluate function value at original point</span></div><div class="line">grad = np.zeros(x.shape)</div><div class="line">h = <span class="number">0.00001</span></div><div class="line"></div><div class="line"><span class="comment"># iterate over all indexes in x</span></div><div class="line">it = np.nditer(x, flags=[<span class="string">'multi_index'</span>], op_flags=[<span class="string">'readwrite'</span>])</div><div class="line"><span class="keyword">while</span> <span class="keyword">not</span> it.finished:</div><div class="line"></div><div class="line">    <span class="comment"># evaluate function at x+h</span></div><div class="line">    ix = it.multi_index</div><div class="line">    old_value = x[ix]</div><div class="line">    x[ix] = old_value + h <span class="comment"># increment by h</span></div><div class="line">    fxh = f(x) <span class="comment"># evalute f(x + h)</span></div><div class="line">    x[ix] = old_value <span class="comment"># restore to previous value (very important!)</span></div><div class="line"></div><div class="line">    <span class="comment"># compute the partial derivative</span></div><div class="line">    grad[ix] = (fxh - fx) / h <span class="comment"># the slope</span></div><div class="line">    it.iternext() <span class="comment"># step to next dimension</span></div></pre></td></tr></table></figure></p>
-<h2 id="Analytically-with-calculus"><a href="#Analytically-with-calculus" class="headerlink" title="Analytically with calculus"></a>Analytically with calculus</h2><p>标签： a fast, exact but more error-prone way</p>
-<p>以SVM损失函数在某个样本下的形式为例：<br>$$L_i = \sum_{j\neq y_i} \left [\max(0, w_j^T x_i - w_{y_i}^T x_i + \Delta) \right ]$$<br>计算上式对 $w_{y_i}$ 的梯度：<br>$$\nabla_{w_{y_i}}L_i = -\left (\sum_{j\neq y_i} \mathbb{I} (w_j^T x_i - w_{y_i}^T x_i + \Delta &gt; 0)\right )x_i$$<br>计算上式对 $j\neq y_i$ 的 $W_j$ 的梯度：<br>$$\nabla_{w_j}L_i = \mathbb{I} (w_j^T x_i - w_{y_i}^T x_i + \Delta &gt; 0)x_i$$</p>
-<h1 id="Gradient-Descent"><a href="#Gradient-Descent" class="headerlink" title="Gradient Descent"></a>Gradient Descent</h1><p>梯度下降方法的主要思路是，在梯度方向上，进行某一步长的移动以使得目标函数呈不增的趋势。</p>
-<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">  weights_grad = evaluate_gradient(loss_fun, data, weights)</div><div class="line">  weights += - step_size * weights_grad <span class="comment"># perform parameter updat</span></div></pre></td></tr></table></figure></p>
-<p><strong>Mini-batch gradient descent</strong><br>当数据集非常的大时，机器资源可能不能一次性的加载进所有的数据，所以可以每次只选择其中的一小部分进行处理。</p>
-<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">  data_batch = sample_training_data(data, <span class="number">256</span>) <span class="comment"># sample 256 examples</span></div><div class="line">  weights_grad = evaluate_gradient(loss_fun, data_batch, weights)</div><div class="line">  weights += - step_size * weights_grad <span class="comment"># perform parameter update</span></div></pre></td></tr></table></figure></p>
-<p>对于Mini-batch的大小，通常不用交叉验证的方式来选择，通常是根据经验提前设定的（根据计算资源而定）：$[32, 64, 128,…]$,通常选择的是2的倍数，因为这符合计算机的二进制计数原理。</p>
-<p><strong>Stochastic Gradient Descent (SGD)</strong><br>当Mini-batch gradient descent取极限时，即每次只取所有样本中的一个样例用于训练。但是由于在实践中发现，计算100个样本的梯度往往要优于计算某一个样本100次所得到的权重矩阵，所以Mini-batch gradient descent较为常用，而SGD有时也指Mini-batch gradient descent。</p>
-<h1 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h1><ol>
-<li><a href="http://cs231n.github.io/optimization-1" target="_blank" rel="external">CS231n: Optimization: Stochastic Gradient Descent</a></li>
-</ol>
+    <content type="html"><![CDATA[<p>两个quad空格&ensp;<code>a \qquad b</code>&ensp;$a \qquad b$&ensp;两个m的宽度<br>quad空格&ensp;&ensp;&ensp;&ensp;&ensp;<code>a \quad b</code>&ensp;$a \quad b$&ensp;一个m的宽度<br>大空格&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;<code>a\ b</code>&ensp;$a\ b$&ensp;1/3m宽度<br>中等空格&ensp;&ensp;&ensp;&ensp;&ensp;<code>a\;b</code>&ensp;$a\;b$&ensp;2/7m宽度<br>小空格&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;<code>a\,b</code>&ensp;$a\,b$&ensp;1/6m宽度<br>没有空格&ensp;&ensp;&ensp;&ensp;&ensp;<code>ab</code>&ensp;$ab\,$<br>紧贴&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;<code>a\!b</code>&ensp;$a\!b$&ensp;缩进1/6m宽度(在hexo中需要写成<code>a\\!b</code>)</p>
+<blockquote>
+<p>approximately the width of an “M” in the current font</p>
+</blockquote>
+<p><code>m</code> 代表当前字体下接近字符‘M’的宽度</p>
 ]]></content>
     
     <summary type="html">
     
-      &lt;p&gt;这一节主要介绍一种优化方法，随机梯度下降，用于求解前面章节提到的目标函数中的权重矩阵$W$.&lt;/p&gt;
-&lt;h1 id=&quot;Visualizing-the-loss-function&quot;&gt;&lt;a href=&quot;#Visualizing-the-loss-function&quot; class=
+      Letex中空格的用法
     
     </summary>
     
-      <category term="Machine Learning" scheme="http://heimignx.cn/categories/Machine-Learning/"/>
+      <category term="Latex" scheme="http://heimignx.cn/categories/Latex/"/>
     
     
-      <category term="Machine Learning" scheme="http://heimignx.cn/tags/Machine-Learning/"/>
-    
-      <category term="CS231n笔记" scheme="http://heimignx.cn/tags/CS231n%E7%AC%94%E8%AE%B0/"/>
+      <category term="Latex" scheme="http://heimignx.cn/tags/Latex/"/>
     
   </entry>
   
@@ -1196,33 +1283,6 @@
   </entry>
   
   <entry>
-    <title>LaTex中空格的用法</title>
-    <link href="http://heimignx.cn/2016/06/28/use-space-in-Latex/"/>
-    <id>http://heimignx.cn/2016/06/28/use-space-in-Latex/</id>
-    <published>2016-06-28T15:21:47.000Z</published>
-    <updated>2016-10-15T14:06:53.930Z</updated>
-    
-    <content type="html"><![CDATA[<p>两个quad空格&ensp;<code>a \qquad b</code>&ensp;$a \qquad b$&ensp;两个m的宽度<br>quad空格&ensp;&ensp;&ensp;&ensp;&ensp;<code>a \quad b</code>&ensp;$a \quad b$&ensp;一个m的宽度<br>大空格&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;<code>a\ b</code>&ensp;$a\ b$&ensp;1/3m宽度<br>中等空格&ensp;&ensp;&ensp;&ensp;&ensp;<code>a\;b</code>&ensp;$a\;b$&ensp;2/7m宽度<br>小空格&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;<code>a\,b</code>&ensp;$a\,b$&ensp;1/6m宽度<br>没有空格&ensp;&ensp;&ensp;&ensp;&ensp;<code>ab</code>&ensp;$ab\,$<br>紧贴&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;<code>a\!b</code>&ensp;$a\!b$&ensp;缩进1/6m宽度(在hexo中需要写成<code>a\\!b</code>)</p>
-<blockquote>
-<p>approximately the width of an “M” in the current font</p>
-</blockquote>
-<p><code>m</code> 代表当前字体下接近字符‘M’的宽度</p>
-]]></content>
-    
-    <summary type="html">
-    
-      Letex中空格的用法
-    
-    </summary>
-    
-      <category term="Latex" scheme="http://heimignx.cn/categories/Latex/"/>
-    
-    
-      <category term="Latex" scheme="http://heimignx.cn/tags/Latex/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Hexo中一些蛋疼的数学公式编辑</title>
     <link href="http://heimignx.cn/2016/06/09/markdown-mathjax/"/>
     <id>http://heimignx.cn/2016/06/09/markdown-mathjax/</id>
@@ -1378,37 +1438,6 @@
     
     
       <category term="mathematics" scheme="http://heimignx.cn/tags/mathematics/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Adaboost算法实现</title>
-    <link href="http://heimignx.cn/2016/05/06/adaboost-algorithm/"/>
-    <id>http://heimignx.cn/2016/05/06/adaboost-algorithm/</id>
-    <published>2016-05-06T14:31:56.000Z</published>
-    <updated>2016-10-15T14:06:53.919Z</updated>
-    
-    <content type="html"><![CDATA[<p>adaboost算法是经典的boosting算法，今天把李航统计学习方法上面的例8.1实现了一下，虽然看着挺简单的，但实现的时候还是有很多细节需要注意。由于代码是严格按照书上算法流程来敲的，这里就不放算法步骤了。直接上代码吧。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># coding: utf-8</span></div><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Params</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.w = []</div><div class="line">        self.alpha = []</div><div class="line">        self.threshold = []</div><div class="line">        self.g = []</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">setW</span><span class="params">(self, w)</span>:</span></div><div class="line">        self.w = w</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getThreshold</span><span class="params">(x, y, params)</span>:</span></div><div class="line">    <span class="string">"""获取当前权值分布下的误差率最小的阈值"""</span></div><div class="line">    threshold = np.zeros(len(x) + <span class="number">1</span>)</div><div class="line">    <span class="keyword">for</span> idx <span class="keyword">in</span> range(len(x)):</div><div class="line">        <span class="keyword">if</span> idx &gt; <span class="number">0</span>:</div><div class="line">            threshold[idx] = np.mean(x[idx<span class="number">-1</span> : idx+<span class="number">1</span>])</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            threshold[idx] = x[idx] - <span class="number">0.5</span> <span class="comment">## 延拓0.5</span></div><div class="line">    threshold[<span class="number">-1</span>] = x[<span class="number">-1</span>] + <span class="number">0.5</span>    </div><div class="line">    predict = np.ones(len(y)) * <span class="number">-1</span></div><div class="line">    minError = <span class="number">1000</span></div><div class="line">    minThreshold = <span class="number">0</span></div><div class="line">    ming = <span class="number">1</span> <span class="comment">## 表示小于阈值时取1 否则取-1</span></div><div class="line">    <span class="keyword">for</span> idx <span class="keyword">in</span> range(len(threshold)):</div><div class="line">        predict = map(<span class="keyword">lambda</span> x1: <span class="number">1</span> <span class="keyword">if</span> x1 == <span class="keyword">True</span> <span class="keyword">else</span> <span class="number">-1</span>, x &lt; threshold[idx])</div><div class="line">        error = np.sum(params.w[predict != y]) <span class="comment">##这里用样本权重来衡量误差率</span></div><div class="line">        <span class="keyword">if</span> error &lt; minError:</div><div class="line">            minThreshold = idx</div><div class="line">            minError = error</div><div class="line">    <span class="keyword">for</span> idx <span class="keyword">in</span> range(len(threshold)):</div><div class="line">        predict = map(<span class="keyword">lambda</span> x1: <span class="number">1</span> <span class="keyword">if</span> x1 == <span class="keyword">True</span> <span class="keyword">else</span> <span class="number">-1</span>, x &gt; threshold[idx])</div><div class="line">        error = np.sum(params.w[predict != y])</div><div class="line">        <span class="keyword">if</span> error &lt; minError:</div><div class="line">            minThreshold = idx</div><div class="line">            minError = error</div><div class="line">            ming = <span class="number">-1</span></div><div class="line">    params.threshold.append(threshold[minThreshold])</div><div class="line">    params.g.append(ming)</div><div class="line">    <span class="keyword">return</span> minError</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getGofx</span><span class="params">(idx, x, params)</span>:</span></div><div class="line">    <span class="string">"""获取第idx个分类器的预测值"""</span></div><div class="line">    <span class="keyword">if</span> params.g[idx] == <span class="number">1</span>:</div><div class="line">        G = map(<span class="keyword">lambda</span> x1: <span class="number">1</span> <span class="keyword">if</span> x1 == <span class="keyword">True</span> <span class="keyword">else</span> <span class="number">-1</span>, x &lt; params.threshold[idx])</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        G = map(<span class="keyword">lambda</span> x1: <span class="number">1</span> <span class="keyword">if</span> x1 == <span class="keyword">True</span> <span class="keyword">else</span> <span class="number">-1</span>, x &gt; params.threshold[idx])</div><div class="line">    <span class="keyword">return</span> np.array(G)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">updateWeight</span><span class="params">(x, y, params)</span>:</span></div><div class="line">    <span class="string">"""更新样本权重"""</span></div><div class="line">    G = getGofx(<span class="number">-1</span>, x, params)</div><div class="line">    normer = np.exp(- params.alpha[<span class="number">-1</span>] * y * G)</div><div class="line">    Z = np.dot(params.w, normer)</div><div class="line">    params.w = params.w * normer / Z</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getPredict</span><span class="params">(x, params)</span>:</span></div><div class="line">    <span class="string">"""获取当前分类器的预测"""</span></div><div class="line">    predict = np.zeros(len(x))</div><div class="line">    <span class="keyword">for</span> idx <span class="keyword">in</span> range(len(params.alpha)):</div><div class="line">        G = getGofx(idx, x, params)</div><div class="line">        predict += G * params.alpha[idx]</div><div class="line">    predict = np.sign(predict)</div><div class="line">    <span class="keyword">return</span> predict</div><div class="line">    </div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">adaboost</span><span class="params">(x, y, params)</span>:</span></div><div class="line">    <span class="string">"""adaboost训练过程"""</span></div><div class="line">    errorNum = len(y)</div><div class="line">    <span class="keyword">while</span>(errorNum &gt; <span class="number">0</span>):</div><div class="line">        errorRate = getThreshold(x, y, params)</div><div class="line">        </div><div class="line">        alpha = <span class="number">0.5</span> * np.log((<span class="number">1</span> - errorRate)/errorRate)</div><div class="line">        params.alpha.append(alpha)</div><div class="line">        </div><div class="line">        updateWeight(x, y, params)</div><div class="line">        predict = getPredict(x, params)</div><div class="line">        error = predict != y</div><div class="line">        errorNum = len(y[error])</div><div class="line">        <span class="keyword">print</span> <span class="string">"alpha:"</span>, params.alpha</div><div class="line">        <span class="keyword">print</span> <span class="string">"threshold:"</span>, params.threshold</div><div class="line">        <span class="keyword">print</span> <span class="string">"errorNum:"</span>, errorNum</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></div><div class="line">    x = np.array([<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>])</div><div class="line">    y = np.array([<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">-1</span>,<span class="number">-1</span>,<span class="number">-1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">-1</span>])</div><div class="line">    params = Params()</div><div class="line">    params.setW(np.ones(len(y)) * (<span class="number">1.0</span> / len(y)))</div><div class="line">    adaboost(x, y, params)</div><div class="line">    </div><div class="line">    predict = getPredict(x, params)</div><div class="line">    <span class="keyword">print</span> <span class="string">"y = "</span>, y</div><div class="line">    <span class="keyword">print</span> <span class="string">"predict = "</span>, predict</div><div class="line">    </div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    main()</div></pre></td></tr></table></figure>
-<ol>
-<li><a href="https://github.com/HeimingX/MLAlgorithms/tree/master/boosting/adaboost" target="_blank" rel="external">源代码下载</a> （如果有帮助记得点赞哦~~哈哈）</li>
-<li>接下来，要用AdaBoost来跑一个实际的数据集来体验一下，同时尝试不同的基分类器看一下他强大的效果。</li>
-<li>啊，Python用的还是不熟啊！！！</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      统计学习方法Adaboost算法例8.1的简单实现
-    
-    </summary>
-    
-      <category term="Machine Learning" scheme="http://heimignx.cn/categories/Machine-Learning/"/>
-    
-    
-      <category term="machine learning" scheme="http://heimignx.cn/tags/machine-learning/"/>
-    
-      <category term="python" scheme="http://heimignx.cn/tags/python/"/>
     
   </entry>
   
