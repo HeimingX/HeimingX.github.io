@@ -86,6 +86,107 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2016/05/24/reproducing-kernel-hilbert-spaces/" title="再生核希尔伯特空间" itemprop="url">再生核希尔伯特空间</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
+		
+  <p class="article-time">
+    <time datetime="2016-05-24T07:24:45.000Z" itemprop="datePublished"> 发表于 2016-05-24</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="一些定义"><a href="#一些定义" class="headerlink" title="一些定义"></a>一些定义</h1><ol>
+<li>向量空间(vector space)： 满足加法和标量乘操作的集合</li>
+<li>范数向量空间(normed vector space)： 定义了向量长度的向量空间，这样我们就可以衡量向量间的长度了。</li>
+<li>度量空间(metric space)： 定义了两个点的距离的<strong>集合</strong>（这里不必须是向量空间）。范数向量空间是度量空间，但是度量空间不一定是范数向量空间。</li>
+<li>Banach 空间： 一个完备的范数向量空间。一个<strong>完备</strong>的空间指没有缺失的元素（所有的<em>柯西序列都是收敛的</em>）。</li>
+<li><p>内积空间(inner product space)<br>内积空间$(\mathcal{V}, \langle., .\rangle)$是在域$\mathbb{F}$上可进行$\langle., .\rangle : \mathcal{V}\times \mathcal{V} \to \mathbb{F}$运算法操作的向量空间，其满足三个原则：<br>1)共轭对称：$\langle \mathbf{x}, \mathbf{y} \rangle = \overline{\langle \mathbf{y}, \mathbf{x} \rangle}$<br>2)第一个变量满足线性性：$\langle a\mathbf{x}, \mathbf{y} \rangle = a \langle \mathbf{x}, \mathbf{y} \rangle$和$\langle \mathbf{x} + \mathbf{z}, \mathbf{y} \rangle = \langle \mathbf{x}, \mathbf{y} \rangle + \langle \mathbf{z}, \mathbf{y} \rangle$<br>3)正定性：$\langle \mathbf{x},\mathbf{x} \rangle \geq 0$其中等式只有在$\mathbf{x}=0$时取到。</p>
+<blockquote>
+<p>注：</p>
+<ol>
+<li>对于内积空间，我们可以推导出范数向量空间，即$l^2$范数空间，但是反过来就不一定成立了，因为如$l^1$范数，$||\mathbf{x}||_{1} = \sum_{i = 1}^n |x_i|$就不能满足内积空间</li>
+<li>An inner product space is also known as a <strong>pre-Hilbert space</strong>, meaning that it is one step behind a Hilbert space</li>
+</ol>
+</blockquote>
+</li>
+<li><p>希尔伯特空间： 当一个内积空间满足通过内积空间可推导出范数空间(赋范空间)，并且是完备的，那么这个内积空间就是希尔伯特空间。</p>
+<blockquote>
+<p>对于常见的$\mathbb R^n$,满足内积运算，能够推导出$l^2$范数，且是完备的，所以是希尔伯特空间。</p>
+</blockquote>
+<p> 另外希尔伯特空间是一个函数空间，即空间中每个元素都是一个函数，所以在希尔伯特空间中的函数可以理解为泛函（functional）</p>
+</li>
+<li><p>再生核：<br>$\mathcal{X}$是非空集，$\mathcal{H}$是定义在$\mathcal{X}$上的希尔伯特空间。核$\mathcal{k}$满足下面的两条性质就称为$\mathcal{H}$的再生核：<br>1) 对于每个$x_0 \in \mathcal{X}$, $k(y, x_0)$作为$y$的函数属于空间$\mathcal{H}$<br>2) reproducing property: 对于每个$x_0 \in \mathcal{X}$和$f \in \mathcal{H}$,有$f(x_0) = \langle f(.), k(.,x_0) \rangle_\mathcal{H}$</p>
+<blockquote>
+<p>对于再生核的理解，首先性质1表示在$\mathcal{X}$中的每个点都可以通过核函数$k$来映射到希尔伯特空间$\mathcal{H}$中，性质2，表示，对于任意的属于$\mathcal{H}$的核函数都可以在$\mathcal{H}$中找到一个函数$f$(注意希尔伯特空间是一个函数空间)来重构出一个新的函数（这里如果函数$f$是一个核函数的话，会再生出一个核函数）</p>
+</blockquote>
+</li>
+<li><p>再生核希尔伯特空间：<br>A Hilbert space $\mathcal{H}$ of complex-valued functions on a nonempty set $\mathcal{X}$ is called a reproducing kernel Hilbert space if the point evaluation functional $L_x$ is a bounded (equivalently, continuous) linear operator for all $x\in \mathcal{X}$</p>
+<p> 补充定义：<br> <strong>Point evaluation functional</strong> ：<br> The point evaluation functional $L_x:\mathcal{H} → \mathbb{C}$ at a point $x\in \mathcal{X}$ is defined as $L_x(f):=f(x)$.</p>
+<p> <strong>Linear operator (Linear map)</strong> :<br> Let $f:V→W$ be a function between two vector spaces $V,W$ over the same field $\mathbb F$. $f$ is called a linear operator if the following two conditions are satisfied for all $x,y\in \mathcal{V}$ and $a \in \mathbb{F}$.<br> 1)$f(u+v)=f(u)+f(v)$<br> 2)$f(au)=af(u)$</p>
+<p> <strong>Bounded linear operator</strong> :<br> Let $f:\mathcal{V}→\mathcal{W}$ be a linear operator between two normed vector spaces $(\mathcal{V},||.||_{\mathcal{V}})$ and $(\mathcal{W},||.||_{\mathcal{W}})$, $f$ is called a bounded linear operator if there exists some $M&gt;0$ such that for all $\mathbb u\in \mathcal{V}$,$||f(\mathbb u)||_{\mathcal{W}} \leq M ||\mathbb u||_{\mathcal{V}}$</p>
+</li>
+<li><p>定理：<br>一个希尔伯特空间$\mathcal{H}$是一个再生核希尔伯特空间，当且仅当它有一个再生核（证明要见参考1）</p>
+</li>
+<li><p>对于给定的希尔伯特空间，再生核是唯一的。</p>
+</li>
+</ol>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="http://sadeepj.blogspot.com/" target="_blank" rel="external">a-tutorial-introduction-to-reproducing-Kernel-Hilbert-Spaces</a>3篇有关希尔伯特空间的系列文章，很赞！不过需要翻墙~</li>
+<li><a href="http://blog.pluskid.org/?p=723" target="_blank" rel="external">Free Mind</a></li>
+</ol>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Mathematics/">Mathematics</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/mathematics/">mathematics</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/05/24/reproducing-kernel-hilbert-spaces/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/05/24/reproducing-kernel-hilbert-spaces/" data-count-type="comments">&nbsp;Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2016/05/06/adaboost-algorithm/" title="Adaboost算法实现" itemprop="url">Adaboost算法实现</a>
   </h1>
   <p class="article-author">By
@@ -750,74 +851,6 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/04/12/lintcode14-binary-search/" title="lintcode[14] 二分查找" itemprop="url">lintcode[14] 二分查找</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
-		
-  <p class="article-time">
-    <time datetime="2016-04-12T13:24:57.000Z" itemprop="datePublished"> 发表于 2016-04-12</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><p>给定一个排序的整数数组（升序）和一个要查找的整数target，用O(logn)的时间查找到target第一次出现的下标（从0开始），如果target不存在于数组中，返回-1。</p>
-<blockquote>
-<p>在数组 [1, 2, 3, 3, 4, 5, 10] 中二分查找3，返回2。</p>
-</blockquote>
-<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>search_idx = (tail + head) / 2 这里不是减法<br>然后注意是要找到第一个target</p>
-<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></div><div class="line">    <span class="comment"># @param nums: The integer array</span></div><div class="line">    <span class="comment"># @param target: Target number to find</span></div><div class="line">    <span class="comment"># @return the first position of target in nums, position start from 0 </span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">binarySearch</span><span class="params">(self, nums, target)</span>:</span></div><div class="line">        <span class="comment"># write your code here</span></div><div class="line">        len_nums = len(nums)</div><div class="line">        search_idx = <span class="number">0</span></div><div class="line">        head = <span class="number">0</span></div><div class="line">        tail = len_nums - <span class="number">1</span></div><div class="line">        <span class="keyword">while</span> head != tail:</div><div class="line">            search_idx = (tail + head) / <span class="number">2</span></div><div class="line">            <span class="keyword">if</span> nums[search_idx] == target:</div><div class="line">                <span class="keyword">while</span> nums[search_idx] == target:</div><div class="line">                    <span class="keyword">if</span> search_idx &gt; head:</div><div class="line">                        search_idx -= <span class="number">1</span></div><div class="line">                    <span class="keyword">else</span>:</div><div class="line">                        <span class="keyword">return</span> search_idx</div><div class="line">                <span class="keyword">return</span> search_idx + <span class="number">1</span></div><div class="line">            <span class="keyword">elif</span> nums[search_idx] &gt; target:</div><div class="line">                tail = search_idx - <span class="number">1</span></div><div class="line">            <span class="keyword">else</span>:</div><div class="line">                head = search_idx + <span class="number">1</span></div><div class="line">        <span class="keyword">if</span> nums[head] == target:</div><div class="line">            <span class="keyword">return</span> head</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">return</span> <span class="number">-1</span></div></pre></td></tr></table></figure>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Lintcode/">Lintcode</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/python/">python</a><a href="/tags/lintcode/">lintcode</a><a href="/tags/algorithm/">algorithm</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/04/12/lintcode14-binary-search/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/12/lintcode14-binary-search/" data-count-type="comments">&nbsp;Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <a class="extend prev" rel="prev" href="/page/2/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/4/">Next<span></span></a>
@@ -868,7 +901,7 @@
 		  
 		
 		  
-			<li><a href="/categories/Tattle/" title="Tattle">Tattle<sup>3</sup></a></li>
+			<li><a href="/categories/Tattle/" title="Tattle">Tattle<sup>4</sup></a></li>
 		  
 		
 		</ul>
@@ -917,23 +950,23 @@
 			
 		
 			
-				<li><a href="/tags/mathematics/" title="mathematics">mathematics<sup>3</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/Optimization/" title="Optimization">Optimization<sup>3</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/tattle/" title="tattle">tattle<sup>2</sup></a></li>
+				<li><a href="/tags/tattle/" title="tattle">tattle<sup>3</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Tattle/" title="Tattle">Tattle<sup>1</sup></a></li>
+				<li><a href="/tags/mathematics/" title="mathematics">mathematics<sup>3</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/code-optimize/" title="code optimize">code optimize<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Tattle/" title="Tattle">Tattle<sup>1</sup></a></li>
 			
 		
 			
