@@ -14,7 +14,7 @@
     })();
   </script>
 
-    <title>CS231n:Neural Networks Part 1: Setting up the Architecture | Heiming Xu</title>
+    <title>CS231n:Neural Networks Part 1: Setting up the Architecture | Heiming&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="heimingx">
@@ -27,7 +27,7 @@ Modeling one neuron很多人都知道神经网络中基本单元是受人脑中�
 <meta property="og:type" content="article">
 <meta property="og:title" content="CS231n:Neural Networks Part 1: Setting up the Architecture">
 <meta property="og:url" content="http://heimignx.cn/2016/08/17/cs231n-neural-networks-part -1-setting-up-the-architecture/index.html">
-<meta property="og:site_name" content="Heiming Xu">
+<meta property="og:site_name" content="Heiming's Blog">
 <meta property="og:description" content="从这一节开始，课程重点：神经网络来了，本节主要讲一些神经网络中常用的损失函数，激活函数以及层次结构等。
 Modeling one neuron很多人都知道神经网络中基本单元是受人脑中的神经元的启发而设计的，所以，本节一开始通过人脑中的基本神经元-突触来揭示了其工作原理，以及到神经网络中基本单元的类比。
 然后，介绍了几个基本的线性分类器 Binary Softmax classifier 和 Bin">
@@ -43,7 +43,7 @@ Modeling one neuron很多人都知道神经网络中基本单元是受人脑中�
 <meta name="twitter:image" content="http://heimignx.cn/img/blog/deeplearning/relu.jpg">
 
     
-    <link rel="alternative" href="/atom.xml" title="Heiming Xu" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="Heiming&#39;s Blog" type="application/atom+xml">
     
     
     <link rel="icon" href="/img/titanicCats.ico">
@@ -58,7 +58,7 @@ Modeling one neuron很多人都知道神经网络中基本单元是受人脑中�
 <div>
 		
 			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="Heiming Xu">Heiming Xu</a></h1>
+				<h1 class="site-name"><a href="/" title="Heiming&#39;s Blog">Heiming&#39;s Blog</a></h1>
 				<h2 class="blog-motto">Optimize Life</h2>
 			</div>
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
@@ -71,17 +71,15 @@ Modeling one neuron很多人都知道神经网络中基本单元是受人脑中�
 					
 						<li><a href="/archives">Archives</a></li>
 					
-						<li><a href="/reference">Reference</a></li>
-					
-						<li><a href="/about">About</a></li>
+						<li><a href="/about">Me</a></li>
 					
 					<li>
  					
-					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+					<!--<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
 						<label>Search</label>
-						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="search..." />
 						<input type="hidden" name="q" value="site:heimignx.cn">
-					</form>
+					</form>-->
 					
 					</li>
 				</ul>
@@ -97,23 +95,18 @@ Modeling one neuron很多人都知道神经网络中基本单元是受人脑中�
     
       <a href="/2016/08/17/cs231n-neural-networks-part -1-setting-up-the-architecture/" title="CS231n:Neural Networks Part 1: Setting up the Architecture" itemprop="url">CS231n:Neural Networks Part 1: Setting up the Architecture</a>
   </h1>
-  <p class="article-author">By
+  <!--<p class="article-author">By
        
 		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
-		
+		 -->
   <p class="article-time">
     <time datetime="2016-08-17T13:22:45.000Z" itemprop="datePublished"> 发表于 2016-08-17</time>
-    
+    <span id="busuanzi_container_page_pv">
+    总阅读<span id="busuanzi_value_page_pv"></span>次
+</span>
   </p>
 </header>
 	<div class="article-content">
-		
-		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目录</strong>
-		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Modeling-one-neuron"><span class="toc-number">1.</span> <span class="toc-text">Modeling one neuron</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Neural-Network-architectures"><span class="toc-number">2.</span> <span class="toc-text">Neural Network architectures</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#references"><span class="toc-number">3.</span> <span class="toc-text">references</span></a></li></ol>
-		
-		</div>
 		
 		<p>从这一节开始，课程重点：神经网络来了，本节主要讲一些神经网络中常用的损失函数，激活函数以及层次结构等。</p>
 <h1 id="Modeling-one-neuron"><a href="#Modeling-one-neuron" class="headerlink" title="Modeling one neuron"></a>Modeling one neuron</h1><p>很多人都知道神经网络中基本单元是受人脑中的神经元的启发而设计的，所以，本节一开始通过人脑中的基本神经元-突触来揭示了其工作原理，以及到神经网络中基本单元的类比。</p>
@@ -175,7 +168,7 @@ Modeling one neuron很多人都知道神经网络中基本单元是受人脑中�
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://heimignx.cn/2016/08/17/cs231n-neural-networks-part -1-setting-up-the-architecture/" data-title="CS231n:Neural Networks Part 1: Setting up the Architecture | Heiming Xu" data-tsina="null" class="share clearfix">
+	  <div data-url="http://heimignx.cn/2016/08/17/cs231n-neural-networks-part -1-setting-up-the-architecture/" data-title="CS231n:Neural Networks Part 1: Setting up the Architecture | Heiming&#39;s Blog" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -216,20 +209,13 @@ Modeling one neuron很多人都知道神经网络中基本单元是受人脑中�
 </div>  
       <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 
-  <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目录</strong>
- 
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Modeling-one-neuron"><span class="toc-number">1.</span> <span class="toc-text">Modeling one neuron</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Neural-Network-architectures"><span class="toc-number">2.</span> <span class="toc-text">Neural Network architectures</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#references"><span class="toc-number">3.</span> <span class="toc-text">references</span></a></li></ol>
- 
-  </div>
-
 <div id="asidepart">
 <div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
 <aside class="clearfix">
 
   
 <div class="categorieslist">
-	<p class="asidetitle">分类</p>
+	<p class="asidetitle">Categories</p>
 		<ul>
 		
 		  
@@ -274,7 +260,7 @@ Modeling one neuron很多人都知道神经网络中基本单元是受人脑中�
 
   
 <div class="tagslist">
-	<p class="asidetitle">标签</p>
+	<p class="asidetitle">Tags</p>
 		<ul class="clearfix">
 		
 			
@@ -314,11 +300,11 @@ Modeling one neuron很多人都知道神经网络中基本单元是受人脑中�
 			
 		
 			
-				<li><a href="/tags/tattle/" title="tattle">tattle<sup>3</sup></a></li>
+				<li><a href="/tags/Optimization/" title="Optimization">Optimization<sup>3</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Optimization/" title="Optimization">Optimization<sup>3</sup></a></li>
+				<li><a href="/tags/tattle/" title="tattle">tattle<sup>3</sup></a></li>
 			
 		
 			
@@ -326,11 +312,11 @@ Modeling one neuron很多人都知道神经网络中基本单元是受人脑中�
 			
 		
 			
-				<li><a href="/tags/Tattle/" title="Tattle">Tattle<sup>1</sup></a></li>
+				<li><a href="/tags/code-optimize/" title="code optimize">code optimize<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/code-optimize/" title="code optimize">code optimize<sup>1</sup></a></li>
+				<li><a href="/tags/Tattle/" title="Tattle">Tattle<sup>1</sup></a></li>
 			
 		
 			
@@ -342,8 +328,14 @@ Modeling one neuron很多人都知道神经网络中基本单元是受人脑中�
 
 
   <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
+  <p class="asidetitle">Links</p>
     <ul>
+        
+          <li>
+            
+            	<a href="http://palm.seu.edu.cn/" target="_blank" title="PALM主页">PALM主页</a>
+            
+          </li>
         
           <li>
             
@@ -392,13 +384,21 @@ Modeling one neuron很多人都知道神经网络中基本单元是受人脑中�
 		
 
 		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2017 
 		
 		<a href="/about" target="_blank" title="heimingx">heimingx</a>
 		
-		
+		<br>
+		<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+		</script>
+		<span id="busuanzi_container_site_pv">
+    	&nbsp;&nbsp;Total visits:&nbsp;<span id="busuanzi_value_site_pv" style="color:orange"></span>
+		</span>
+		<span id="busuanzi_container_site_uv">
+  		&nbsp;&nbsp;You are Visiter No.<span id="busuanzi_value_site_uv" style="color:orange"></span>
+		</span>
 		</p>
-</div>
+</div>	
 </footer>
     <script src="/js/jquery-2.0.3.min.js"></script>
 <script src="/js/jquery.imagesloaded.min.js"></script>
@@ -449,8 +449,6 @@ $(document).ready(function(){
       m.removeClass('moveMain');
       a.css('display', 'block').removeClass('fadeOut');
       o.css('display', 'none');
-      
-      $('#toc.toc-aside').css('display', 'none');
         
     }
   });

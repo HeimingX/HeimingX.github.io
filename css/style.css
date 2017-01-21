@@ -394,12 +394,6 @@ body >header {
   box-shadow: 2px 4px 5px rgba(3,3,3,0.2);
   background: url("../") center #055db5;
   color: #fff;
-  padding: 1em 0 0.8em;
-}
-@media only screen and (min-width: 1024px) {
-  body >header {
-    padding: 1.8em 0 1.5em;
-  }
 }
 body >header >div {
   width: 95%;
@@ -446,9 +440,11 @@ body >header a {
 }
 #textlogo {
 /*float left*/
-  text-align: center;
-  width: 75%;
-  margin: auto;
+/*text-align center*/
+/*width 75%*/
+/*margin auto*/
+  margin-left: 15em;
+  width: 15em;
 }
 #textlogo h1.site-name {
   width: 86%;
@@ -470,6 +466,8 @@ body >header a {
 #textlogo h2.blog-motto {
   width: 86%;
   font-size: 0.7em;
+  margin-bottom: 0.5em;
+  margin-left: 2.5em;
   font-weight: normal;
 }
 @media only screen and (min-width: 768px) {
@@ -507,7 +505,6 @@ header nav {
   float: left;
   width: 100%;
   font-size: 112.5%;
-  padding-top: 0.5em;
   max-height: 0.01em;
   -webkit-transition: max-height 1s ease-out;
   -moz-transition: max-height 1s ease-out;
@@ -524,7 +521,8 @@ header nav {
   header nav {
     float: right;
     width: auto;
-    margin-top: 1em;
+    margin-top: -3.5em;
+    margin-right: 15em;
     max-height: none;
   }
 }
@@ -532,7 +530,6 @@ header nav {
   header nav ul {
     float: right;
     position: relative;
-    left: -30%;
   }
 }
 @media only screen and (min-width: 1024px) {
@@ -2001,7 +1998,7 @@ footer {
   display: block;
   width: 14%;
   color: #fff;
-  font-size: 185%;
+/*font-size font-size+85*/
   padding: 0.5em;
 }
 @media only screen and (min-width: 1024px) {
@@ -2061,8 +2058,9 @@ footer {
   content: "\f142";
 }
 .copyright {
-  font-family: "Helvetica Neue", "Helvetica", "Microsoft YaHei", "WenQuanYi Micro Hei", Arial, sans-serif;
-  font-size: 0.6em;
+/*font-family font-default*/
+  font-family: Cursive, serif;
+/*font-size 0.6em*/
   width: 100%;
   color: #fff;
   text-align: center;

@@ -14,7 +14,7 @@
     })();
   </script>
 
-    <title>manifold learning | Heiming Xu</title>
+    <title>manifold learning | Heiming&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="heimingx">
@@ -25,7 +25,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="manifold learning">
 <meta property="og:url" content="http://heimignx.cn/2015/11/25/manifold-learning/index.html">
-<meta property="og:site_name" content="Heiming Xu">
+<meta property="og:site_name" content="Heiming's Blog">
 <meta property="og:description" content="介绍几种经典的流形学习算法">
 <meta property="og:updated_time" content="2016-10-15T14:06:53.928Z">
 <meta name="twitter:card" content="summary">
@@ -33,7 +33,7 @@
 <meta name="twitter:description" content="介绍几种经典的流形学习算法">
 
     
-    <link rel="alternative" href="/atom.xml" title="Heiming Xu" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="Heiming&#39;s Blog" type="application/atom+xml">
     
     
     <link rel="icon" href="/img/titanicCats.ico">
@@ -48,7 +48,7 @@
 <div>
 		
 			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="Heiming Xu">Heiming Xu</a></h1>
+				<h1 class="site-name"><a href="/" title="Heiming&#39;s Blog">Heiming&#39;s Blog</a></h1>
 				<h2 class="blog-motto">Optimize Life</h2>
 			</div>
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
@@ -61,17 +61,15 @@
 					
 						<li><a href="/archives">Archives</a></li>
 					
-						<li><a href="/reference">Reference</a></li>
-					
-						<li><a href="/about">About</a></li>
+						<li><a href="/about">Me</a></li>
 					
 					<li>
  					
-					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+					<!--<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
 						<label>Search</label>
-						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="search..." />
 						<input type="hidden" name="q" value="site:heimignx.cn">
-					</form>
+					</form>-->
 					
 					</li>
 				</ul>
@@ -87,23 +85,18 @@
     
       <a href="/2015/11/25/manifold-learning/" title="manifold learning" itemprop="url">manifold learning</a>
   </h1>
-  <p class="article-author">By
+  <!--<p class="article-author">By
        
 		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
-		
+		 -->
   <p class="article-time">
     <time datetime="2015-11-25T15:33:43.000Z" itemprop="datePublished"> 发表于 2015-11-25</time>
-    
+    <span id="busuanzi_container_page_pv">
+    总阅读<span id="busuanzi_value_page_pv"></span>次
+</span>
   </p>
 </header>
 	<div class="article-content">
-		
-		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目录</strong>
-		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#概括"><span class="toc-number">1.</span> <span class="toc-text">概括</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ISOMAP"><span class="toc-number">2.</span> <span class="toc-text">ISOMAP</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LLE"><span class="toc-number">3.</span> <span class="toc-text">LLE</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LE"><span class="toc-number">4.</span> <span class="toc-text">LE</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#HE"><span class="toc-number">5.</span> <span class="toc-text">HE</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LTSA"><span class="toc-number">6.</span> <span class="toc-text">LTSA</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#MVU"><span class="toc-number">7.</span> <span class="toc-text">MVU</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#reference"><span class="toc-number">8.</span> <span class="toc-text">reference</span></a></li></ol>
-		
-		</div>
 		
 		<p>好久好久木有写了，由于时间比较零散，总是感觉没有学到什么东西，也就没什么可写的，最近模式识别课正好有个作业是写一个综述，我选的流形学习，把自己的所学记录下来。</p>
 <h1 id="概括"><a href="#概括" class="headerlink" title="概括"></a>概括</h1><p>流形学习是一种实现非线性降维的方法，这一方法的发展主要得益于2000年Science上两篇文章的发表—ISOMAP和LLE（Local linear embedding）,第一篇主要是对MDS方法的改进，用测地线距离（geodesic diatance）取代了欧氏距离，从全局的角度对高维数据的实现降维。而第二篇正好相反，它主要从局部角度出发，用每个样本点的k临近点来线性表示这个样本点，然后在低维空间中进行重构。<br>接着，大体从这两个角度出发，后继研究者又给出了Laplacian Eigenmap（LE）、Hessian Eigenmap（HE）、Local Tangent Space Alignment(LTSA)、Maximum Variance Unfolding（MVU）等等。</p>
@@ -177,7 +170,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://heimignx.cn/2015/11/25/manifold-learning/" data-title="manifold learning | Heiming Xu" data-tsina="null" class="share clearfix">
+	  <div data-url="http://heimignx.cn/2015/11/25/manifold-learning/" data-title="manifold learning | Heiming&#39;s Blog" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -218,20 +211,13 @@
 </div>  
       <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 
-  <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目录</strong>
- 
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#概括"><span class="toc-number">1.</span> <span class="toc-text">概括</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ISOMAP"><span class="toc-number">2.</span> <span class="toc-text">ISOMAP</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LLE"><span class="toc-number">3.</span> <span class="toc-text">LLE</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LE"><span class="toc-number">4.</span> <span class="toc-text">LE</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#HE"><span class="toc-number">5.</span> <span class="toc-text">HE</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LTSA"><span class="toc-number">6.</span> <span class="toc-text">LTSA</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#MVU"><span class="toc-number">7.</span> <span class="toc-text">MVU</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#reference"><span class="toc-number">8.</span> <span class="toc-text">reference</span></a></li></ol>
- 
-  </div>
-
 <div id="asidepart">
 <div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
 <aside class="clearfix">
 
   
 <div class="categorieslist">
-	<p class="asidetitle">分类</p>
+	<p class="asidetitle">Categories</p>
 		<ul>
 		
 		  
@@ -276,7 +262,7 @@
 
   
 <div class="tagslist">
-	<p class="asidetitle">标签</p>
+	<p class="asidetitle">Tags</p>
 		<ul class="clearfix">
 		
 			
@@ -316,11 +302,11 @@
 			
 		
 			
-				<li><a href="/tags/tattle/" title="tattle">tattle<sup>3</sup></a></li>
+				<li><a href="/tags/Optimization/" title="Optimization">Optimization<sup>3</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Optimization/" title="Optimization">Optimization<sup>3</sup></a></li>
+				<li><a href="/tags/tattle/" title="tattle">tattle<sup>3</sup></a></li>
 			
 		
 			
@@ -328,11 +314,11 @@
 			
 		
 			
-				<li><a href="/tags/Tattle/" title="Tattle">Tattle<sup>1</sup></a></li>
+				<li><a href="/tags/code-optimize/" title="code optimize">code optimize<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/code-optimize/" title="code optimize">code optimize<sup>1</sup></a></li>
+				<li><a href="/tags/Tattle/" title="Tattle">Tattle<sup>1</sup></a></li>
 			
 		
 			
@@ -344,8 +330,14 @@
 
 
   <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
+  <p class="asidetitle">Links</p>
     <ul>
+        
+          <li>
+            
+            	<a href="http://palm.seu.edu.cn/" target="_blank" title="PALM主页">PALM主页</a>
+            
+          </li>
         
           <li>
             
@@ -394,13 +386,21 @@
 		
 
 		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2017 
 		
 		<a href="/about" target="_blank" title="heimingx">heimingx</a>
 		
-		
+		<br>
+		<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+		</script>
+		<span id="busuanzi_container_site_pv">
+    	&nbsp;&nbsp;Total visits:&nbsp;<span id="busuanzi_value_site_pv" style="color:orange"></span>
+		</span>
+		<span id="busuanzi_container_site_uv">
+  		&nbsp;&nbsp;You are Visiter No.<span id="busuanzi_value_site_uv" style="color:orange"></span>
+		</span>
 		</p>
-</div>
+</div>	
 </footer>
     <script src="/js/jquery-2.0.3.min.js"></script>
 <script src="/js/jquery.imagesloaded.min.js"></script>
@@ -451,8 +451,6 @@ $(document).ready(function(){
       m.removeClass('moveMain');
       a.css('display', 'block').removeClass('fadeOut');
       o.css('display', 'none');
-      
-      $('#toc.toc-aside').css('display', 'none');
         
     }
   });

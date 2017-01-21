@@ -14,7 +14,7 @@
     })();
   </script>
 
-    <title>Heiming Xu</title>
+    <title>Heiming&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="heimingx">
@@ -23,16 +23,16 @@
     
     <meta name="description" content="Optimize Life">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Heiming Xu">
+<meta property="og:title" content="Heiming's Blog">
 <meta property="og:url" content="http://heimignx.cn/page/4/index.html">
-<meta property="og:site_name" content="Heiming Xu">
+<meta property="og:site_name" content="Heiming's Blog">
 <meta property="og:description" content="Optimize Life">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Heiming Xu">
+<meta name="twitter:title" content="Heiming's Blog">
 <meta name="twitter:description" content="Optimize Life">
 
     
-    <link rel="alternative" href="/atom.xml" title="Heiming Xu" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="Heiming&#39;s Blog" type="application/atom+xml">
     
     
     <link rel="icon" href="/img/titanicCats.ico">
@@ -47,7 +47,7 @@
 <div>
 		
 			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="Heiming Xu">Heiming Xu</a></h1>
+				<h1 class="site-name"><a href="/" title="Heiming&#39;s Blog">Heiming&#39;s Blog</a></h1>
 				<h2 class="blog-motto">Optimize Life</h2>
 			</div>
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
@@ -60,17 +60,15 @@
 					
 						<li><a href="/archives">Archives</a></li>
 					
-						<li><a href="/reference">Reference</a></li>
-					
-						<li><a href="/about">About</a></li>
+						<li><a href="/about">Me</a></li>
 					
 					<li>
  					
-					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+					<!--<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
 						<label>Search</label>
-						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="search..." />
 						<input type="hidden" name="q" value="site:heimignx.cn">
-					</form>
+					</form>-->
 					
 					</li>
 				</ul>
@@ -81,67 +79,19 @@
       <div id="main">
 
    
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/04/12/lintcode14-binary-search/" title="lintcode[14] 二分查找" itemprop="url">lintcode[14] 二分查找</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
-		
-  <p class="article-time">
-    <time datetime="2016-04-12T13:24:57.000Z" itemprop="datePublished"> 发表于 2016-04-12</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><p>给定一个排序的整数数组（升序）和一个要查找的整数target，用O(logn)的时间查找到target第一次出现的下标（从0开始），如果target不存在于数组中，返回-1。</p>
-<blockquote>
-<p>在数组 [1, 2, 3, 3, 4, 5, 10] 中二分查找3，返回2。</p>
-</blockquote>
-<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>search_idx = (tail + head) / 2 这里不是减法<br>然后注意是要找到第一个target</p>
-<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></div><div class="line">    <span class="comment"># @param nums: The integer array</span></div><div class="line">    <span class="comment"># @param target: Target number to find</span></div><div class="line">    <span class="comment"># @return the first position of target in nums, position start from 0 </span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">binarySearch</span><span class="params">(self, nums, target)</span>:</span></div><div class="line">        <span class="comment"># write your code here</span></div><div class="line">        len_nums = len(nums)</div><div class="line">        search_idx = <span class="number">0</span></div><div class="line">        head = <span class="number">0</span></div><div class="line">        tail = len_nums - <span class="number">1</span></div><div class="line">        <span class="keyword">while</span> head != tail:</div><div class="line">            search_idx = (tail + head) / <span class="number">2</span></div><div class="line">            <span class="keyword">if</span> nums[search_idx] == target:</div><div class="line">                <span class="keyword">while</span> nums[search_idx] == target:</div><div class="line">                    <span class="keyword">if</span> search_idx &gt; head:</div><div class="line">                        search_idx -= <span class="number">1</span></div><div class="line">                    <span class="keyword">else</span>:</div><div class="line">                        <span class="keyword">return</span> search_idx</div><div class="line">                <span class="keyword">return</span> search_idx + <span class="number">1</span></div><div class="line">            <span class="keyword">elif</span> nums[search_idx] &gt; target:</div><div class="line">                tail = search_idx - <span class="number">1</span></div><div class="line">            <span class="keyword">else</span>:</div><div class="line">                head = search_idx + <span class="number">1</span></div><div class="line">        <span class="keyword">if</span> nums[head] == target:</div><div class="line">            <span class="keyword">return</span> head</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">return</span> <span class="number">-1</span></div></pre></td></tr></table></figure>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Lintcode/">Lintcode</a>
-</div>
-
-
-  <div class="article-tags">
+<section class="post" itemscope itemprop="blogitem">
   
-  <span></span> <a href="/tags/python/">python</a><a href="/tags/lintcode/">lintcode</a><a href="/tags/algorithm/">algorithm</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/04/12/lintcode14-binary-search/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/12/lintcode14-binary-search/" data-count-type="comments">&nbsp;Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
+    <a href="/2016/04/12/lintcode14-binary-search/" title="lintcode[14] 二分查找" itemprop="url">
+  
+    <h1 itemprop="name">lintcode[14] 二分查找</h1>
+    
+     
+      <p itemprop="description" >如题~</p>
+      
+    
+    <time datetime="2016-04-12T13:24:57.000Z" itemprop="datePublished">2016-04-12</time>
+  </a>
+</section>
 
 
 
@@ -149,66 +99,19 @@
 
 
    
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/04/11/lintcode13-strStr/" title="lintcode[13] 字符串查找" itemprop="url">lintcode[13] 字符串查找</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
-		
-  <p class="article-time">
-    <time datetime="2016-04-11T13:18:03.000Z" itemprop="datePublished"> 发表于 2016-04-11</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><p>对于一个给定的 source 字符串和一个 target 字符串，你应该在 source 字符串中找出 target 字符串出现的第一个位置(从0开始)。如果不存在，则返回 -1。</p>
-<blockquote>
-<p>如果 source = “source” 和 target = “target”，返回 -1。<br>如果 source = “abcdabcdefg” 和 target = “bcd”，返回 1。</p>
-</blockquote>
-<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>字符串匹配，有著名的KMP算法，这里咩有实现，只是用了暴力搜索<br>不过有很多小的细节需要注意</p>
-<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">strStr</span><span class="params">(self, source, target)</span>:</span></div><div class="line">        <span class="keyword">if</span> source == <span class="keyword">None</span> <span class="keyword">or</span> target == <span class="keyword">None</span>:</div><div class="line">            <span class="keyword">return</span> <span class="number">-1</span></div><div class="line">        sourceLen = len(source)</div><div class="line">        targetLen = len(target)</div><div class="line">        <span class="keyword">if</span> sourceLen == <span class="number">0</span> <span class="keyword">and</span> targetLen != <span class="number">0</span>:</div><div class="line">            <span class="keyword">return</span> <span class="number">-1</span></div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span>(sourceLen <span class="keyword">and</span> targetLen):</div><div class="line">            <span class="keyword">return</span> <span class="number">0</span></div><div class="line">        sourceIdx = <span class="number">0</span></div><div class="line">        <span class="keyword">while</span> sourceIdx &lt; sourceLen:</div><div class="line">            targetIdx = <span class="number">0</span></div><div class="line">            tmpIdx = sourceIdx</div><div class="line">            <span class="keyword">while</span> targetIdx &lt; targetLen <span class="keyword">and</span> source[tmpIdx] == target[targetIdx]:</div><div class="line">                    tmpIdx += <span class="number">1</span></div><div class="line">                    targetIdx += <span class="number">1</span></div><div class="line">            <span class="keyword">if</span> targetIdx == targetLen:</div><div class="line">                <span class="keyword">return</span> sourceIdx</div><div class="line">            <span class="keyword">else</span>:</div><div class="line">                sourceIdx += <span class="number">1</span></div><div class="line">        <span class="keyword">return</span> <span class="number">-1</span></div></pre></td></tr></table></figure>
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Lintcode/">Lintcode</a>
-</div>
-
-
-  <div class="article-tags">
+<section class="post" itemscope itemprop="blogitem">
   
-  <span></span> <a href="/tags/python/">python</a><a href="/tags/lintcode/">lintcode</a><a href="/tags/algorithm/">algorithm</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/04/11/lintcode13-strStr/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/11/lintcode13-strStr/" data-count-type="comments">&nbsp;Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
+    <a href="/2016/04/11/lintcode13-strStr/" title="lintcode[13] 字符串查找" itemprop="url">
+  
+    <h1 itemprop="name">lintcode[13] 字符串查找</h1>
+    
+     
+      <p itemprop="description" >如题~</p>
+      
+    
+    <time datetime="2016-04-11T13:18:03.000Z" itemprop="datePublished">2016-04-11</time>
+  </a>
+</section>
 
 
 
@@ -216,69 +119,19 @@
 
 
    
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/04/10/lintcode12-min-stack/" title="lintcode[12] min stack" itemprop="url">lintcode[12] min stack</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
-		
-  <p class="article-time">
-    <time datetime="2016-04-10T13:15:33.000Z" itemprop="datePublished"> 发表于 2016-04-10</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><p>实现一个带有取最小值min方法的栈，min方法将返回当前栈中的最小值。</p>
-<p>你实现的栈将支持push，pop 和 min 操作，所有操作要求都在O(1)时间内完成。</p>
-<blockquote>
-<p>如下操作：push(1)，pop()，push(2)，push(3)，min()， push(1)，min() 返回1，2，1</p>
-</blockquote>
-<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>搞两个list，一个放原序数，另一个存前i个数的最小值<br>这边一开始多想了，在minstack中并不需要把所有的数都放进去，要真正理解存前i个数的最小值得意义</p>
-<p>对了今天发现lintcode一个非常恶心的bug，居然不能有中文注释！！！！！搞了好久wtf</p>
-<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MinStack</span><span class="params">(object)</span>:</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="comment"># do some intialize if necessary</span></div><div class="line">        self.stack = []</div><div class="line">        <span class="comment"># the ith number is the min of the numbers哈哈</span></div><div class="line">        self.minstack = []</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">push</span><span class="params">(self, number)</span>:</span></div><div class="line">        <span class="comment"># write yout code here</span></div><div class="line">        self.stack.append(number)</div><div class="line">        <span class="keyword">if</span> len(self.minstack) == <span class="number">0</span> <span class="keyword">or</span> self.minstack[<span class="number">-1</span>] &gt;= number:</div><div class="line">            self.minstack.append(number)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">pop</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="comment"># pop and return the top item in stack</span></div><div class="line">        <span class="keyword">if</span> self.stack[<span class="number">-1</span>] == self.minstack[<span class="number">-1</span>]:</div><div class="line">            self.minstack.pop()</div><div class="line">        <span class="keyword">return</span> self.stack.pop()</div><div class="line">        </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">min</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="comment"># return the minimum number in stack</span></div><div class="line">        <span class="keyword">return</span> self.minstack[<span class="number">-1</span>]</div></pre></td></tr></table></figure>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Lintcode/">Lintcode</a>
-</div>
-
-
-  <div class="article-tags">
+<section class="post" itemscope itemprop="blogitem">
   
-  <span></span> <a href="/tags/python/">python</a><a href="/tags/lintcode/">lintcode</a><a href="/tags/algorithm/">algorithm</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/04/10/lintcode12-min-stack/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/10/lintcode12-min-stack/" data-count-type="comments">&nbsp;Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
+    <a href="/2016/04/10/lintcode12-min-stack/" title="lintcode[12] min stack" itemprop="url">
+  
+    <h1 itemprop="name">lintcode[12] min stack</h1>
+    
+     
+      <p itemprop="description" >如题~</p>
+      
+    
+    <time datetime="2016-04-10T13:15:33.000Z" itemprop="datePublished">2016-04-10</time>
+  </a>
+</section>
 
 
 
@@ -286,67 +139,19 @@
 
 
    
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/04/09/lintcode11-search-range/" title="lintcode[11] 二叉查找树中搜索区间" itemprop="url">lintcode[11] 二叉查找树中搜索区间</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
-		
-  <p class="article-time">
-    <time datetime="2016-04-09T13:10:51.000Z" itemprop="datePublished"> 发表于 2016-04-09</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><p>给定两个值 k1 和 k2（k1 &lt; k2）和一个二叉查找树的根节点。找到树中所有值在 k1 到 k2 范围内的节点。即打印所有x (k1 &lt;= x &lt;= k2) 其中 x 是二叉查找树的中的节点值。返回所有升序的节点值。</p>
-<blockquote>
-<p>如果有 k1 = 10 和 k2 = 22, 你的程序应该返回 [12, 20, 22].</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">    20</div><div class="line">   /  \</div><div class="line">  8   22</div><div class="line"> / \</div><div class="line">4   12</div></pre></td></tr></table></figure>
-<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>本质就是有条件的中序遍历</p>
-<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="string">"""</span></div><div class="line">Definition of TreeNode:</div><div class="line">class TreeNode:</div><div class="line">    def __init__(self, val):</div><div class="line">        self.val = val</div><div class="line">        self.left, self.right = None, None</div><div class="line">"""</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    @param root: The root of the binary search tree.</div><div class="line">    @param k1 and k2: range k1 to k2.</div><div class="line">    @return: Return all keys that k1&lt;=key&lt;=k2 in ascending order.</div><div class="line">    """     </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">searchRange</span><span class="params">(self, root, k1, k2)</span>:</span></div><div class="line">        <span class="comment"># write your code here</span></div><div class="line">        res = self.inorderSearch(root, k1, k2)</div><div class="line">        <span class="keyword">return</span> res</div><div class="line">        </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">inorderSearch</span><span class="params">(self, root, k1, k2)</span>:</span></div><div class="line">        inorder = []</div><div class="line">        <span class="keyword">if</span> root == <span class="keyword">None</span>:</div><div class="line">            <span class="keyword">return</span> inorder</div><div class="line">        left = self.inorderSearch(root.left, k1, k2)</div><div class="line">        <span class="keyword">if</span> len(left) != <span class="number">0</span>:</div><div class="line"><span class="comment">#            inorder.append(left)</span></div><div class="line">            inorder += left</div><div class="line">        <span class="keyword">if</span> root.val &gt;= k1 <span class="keyword">and</span> root.val &lt;= k2:</div><div class="line">            inorder.append(root.val)</div><div class="line">        right = self.inorderSearch(root.right, k1, k2)</div><div class="line">        <span class="keyword">if</span> len(right) != <span class="number">0</span>:</div><div class="line"><span class="comment">#            inorder.append(right)</span></div><div class="line">            inorder += right</div><div class="line">        <span class="keyword">return</span> inorder</div></pre></td></tr></table></figure>
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Lintcode/">Lintcode</a>
-</div>
-
-
-  <div class="article-tags">
+<section class="post" itemscope itemprop="blogitem">
   
-  <span></span> <a href="/tags/python/">python</a><a href="/tags/lintcode/">lintcode</a><a href="/tags/algorithm/">algorithm</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/04/09/lintcode11-search-range/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/09/lintcode11-search-range/" data-count-type="comments">&nbsp;Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
+    <a href="/2016/04/09/lintcode11-search-range/" title="lintcode[11] 二叉查找树中搜索区间" itemprop="url">
+  
+    <h1 itemprop="name">lintcode[11] 二叉查找树中搜索区间</h1>
+    
+     
+      <p itemprop="description" >如题~</p>
+      
+    
+    <time datetime="2016-04-09T13:10:51.000Z" itemprop="datePublished">2016-04-09</time>
+  </a>
+</section>
 
 
 
@@ -354,70 +159,19 @@
 
 
    
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/04/08/hello-world/" title="Hello World" itemprop="url">Hello World</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
-		
-  <p class="article-time">
-    <time datetime="2016-04-08T15:29:23.000Z" itemprop="datePublished"> 发表于 2016-04-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Hexo/">Hexo</a>
-</div>
-
-
-  <div class="article-tags">
+<section class="post" itemscope itemprop="blogitem">
   
-  <span></span> <a href="/tags/Hexo/">Hexo</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/04/08/hello-world/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/08/hello-world/" data-count-type="comments">&nbsp;Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
+    <a href="/2016/04/08/hello-world/" title="Hello World" itemprop="url">
+  
+    <h1 itemprop="name">Hello World</h1>
+    
+     
+      <p itemprop="description" >hexo 初始化博文</p>
+      
+    
+    <time datetime="2016-04-08T15:29:23.000Z" itemprop="datePublished">2016-04-08</time>
+  </a>
+</section>
 
 
 
@@ -425,73 +179,19 @@
 
 
    
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/04/08/lintcode9-fizz-buzz/" title="lintcode[9] fizz buzz问题" itemprop="url">lintcode[9] fizz buzz问题</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
-		
-  <p class="article-time">
-    <time datetime="2016-04-08T13:06:03.000Z" itemprop="datePublished"> 发表于 2016-04-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><p>给你一个整数n. 从 1 到 n 按照下面的规则打印每个数：</p>
-<ul>
-<li>如果这个数被3整除，打印fizz.</li>
-<li>如果这个数被5整除，打印buzz.</li>
-<li>如果这个数能同时被3和5整除，打印fizz buzz.</li>
-</ul>
-<blockquote>
-<p>比如 n = 15, 返回一个字符串数组：</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">[</div><div class="line">  &quot;1&quot;, &quot;2&quot;, &quot;fizz&quot;,</div><div class="line">  &quot;4&quot;, &quot;buzz&quot;, &quot;fizz&quot;,</div><div class="line">  &quot;7&quot;, &quot;8&quot;, &quot;fizz&quot;,</div><div class="line">  &quot;buzz&quot;, &quot;11&quot;, &quot;fizz&quot;,</div><div class="line">  &quot;13&quot;, &quot;14&quot;, &quot;fizz buzz&quot;</div><div class="line">]</div></pre></td></tr></table></figure>
-<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>主要判断这个数是不是能被3或5整除</p>
-<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">class</span> Solution &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * param n: As description.</div><div class="line">     * return: A list of strings.</div><div class="line">     */</div><div class="line">    <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; fizzBuzz(<span class="keyword">int</span> n) &#123;</div><div class="line">        <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; results;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</div><div class="line">            <span class="keyword">if</span> (i % <span class="number">15</span> == <span class="number">0</span>) &#123;</div><div class="line">                results.push_back(<span class="string">"fizz buzz"</span>);</div><div class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (i % <span class="number">5</span> == <span class="number">0</span>) &#123;</div><div class="line">                results.push_back(<span class="string">"buzz"</span>);</div><div class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (i % <span class="number">3</span> == <span class="number">0</span>) &#123;</div><div class="line">                results.push_back(<span class="string">"fizz"</span>);</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                results.push_back(to_string(i));</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> results;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Lintcode/">Lintcode</a>
-</div>
-
-
-  <div class="article-tags">
+<section class="post" itemscope itemprop="blogitem">
   
-  <span></span> <a href="/tags/lintcode/">lintcode</a><a href="/tags/c/">c++</a><a href="/tags/algorithm/">algorithm</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/04/08/lintcode9-fizz-buzz/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/08/lintcode9-fizz-buzz/" data-count-type="comments">&nbsp;Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
+    <a href="/2016/04/08/lintcode9-fizz-buzz/" title="lintcode[9] fizz buzz问题" itemprop="url">
+  
+    <h1 itemprop="name">lintcode[9] fizz buzz问题</h1>
+    
+     
+      <p itemprop="description" >如题~</p>
+      
+    
+    <time datetime="2016-04-08T13:06:03.000Z" itemprop="datePublished">2016-04-08</time>
+  </a>
+</section>
 
 
 
@@ -499,77 +199,19 @@
 
 
    
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/04/07/lintcode8-rotate-string/" title="lintcode[8] 旋转字符串" itemprop="url">lintcode[8] 旋转字符串</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
-		
-  <p class="article-time">
-    <time datetime="2016-04-07T13:01:56.000Z" itemprop="datePublished"> 发表于 2016-04-07</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><p>给定一个字符串和一个偏移量，根据偏移量旋转字符串(从左向右旋转)</p>
-<blockquote>
-<p>对于字符串 “abcdefg”.<br>offset=0 =&gt; “abcdefg”<br>offset=1 =&gt; “gabcdef”<br>offset=2 =&gt; “fgabcde”<br>offset=3 =&gt; “efgabcd”</p>
-</blockquote>
-<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>这题主要考虑的是字符串拼接，方法有四种</p>
-<ol>
-<li>+=， </li>
-<li><p>append，</p>
-<blockquote>
-<p><strong>string的连接：</strong><br>string &amp;operator+=(const string &amp;s);//把字符串s连接到当前字符串的结尾<br>string &amp;append(const char <em>s);            //把c类型字符串s连接到当前字符串结尾<br>string &amp;append(const char </em>s,int n);//把c类型字符串s的前n个字符连接到当前字符串结尾<br>string &amp;append(const string &amp;s);    //同operator+=()<br>string &amp;append(const string &amp;s,int pos,int n);//把字符串s中从pos开始的n个字符连接到当前字符串的结尾<br>string &amp;append(int n,char c);        //在当前字符串结尾添加n个字符c<br>string &amp;append(const_iterator first,const_iterator last);//把迭代器first和last之间的部分连接到当前字符串的结尾</p>
-</blockquote>
-</li>
-<li><p>stringstream s1; s1&lt;&lt;s2;</p>
-</li>
-<li>sprintf</li>
-</ol>
-<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">class</span> Solution &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * @param str: a string</div><div class="line">     * @param offset: an integer</div><div class="line">     * @return: nothing</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">rotateString</span><span class="params">(<span class="built_in">string</span> &amp;str,<span class="keyword">int</span> offset)</span></span>&#123;</div><div class="line">        <span class="comment">//wirte your code here</span></div><div class="line">        <span class="keyword">int</span> <span class="built_in">strlen</span> = str.length();</div><div class="line">        <span class="keyword">if</span>(<span class="built_in">strlen</span> == <span class="number">0</span>)&#123;</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125;</div><div class="line">        offset %= <span class="built_in">strlen</span>;</div><div class="line">        <span class="built_in">string</span> tmp = <span class="string">""</span>;</div><div class="line">        <span class="keyword">while</span>(offset)&#123;</div><div class="line">            tmp = str[<span class="built_in">strlen</span> - <span class="number">1</span>];</div><div class="line">            str.erase(<span class="built_in">strlen</span> - <span class="number">1</span>);</div><div class="line"><span class="comment">//          str = tmp + str;</span></div><div class="line">            str = tmp.append(str);</div><div class="line">            offset--;</div><div class="line">        &#125; </div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Lintcode/">Lintcode</a>
-</div>
-
-
-  <div class="article-tags">
+<section class="post" itemscope itemprop="blogitem">
   
-  <span></span> <a href="/tags/lintcode/">lintcode</a><a href="/tags/c/">c++</a><a href="/tags/algorithm/">algorithm</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/04/07/lintcode8-rotate-string/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/07/lintcode8-rotate-string/" data-count-type="comments">&nbsp;Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
+    <a href="/2016/04/07/lintcode8-rotate-string/" title="lintcode[8] 旋转字符串" itemprop="url">
+  
+    <h1 itemprop="name">lintcode[8] 旋转字符串</h1>
+    
+     
+      <p itemprop="description" >如题~</p>
+      
+    
+    <time datetime="2016-04-07T13:01:56.000Z" itemprop="datePublished">2016-04-07</time>
+  </a>
+</section>
 
 
 
@@ -577,68 +219,19 @@
 
 
    
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/04/06/lintcode7-serialize-and-deserialize/" title="lintcode[7] 二叉树的序列化和反序列化" itemprop="url">lintcode[7] 二叉树的序列化和反序列化</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
-		
-  <p class="article-time">
-    <time datetime="2016-04-06T12:55:42.000Z" itemprop="datePublished"> 发表于 2016-04-06</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><p>设计一个算法，并编写代码来序列化和反序列化二叉树。将树写入一个文件被称为“序列化”，读取文件后重建同样的二叉树被称为“反序列化”。</p>
-<p>如何反序列化或序列化二叉树是没有限制的，你只需要确保可以将二叉树序列化为一个字符串，并且可以将字符串反序列化为原来的树结构。</p>
-<blockquote>
-<p>给出一个测试数据样例， 二叉树{3,9,20,#,#,15,7}，表示如下的树结构：</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">  3</div><div class="line"> / \</div><div class="line">9  20</div><div class="line">  /  \</div><div class="line"> 15   7</div></pre></td></tr></table></figure>
-<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>这题主要考察对二叉树的建立与遍历的过程，需要注意很多小的细节的地方</p>
-<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Definition of TreeNode:</div><div class="line"> * class TreeNode &#123;</div><div class="line"> * public:</div><div class="line"> *     int val;</div><div class="line"> *     TreeNode *left, *right;</div><div class="line"> *     TreeNode(int val) &#123;</div><div class="line"> *         this-&gt;val = val;</div><div class="line"> *         this-&gt;left = this-&gt;right = NULL;</div><div class="line"> *     &#125;</div><div class="line"> * &#125;</div><div class="line"> */</div><div class="line"><span class="keyword">class</span> Solution &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * This method will be invoked first, you should design your own algorithm </div><div class="line">     * to serialize a binary tree which denote by a root node to a string which</div><div class="line">     * can be easily deserialized by your own "deserialize" method later.</div><div class="line">     */</div><div class="line">    <span class="function"><span class="built_in">string</span> <span class="title">serialize</span><span class="params">(TreeNode *root)</span> </span>&#123;</div><div class="line">        <span class="comment">// write your code here</span></div><div class="line">        <span class="keyword">if</span>(!root)   <span class="keyword">return</span> <span class="string">"#"</span>;</div><div class="line">        <span class="built_in">string</span> res = <span class="string">""</span>;</div><div class="line">        <span class="keyword">char</span> buf[<span class="number">100</span>];</div><div class="line">        <span class="built_in">sprintf</span>(buf, <span class="string">"%d"</span>, root-&gt;val);</div><div class="line">        res.append(<span class="built_in">string</span>(buf));</div><div class="line">        <span class="built_in">queue</span>&lt;TreeNode *&gt; q;</div><div class="line">        q.push(root);</div><div class="line">        <span class="keyword">while</span>(!q.empty())&#123;</div><div class="line">            TreeNode *now = q.front();</div><div class="line">            q.pop();</div><div class="line">            TreeNode *left = now-&gt;left;</div><div class="line">            TreeNode *right = now-&gt;right;</div><div class="line">            <span class="keyword">if</span>(!left)&#123;</div><div class="line">                res.append(<span class="string">",#"</span>);</div><div class="line">            &#125;<span class="keyword">else</span>&#123;</div><div class="line">                <span class="built_in">sprintf</span>(buf, <span class="string">"%d"</span>, left-&gt;val);</div><div class="line">                res.append(<span class="string">","</span>);</div><div class="line">                res.append(<span class="built_in">string</span>(buf));</div><div class="line">                q.push(left);</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">if</span>(!right)&#123;</div><div class="line">                res.append(<span class="string">",#"</span>);</div><div class="line">            &#125;<span class="keyword">else</span>&#123;</div><div class="line">                <span class="built_in">sprintf</span>(buf, <span class="string">"%d"</span>, right-&gt;val);</div><div class="line">                res.append(<span class="string">","</span>);</div><div class="line">                res.append(<span class="built_in">string</span>(buf));</div><div class="line">                q.push(right);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        <span class="keyword">return</span> res;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * This method will be invoked second, the argument data is what exactly</div><div class="line">     * you serialized at method "serialize", that means the data is not given by</div><div class="line">     * system, it's given by your own serialize method. So the format of data is</div><div class="line">     * designed by yourself, and deserialize it here as you serialize it in </div><div class="line">     * "serialize" method.</div><div class="line">     */</div><div class="line">    <span class="function">TreeNode *<span class="title">deserialize</span><span class="params">(<span class="built_in">string</span> data)</span> </span>&#123;</div><div class="line">        <span class="comment">// write your code here</span></div><div class="line">        <span class="keyword">if</span>(data[<span class="number">0</span>]==<span class="string">'#'</span>)    <span class="keyword">return</span> <span class="literal">NULL</span>;</div><div class="line">        <span class="built_in">deque</span>&lt;<span class="built_in">string</span>&gt; q;</div><div class="line">        <span class="keyword">while</span>(<span class="literal">true</span>)&#123;</div><div class="line">            <span class="keyword">int</span> pos = data.find_last_of(<span class="string">','</span>);</div><div class="line">            <span class="keyword">if</span>(pos==<span class="built_in">string</span>::npos)&#123;</div><div class="line">                q.push_front(data);</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            &#125;</div><div class="line">            q.push_front(data.substr(pos+<span class="number">1</span>));</div><div class="line">            data.erase(pos);</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        <span class="built_in">string</span> s = q.front();</div><div class="line">        q.pop_front();</div><div class="line">        TreeNode *root = <span class="keyword">new</span> TreeNode(atoi(s.c_str()));</div><div class="line">        <span class="built_in">queue</span>&lt;TreeNode *&gt; q1;</div><div class="line">        q1.push(root);</div><div class="line">        <span class="keyword">while</span>(!q1.empty())&#123;</div><div class="line">            TreeNode *now = q1.front();</div><div class="line">            q1.pop();</div><div class="line">            s = q.front();</div><div class="line">            q.pop_front();</div><div class="line">            <span class="keyword">if</span>(s[<span class="number">0</span>]!=<span class="string">'#'</span>)&#123;</div><div class="line">                now-&gt;left = <span class="keyword">new</span> TreeNode(atoi(s.c_str()));</div><div class="line">                q1.push(now-&gt;left);</div><div class="line">            &#125;</div><div class="line">            s = q.front();</div><div class="line">            q.pop_front();</div><div class="line">            <span class="keyword">if</span>(s[<span class="number">0</span>]!=<span class="string">'#'</span>)&#123;</div><div class="line">                now-&gt;right = <span class="keyword">new</span> TreeNode(atoi(s.c_str()));</div><div class="line">                q1.push(now-&gt;right);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        <span class="keyword">return</span> root;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Lintcode/">Lintcode</a>
-</div>
-
-
-  <div class="article-tags">
+<section class="post" itemscope itemprop="blogitem">
   
-  <span></span> <a href="/tags/lintcode/">lintcode</a><a href="/tags/c/">c++</a><a href="/tags/algorithm/">algorithm</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/04/06/lintcode7-serialize-and-deserialize/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/06/lintcode7-serialize-and-deserialize/" data-count-type="comments">&nbsp;Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
+    <a href="/2016/04/06/lintcode7-serialize-and-deserialize/" title="lintcode[7] 二叉树的序列化和反序列化" itemprop="url">
+  
+    <h1 itemprop="name">lintcode[7] 二叉树的序列化和反序列化</h1>
+    
+     
+      <p itemprop="description" >如题~</p>
+      
+    
+    <time datetime="2016-04-06T12:55:42.000Z" itemprop="datePublished">2016-04-06</time>
+  </a>
+</section>
 
 
 
@@ -646,66 +239,19 @@
 
 
    
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/04/05/lintcode6-merge-order-array/" title="lintcode[6] 合并排序数组" itemprop="url">lintcode[6] 合并排序数组</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
-		
-  <p class="article-time">
-    <time datetime="2016-04-05T12:52:49.000Z" itemprop="datePublished"> 发表于 2016-04-05</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><p>合并两个排序的整数数组A和B变成一个新的数组。</p>
-<blockquote>
-<p>给出A=[1,2,3,4]，B=[2,4,5,6]，返回 [1,2,2,3,4,4,5,6]</p>
-</blockquote>
-<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>这题可以考虑不另外开辟空间，直接先比较两个数组的大小，将小的复制到大的里面，然后返回大的就好，不过这里，vector用的不熟。</p>
-<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">class</span> Solution &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * @param A and B: sorted integer array A and B.</div><div class="line">     * @return: A new sorted integer array</div><div class="line">     */</div><div class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; mergeSortedArray(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;A, <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;B) &#123;</div><div class="line">        <span class="comment">// write your code here</span></div><div class="line">        <span class="keyword">int</span> A_len = A.size();</div><div class="line">        <span class="keyword">int</span> B_len = B.size();</div><div class="line">        </div><div class="line">        <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; C;</div><div class="line">        <span class="keyword">int</span> i = <span class="number">0</span>, j = <span class="number">0</span>;</div><div class="line">        <span class="keyword">while</span>(i &lt; A_len &amp;&amp; j &lt; B_len)&#123;</div><div class="line">            <span class="keyword">if</span>(A[i] &lt;= B[j])&#123;</div><div class="line">                C.push_back(A[i++]);</div><div class="line">            &#125;<span class="keyword">else</span>&#123;</div><div class="line">                C.push_back(B[j++]);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">while</span>(i &lt; A_len)&#123;</div><div class="line">            C.push_back(A[i++]);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">while</span>(j &lt; B_len)&#123;</div><div class="line">            C.push_back(B[j++]);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> C;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Lintcode/">Lintcode</a>
-</div>
-
-
-  <div class="article-tags">
+<section class="post" itemscope itemprop="blogitem">
   
-  <span></span> <a href="/tags/lintcode/">lintcode</a><a href="/tags/c/">c++</a><a href="/tags/algorithm/">algorithm</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/04/05/lintcode6-merge-order-array/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/05/lintcode6-merge-order-array/" data-count-type="comments">&nbsp;Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
+    <a href="/2016/04/05/lintcode6-merge-order-array/" title="lintcode[6] 合并排序数组" itemprop="url">
+  
+    <h1 itemprop="name">lintcode[6] 合并排序数组</h1>
+    
+     
+      <p itemprop="description" >如题~</p>
+      
+    
+    <time datetime="2016-04-05T12:52:49.000Z" itemprop="datePublished">2016-04-05</time>
+  </a>
+</section>
 
 
 
@@ -713,66 +259,19 @@
 
 
    
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/04/04/lintcode5-kth-large-number/" title="lintcode[5] 第k大元素" itemprop="url">lintcode[5] 第k大元素</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
-		
-  <p class="article-time">
-    <time datetime="2016-04-04T12:47:46.000Z" itemprop="datePublished"> 发表于 2016-04-04</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><p>在数组中找到第k大的元素</p>
-<blockquote>
-<p>给出数组 [9,3,2,4,8]，第三大的元素是 4<br>给出数组 [1,2,3,4,5]，第一大的元素是 5，第二大的元素是 4，第三大的元素是3，以此类推</p>
-</blockquote>
-<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>这题直接用sort函数排个序就解决了</p>
-<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">class</span> Solution &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="comment">/*</span></div><div class="line">     * param k : description of k</div><div class="line">     * param nums : description of array and index 0 ~ n-1</div><div class="line">     * return: description of return</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">int</span> <span class="title">kthLargestElement</span><span class="params">(<span class="keyword">int</span> k, <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; nums)</span> </span>&#123;</div><div class="line">        <span class="comment">// write your code here</span></div><div class="line">        sort(nums.begin(), nums.end(),greater&lt;<span class="keyword">int</span>&gt;());</div><div class="line">        <span class="keyword">return</span> nums[k<span class="number">-1</span>];</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Lintcode/">Lintcode</a>
-</div>
-
-
-  <div class="article-tags">
+<section class="post" itemscope itemprop="blogitem">
   
-  <span></span> <a href="/tags/lintcode/">lintcode</a><a href="/tags/c/">c++</a><a href="/tags/algorithm/">algorithm</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/04/04/lintcode5-kth-large-number/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/04/lintcode5-kth-large-number/" data-count-type="comments">&nbsp;Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
+    <a href="/2016/04/04/lintcode5-kth-large-number/" title="lintcode[5] 第k大元素" itemprop="url">
+  
+    <h1 itemprop="name">lintcode[5] 第k大元素</h1>
+    
+     
+      <p itemprop="description" >如题~</p>
+      
+    
+    <time datetime="2016-04-04T12:47:46.000Z" itemprop="datePublished">2016-04-04</time>
+  </a>
+</section>
 
 
 
@@ -780,7 +279,7 @@
 
 
 
-  <nav id="page-nav" class="clearfix">
+  <nav id="page-nav" class="clearfix unexpand">
     <a class="extend prev" rel="prev" href="/page/3/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/5/">Next<span></span></a>
   </nav>
 
@@ -793,7 +292,7 @@
 
   
 <div class="categorieslist">
-	<p class="asidetitle">分类</p>
+	<p class="asidetitle">Categories</p>
 		<ul>
 		
 		  
@@ -838,7 +337,7 @@
 
   
 <div class="tagslist">
-	<p class="asidetitle">标签</p>
+	<p class="asidetitle">Tags</p>
 		<ul class="clearfix">
 		
 			
@@ -878,11 +377,11 @@
 			
 		
 			
-				<li><a href="/tags/tattle/" title="tattle">tattle<sup>3</sup></a></li>
+				<li><a href="/tags/Optimization/" title="Optimization">Optimization<sup>3</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Optimization/" title="Optimization">Optimization<sup>3</sup></a></li>
+				<li><a href="/tags/tattle/" title="tattle">tattle<sup>3</sup></a></li>
 			
 		
 			
@@ -890,11 +389,11 @@
 			
 		
 			
-				<li><a href="/tags/Tattle/" title="Tattle">Tattle<sup>1</sup></a></li>
+				<li><a href="/tags/code-optimize/" title="code optimize">code optimize<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/code-optimize/" title="code optimize">code optimize<sup>1</sup></a></li>
+				<li><a href="/tags/Tattle/" title="Tattle">Tattle<sup>1</sup></a></li>
 			
 		
 			
@@ -906,8 +405,14 @@
 
 
   <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
+  <p class="asidetitle">Links</p>
     <ul>
+        
+          <li>
+            
+            	<a href="http://palm.seu.edu.cn/" target="_blank" title="PALM主页">PALM主页</a>
+            
+          </li>
         
           <li>
             
@@ -956,13 +461,21 @@
 		
 
 		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2017 
 		
 		<a href="/about" target="_blank" title="heimingx">heimingx</a>
 		
-		
+		<br>
+		<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+		</script>
+		<span id="busuanzi_container_site_pv">
+    	&nbsp;&nbsp;Total visits:&nbsp;<span id="busuanzi_value_site_pv" style="color:orange"></span>
+		</span>
+		<span id="busuanzi_container_site_uv">
+  		&nbsp;&nbsp;You are Visiter No.<span id="busuanzi_value_site_uv" style="color:orange"></span>
+		</span>
 		</p>
-</div>
+</div>	
 </footer>
     <script src="/js/jquery-2.0.3.min.js"></script>
 <script src="/js/jquery.imagesloaded.min.js"></script>

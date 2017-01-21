@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://heimignx.cn/2016/11/03/methods-optimize-large-scale-SVM-problems/</loc>
+    
+    <lastmod>2017-01-21T15:29:59.599Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://heimignx.cn/about/index.html</loc>
+    
+    <lastmod>2017-01-21T15:29:59.599Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://heimignx.cn/2016/12/22/see-you-suzhou/</loc>
     
     <lastmod>2016-12-22T13:24:44.388Z</lastmod>
@@ -19,13 +33,6 @@
     <loc>http://heimignx.cn/2016/06/09/markdown-mathjax/</loc>
     
     <lastmod>2016-11-03T03:40:58.332Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://heimignx.cn/2016/11/03/methods-optimize-large-scale-SVM-problems/</loc>
-    
-    <lastmod>2016-11-03T03:39:19.467Z</lastmod>
     
   </url>
   
@@ -51,13 +58,6 @@
   </url>
   
   <url>
-    <loc>http://heimignx.cn/about/index.html</loc>
-    
-    <lastmod>2016-10-15T14:06:53.931Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://heimignx.cn/2016/06/08/support-vector-machine/</loc>
     
     <lastmod>2016-10-15T14:06:53.930Z</lastmod>
@@ -65,14 +65,14 @@
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/06/28/use-space-in-Latex/</loc>
+    <loc>http://heimignx.cn/2016/05/01/smo-algorithm/</loc>
     
     <lastmod>2016-10-15T14:06:53.930Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/05/01/smo-algorithm/</loc>
+    <loc>http://heimignx.cn/2016/06/28/use-space-in-Latex/</loc>
     
     <lastmod>2016-10-15T14:06:53.930Z</lastmod>
     
@@ -121,6 +121,13 @@
   </url>
   
   <url>
+    <loc>http://heimignx.cn/2016/09/29/multiple-kernel-learning-for-visual-object-recognition-a-review/</loc>
+    
+    <lastmod>2016-10-15T14:06:53.928Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://heimignx.cn/2016/03/10/parallel-compute-in-matlab/</loc>
     
     <lastmod>2016-10-15T14:06:53.928Z</lastmod>
@@ -129,13 +136,6 @@
   
   <url>
     <loc>http://heimignx.cn/2015/11/25/manifold-learning/</loc>
-    
-    <lastmod>2016-10-15T14:06:53.928Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://heimignx.cn/2016/09/29/multiple-kernel-learning-for-visual-object-recognition-a-review/</loc>
     
     <lastmod>2016-10-15T14:06:53.928Z</lastmod>
     
@@ -170,20 +170,6 @@
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/04/07/lintcode8-rotate-string/</loc>
-    
-    <lastmod>2016-10-15T14:06:53.925Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://heimignx.cn/2016/04/03/lintcode4-ugly-number/</loc>
-    
-    <lastmod>2016-10-15T14:06:53.925Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://heimignx.cn/2016/04/04/lintcode5-kth-large-number/</loc>
     
     <lastmod>2016-10-15T14:06:53.925Z</lastmod>
@@ -191,7 +177,7 @@
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/04/05/lintcode6-merge-order-array/</loc>
+    <loc>http://heimignx.cn/2016/04/07/lintcode8-rotate-string/</loc>
     
     <lastmod>2016-10-15T14:06:53.925Z</lastmod>
     
@@ -205,7 +191,21 @@
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/04/02/lintcode3-count-numbers/</loc>
+    <loc>http://heimignx.cn/2016/04/05/lintcode6-merge-order-array/</loc>
+    
+    <lastmod>2016-10-15T14:06:53.925Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://heimignx.cn/2016/04/03/lintcode4-ugly-number/</loc>
+    
+    <lastmod>2016-10-15T14:06:53.925Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://heimignx.cn/2016/04/20/lintcode17-subsets/</loc>
     
     <lastmod>2016-10-15T14:06:53.924Z</lastmod>
     
@@ -219,14 +219,35 @@
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/04/20/lintcode17-subsets/</loc>
+    <loc>http://heimignx.cn/2016/04/02/lintcode3-count-numbers/</loc>
     
     <lastmod>2016-10-15T14:06:53.924Z</lastmod>
     
   </url>
   
   <url>
+    <loc>http://heimignx.cn/2016/04/17/lintcode15-permutation/</loc>
+    
+    <lastmod>2016-10-15T14:06:53.923Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://heimignx.cn/2016/04/18/lintcode16-permute-unique/</loc>
+    
+    <lastmod>2016-10-15T14:06:53.923Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://heimignx.cn/2016/04/12/lintcode14-binary-search/</loc>
+    
+    <lastmod>2016-10-15T14:06:53.923Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://heimignx.cn/2016/04/10/lintcode12-min-stack/</loc>
     
     <lastmod>2016-10-15T14:06:53.923Z</lastmod>
     
@@ -247,35 +268,14 @@
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/04/10/lintcode12-min-stack/</loc>
-    
-    <lastmod>2016-10-15T14:06:53.923Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://heimignx.cn/2016/04/17/lintcode15-permutation/</loc>
-    
-    <lastmod>2016-10-15T14:06:53.923Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://heimignx.cn/2016/04/18/lintcode16-permute-unique/</loc>
-    
-    <lastmod>2016-10-15T14:06:53.923Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://heimignx.cn/2016/04/17/hexo-build/</loc>
+    <loc>http://heimignx.cn/2016/09/29/indefinite-kernel-svms/</loc>
     
     <lastmod>2016-10-15T14:06:53.922Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/09/29/indefinite-kernel-svms/</loc>
+    <loc>http://heimignx.cn/2016/04/17/hexo-build/</loc>
     
     <lastmod>2016-10-15T14:06:53.922Z</lastmod>
     
@@ -359,13 +359,6 @@
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/09/27/conclusion-for-first-year-of-master/</loc>
-    
-    <lastmod>2016-10-15T14:06:53.919Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://heimignx.cn/2016/03/08/code-optimize-in-matlab/</loc>
     
     <lastmod>2016-10-15T14:06:53.919Z</lastmod>
@@ -373,14 +366,21 @@
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/02/01/about-shaoshuai/</loc>
+    <loc>http://heimignx.cn/2016/09/27/conclusion-for-first-year-of-master/</loc>
+    
+    <lastmod>2016-10-15T14:06:53.919Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://heimignx.cn/2016/06/28/Goldstein-Armijo-Rule-and-backtracking-line-search/</loc>
     
     <lastmod>2016-10-15T14:06:53.918Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/06/28/Goldstein-Armijo-Rule-and-backtracking-line-search/</loc>
+    <loc>http://heimignx.cn/2016/02/01/about-shaoshuai/</loc>
     
     <lastmod>2016-10-15T14:06:53.918Z</lastmod>
     

@@ -14,7 +14,7 @@
     })();
   </script>
 
-    <title>matlab代码优化 | Heiming Xu</title>
+    <title>matlab代码优化 | Heiming&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="heimingx">
@@ -25,7 +25,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="matlab代码优化">
 <meta property="og:url" content="http://heimignx.cn/2016/03/08/code-optimize-in-matlab/index.html">
-<meta property="og:site_name" content="Heiming Xu">
+<meta property="og:site_name" content="Heiming's Blog">
 <meta property="og:description" content="各种MATLAB代码优化的奇技淫巧">
 <meta property="og:updated_time" content="2016-10-15T14:06:53.919Z">
 <meta name="twitter:card" content="summary">
@@ -33,7 +33,7 @@
 <meta name="twitter:description" content="各种MATLAB代码优化的奇技淫巧">
 
     
-    <link rel="alternative" href="/atom.xml" title="Heiming Xu" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="Heiming&#39;s Blog" type="application/atom+xml">
     
     
     <link rel="icon" href="/img/titanicCats.ico">
@@ -48,7 +48,7 @@
 <div>
 		
 			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="Heiming Xu">Heiming Xu</a></h1>
+				<h1 class="site-name"><a href="/" title="Heiming&#39;s Blog">Heiming&#39;s Blog</a></h1>
 				<h2 class="blog-motto">Optimize Life</h2>
 			</div>
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
@@ -61,17 +61,15 @@
 					
 						<li><a href="/archives">Archives</a></li>
 					
-						<li><a href="/reference">Reference</a></li>
-					
-						<li><a href="/about">About</a></li>
+						<li><a href="/about">Me</a></li>
 					
 					<li>
  					
-					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+					<!--<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
 						<label>Search</label>
-						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="search..." />
 						<input type="hidden" name="q" value="site:heimignx.cn">
-					</form>
+					</form>-->
 					
 					</li>
 				</ul>
@@ -87,23 +85,18 @@
     
       <a href="/2016/03/08/code-optimize-in-matlab/" title="matlab代码优化" itemprop="url">matlab代码优化</a>
   </h1>
-  <p class="article-author">By
+  <!--<p class="article-author">By
        
 		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
-		
+		 -->
   <p class="article-time">
     <time datetime="2016-03-08T15:27:02.000Z" itemprop="datePublished"> 发表于 2016-03-08</time>
-    
+    <span id="busuanzi_container_page_pv">
+    总阅读<span id="busuanzi_value_page_pv"></span>次
+</span>
   </p>
 </header>
 	<div class="article-content">
-		
-		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目录</strong>
-		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#一个栗子"><span class="toc-number">1.</span> <span class="toc-text">一个栗子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#综述（总结）"><span class="toc-number">2.</span> <span class="toc-text">综述（总结）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#编码技巧"><span class="toc-number">2.1.</span> <span class="toc-text">编码技巧</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#函数：内建函数，-m函数，匿名函数，句柄函数"><span class="toc-number">2.2.</span> <span class="toc-text">函数：内建函数，.m函数，匿名函数，句柄函数</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Reference"><span class="toc-number">3.</span> <span class="toc-text">Reference</span></a></li></ol>
-		
-		</div>
 		
 		<p>最近做实验发现跑的时间实在太漫长了，其实主要原因是迭代次数比较大的原因，需要进一步读些paper，找到好的解决方法，但是也感觉对于MATLAB的代码优化还是需要好好掌握一下的，因为之前在做图像处理实验时就发现for循环和向量化之后的性能差异简直一天一地，所以今天google一下，感觉发现新大陆一样<a href="http://freemind.pluskid.org" target="_blank" rel="external">FreeMind</a>的<a href="http://freemind.pluskid.org/programming/recipes-for-faster-matlab-code/" target="_blank" rel="external">Recipes for Faster Matlab Code</a>的对k-medoids的一段代码的解释，收获颇丰，要好好的掌握下。原文就不贴了（主要是博主搞的太精致了，实在不忍心粘成txt格式的……），自己来总结一下吧。</p>
 <h1 id="一个栗子"><a href="#一个栗子" class="headerlink" title="一个栗子"></a>一个栗子</h1><figure class="highlight matlab"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="params">[label, energy, index]</span> = <span class="title">kmedoids</span><span class="params">(X,k)</span></span></div><div class="line"><span class="comment">% X: d x n data matrix</span></div><div class="line"><span class="comment">% k: number of cluster</span></div><div class="line"><span class="comment">% Written by Mo Chen (sth4nth@gamil.com)</span></div><div class="line">v = <span class="built_in">dot</span>(X,X,<span class="number">1</span>);</div><div class="line">D = <span class="built_in">bsxfun</span>(@plus,v,v')<span class="number">-2</span>*(X'*X);</div><div class="line">n = <span class="built_in">size</span>(X,<span class="number">2</span>);</div><div class="line">[~, label] = min(D(randsample(n,k),:));</div><div class="line">last = <span class="number">0</span>;</div><div class="line"><span class="keyword">while</span> any(label ~= last)</div><div class="line">    [~, index] = min(D*sparse(<span class="number">1</span>:n,label,<span class="number">1</span>,n,k,n));</div><div class="line">    last = label;</div><div class="line">    [val, label] = min(D(index,:),[],<span class="number">1</span>);</div><div class="line"><span class="keyword">end</span></div><div class="line">energy = sum(val);</div></pre></td></tr></table></figure>
@@ -228,7 +221,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://heimignx.cn/2016/03/08/code-optimize-in-matlab/" data-title="matlab代码优化 | Heiming Xu" data-tsina="null" class="share clearfix">
+	  <div data-url="http://heimignx.cn/2016/03/08/code-optimize-in-matlab/" data-title="matlab代码优化 | Heiming&#39;s Blog" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -269,20 +262,13 @@
 </div>  
       <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 
-  <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目录</strong>
- 
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#一个栗子"><span class="toc-number">1.</span> <span class="toc-text">一个栗子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#综述（总结）"><span class="toc-number">2.</span> <span class="toc-text">综述（总结）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#编码技巧"><span class="toc-number">2.1.</span> <span class="toc-text">编码技巧</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#函数：内建函数，-m函数，匿名函数，句柄函数"><span class="toc-number">2.2.</span> <span class="toc-text">函数：内建函数，.m函数，匿名函数，句柄函数</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Reference"><span class="toc-number">3.</span> <span class="toc-text">Reference</span></a></li></ol>
- 
-  </div>
-
 <div id="asidepart">
 <div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
 <aside class="clearfix">
 
   
 <div class="categorieslist">
-	<p class="asidetitle">分类</p>
+	<p class="asidetitle">Categories</p>
 		<ul>
 		
 		  
@@ -327,7 +313,7 @@
 
   
 <div class="tagslist">
-	<p class="asidetitle">标签</p>
+	<p class="asidetitle">Tags</p>
 		<ul class="clearfix">
 		
 			
@@ -367,11 +353,11 @@
 			
 		
 			
-				<li><a href="/tags/tattle/" title="tattle">tattle<sup>3</sup></a></li>
+				<li><a href="/tags/Optimization/" title="Optimization">Optimization<sup>3</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Optimization/" title="Optimization">Optimization<sup>3</sup></a></li>
+				<li><a href="/tags/tattle/" title="tattle">tattle<sup>3</sup></a></li>
 			
 		
 			
@@ -379,11 +365,11 @@
 			
 		
 			
-				<li><a href="/tags/Tattle/" title="Tattle">Tattle<sup>1</sup></a></li>
+				<li><a href="/tags/code-optimize/" title="code optimize">code optimize<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/code-optimize/" title="code optimize">code optimize<sup>1</sup></a></li>
+				<li><a href="/tags/Tattle/" title="Tattle">Tattle<sup>1</sup></a></li>
 			
 		
 			
@@ -395,8 +381,14 @@
 
 
   <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
+  <p class="asidetitle">Links</p>
     <ul>
+        
+          <li>
+            
+            	<a href="http://palm.seu.edu.cn/" target="_blank" title="PALM主页">PALM主页</a>
+            
+          </li>
         
           <li>
             
@@ -445,13 +437,21 @@
 		
 
 		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2017 
 		
 		<a href="/about" target="_blank" title="heimingx">heimingx</a>
 		
-		
+		<br>
+		<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+		</script>
+		<span id="busuanzi_container_site_pv">
+    	&nbsp;&nbsp;Total visits:&nbsp;<span id="busuanzi_value_site_pv" style="color:orange"></span>
+		</span>
+		<span id="busuanzi_container_site_uv">
+  		&nbsp;&nbsp;You are Visiter No.<span id="busuanzi_value_site_uv" style="color:orange"></span>
+		</span>
 		</p>
-</div>
+</div>	
 </footer>
     <script src="/js/jquery-2.0.3.min.js"></script>
 <script src="/js/jquery.imagesloaded.min.js"></script>
@@ -502,8 +502,6 @@ $(document).ready(function(){
       m.removeClass('moveMain');
       a.css('display', 'block').removeClass('fadeOut');
       o.css('display', 'none');
-      
-      $('#toc.toc-aside').css('display', 'none');
         
     }
   });

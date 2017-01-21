@@ -14,7 +14,7 @@
     })();
   </script>
 
-    <title>Euclidean Projection onto the Simplex | Heiming Xu</title>
+    <title>Euclidean Projection onto the Simplex | Heiming&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="heimingx">
@@ -25,7 +25,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="Euclidean Projection onto the Simplex">
 <meta property="og:url" content="http://heimignx.cn/2016/10/15/euclidean-projection-onto-the-simplex/index.html">
-<meta property="og:site_name" content="Heiming Xu">
+<meta property="og:site_name" content="Heiming's Blog">
 <meta property="og:description" content="在欧式空间将向量投影到Simplex">
 <meta property="og:updated_time" content="2016-10-18T03:24:25.501Z">
 <meta name="twitter:card" content="summary">
@@ -33,7 +33,7 @@
 <meta name="twitter:description" content="在欧式空间将向量投影到Simplex">
 
     
-    <link rel="alternative" href="/atom.xml" title="Heiming Xu" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="Heiming&#39;s Blog" type="application/atom+xml">
     
     
     <link rel="icon" href="/img/titanicCats.ico">
@@ -48,7 +48,7 @@
 <div>
 		
 			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="Heiming Xu">Heiming Xu</a></h1>
+				<h1 class="site-name"><a href="/" title="Heiming&#39;s Blog">Heiming&#39;s Blog</a></h1>
 				<h2 class="blog-motto">Optimize Life</h2>
 			</div>
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
@@ -61,17 +61,15 @@
 					
 						<li><a href="/archives">Archives</a></li>
 					
-						<li><a href="/reference">Reference</a></li>
-					
-						<li><a href="/about">About</a></li>
+						<li><a href="/about">Me</a></li>
 					
 					<li>
  					
-					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+					<!--<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
 						<label>Search</label>
-						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="search..." />
 						<input type="hidden" name="q" value="site:heimignx.cn">
-					</form>
+					</form>-->
 					
 					</li>
 				</ul>
@@ -87,23 +85,18 @@
     
       <a href="/2016/10/15/euclidean-projection-onto-the-simplex/" title="Euclidean Projection onto the Simplex" itemprop="url">Euclidean Projection onto the Simplex</a>
   </h1>
-  <p class="article-author">By
+  <!--<p class="article-author">By
        
 		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
-		
+		 -->
   <p class="article-time">
     <time datetime="2016-10-15T12:30:47.000Z" itemprop="datePublished"> 发表于 2016-10-15</time>
-    
+    <span id="busuanzi_container_page_pv">
+    总阅读<span id="busuanzi_value_page_pv"></span>次
+</span>
   </p>
 </header>
 	<div class="article-content">
-		
-		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目录</strong>
-		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#model-1：-Euclidean-Projection-onto-the-Simplex"><span class="toc-number">1.</span> <span class="toc-text">model 1： Euclidean Projection onto the Simplex</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#model-2-Euclidean-Projection-onto-the-ℓ1-Ball"><span class="toc-number">2.</span> <span class="toc-text">model 2: Euclidean Projection onto the ℓ1-Ball</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#references"><span class="toc-number">3.</span> <span class="toc-text">references</span></a></li></ol>
-		
-		</div>
 		
 		<p>在ML中，通常通过L1范数约束来达到稀疏性，而对于L1范数约束的求解常用的解法是内点法，这种算法虽然通用，但是针对这一问题有其效率的问题，最近在阅读到一篇文章专门研究在欧式空间下投影到Simplex上的做法，这里总结下来以备忘。</p>
 <h1 id="model-1：-Euclidean-Projection-onto-the-Simplex"><a href="#model-1：-Euclidean-Projection-onto-the-Simplex" class="headerlink" title="model 1： Euclidean Projection onto the Simplex"></a>model 1： Euclidean Projection onto the Simplex</h1><p>首先确定一下要求解的模型：<br>$$\min_w \frac{1}{2}|w-v|^2_2\quad s.t. \quad \sum_{i=1}^nw_i = z, w_i \geq 0$$</p>
@@ -150,7 +143,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Optimization/">Optimization</a><a href="/tags/Machine-Learning/">Machine Learning</a>
+  <span></span> <a href="/tags/Machine-Learning/">Machine Learning</a><a href="/tags/Optimization/">Optimization</a>
   </div>
 
 </div>
@@ -159,7 +152,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://heimignx.cn/2016/10/15/euclidean-projection-onto-the-simplex/" data-title="Euclidean Projection onto the Simplex | Heiming Xu" data-tsina="null" class="share clearfix">
+	  <div data-url="http://heimignx.cn/2016/10/15/euclidean-projection-onto-the-simplex/" data-title="Euclidean Projection onto the Simplex | Heiming&#39;s Blog" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -200,20 +193,13 @@
 </div>  
       <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 
-  <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目录</strong>
- 
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#model-1：-Euclidean-Projection-onto-the-Simplex"><span class="toc-number">1.</span> <span class="toc-text">model 1： Euclidean Projection onto the Simplex</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#model-2-Euclidean-Projection-onto-the-ℓ1-Ball"><span class="toc-number">2.</span> <span class="toc-text">model 2: Euclidean Projection onto the ℓ1-Ball</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#references"><span class="toc-number">3.</span> <span class="toc-text">references</span></a></li></ol>
- 
-  </div>
-
 <div id="asidepart">
 <div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
 <aside class="clearfix">
 
   
 <div class="categorieslist">
-	<p class="asidetitle">分类</p>
+	<p class="asidetitle">Categories</p>
 		<ul>
 		
 		  
@@ -258,7 +244,7 @@
 
   
 <div class="tagslist">
-	<p class="asidetitle">标签</p>
+	<p class="asidetitle">Tags</p>
 		<ul class="clearfix">
 		
 			
@@ -298,11 +284,11 @@
 			
 		
 			
-				<li><a href="/tags/tattle/" title="tattle">tattle<sup>3</sup></a></li>
+				<li><a href="/tags/Optimization/" title="Optimization">Optimization<sup>3</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Optimization/" title="Optimization">Optimization<sup>3</sup></a></li>
+				<li><a href="/tags/tattle/" title="tattle">tattle<sup>3</sup></a></li>
 			
 		
 			
@@ -310,11 +296,11 @@
 			
 		
 			
-				<li><a href="/tags/Tattle/" title="Tattle">Tattle<sup>1</sup></a></li>
+				<li><a href="/tags/code-optimize/" title="code optimize">code optimize<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/code-optimize/" title="code optimize">code optimize<sup>1</sup></a></li>
+				<li><a href="/tags/Tattle/" title="Tattle">Tattle<sup>1</sup></a></li>
 			
 		
 			
@@ -326,8 +312,14 @@
 
 
   <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
+  <p class="asidetitle">Links</p>
     <ul>
+        
+          <li>
+            
+            	<a href="http://palm.seu.edu.cn/" target="_blank" title="PALM主页">PALM主页</a>
+            
+          </li>
         
           <li>
             
@@ -376,13 +368,21 @@
 		
 
 		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2017 
 		
 		<a href="/about" target="_blank" title="heimingx">heimingx</a>
 		
-		
+		<br>
+		<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+		</script>
+		<span id="busuanzi_container_site_pv">
+    	&nbsp;&nbsp;Total visits:&nbsp;<span id="busuanzi_value_site_pv" style="color:orange"></span>
+		</span>
+		<span id="busuanzi_container_site_uv">
+  		&nbsp;&nbsp;You are Visiter No.<span id="busuanzi_value_site_uv" style="color:orange"></span>
+		</span>
 		</p>
-</div>
+</div>	
 </footer>
     <script src="/js/jquery-2.0.3.min.js"></script>
 <script src="/js/jquery.imagesloaded.min.js"></script>
@@ -433,8 +433,6 @@ $(document).ready(function(){
       m.removeClass('moveMain');
       a.css('display', 'block').removeClass('fadeOut');
       o.css('display', 'none');
-      
-      $('#toc.toc-aside').css('display', 'none');
         
     }
   });

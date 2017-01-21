@@ -14,7 +14,7 @@
     })();
   </script>
 
-    <title>CS231n:Linear classification: Support Vector Machine, Softmax | Heiming Xu</title>
+    <title>CS231n:Linear classification: Support Vector Machine, Softmax | Heiming&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="heimingx">
@@ -28,7 +28,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="CS231n:Linear classification: Support Vector Machine, Softmax">
 <meta property="og:url" content="http://heimignx.cn/2016/08/15/cs231n-linear-classification/index.html">
-<meta property="og:site_name" content="Heiming Xu">
+<meta property="og:site_name" content="Heiming's Blog">
 <meta property="og:description" content="在第一节的课程中主要介绍了KNN方法，由于knn是lazy Learning，主要有两个缺点：要记住所有的训练点；将测试点与所有训练点进行比较，为了克服这些缺点，通常会选择其他的分类方法，本节介绍了SVM和softmax classifier.
 对线性分类器的解释线性分类器的形式：$$f(x_i;W,b)=Wx_i + b$$
 结果向量 $f(x_i;W,b)$ 中值的大小
@@ -45,7 +45,7 @@
 <meta name="twitter:image" content="http://heimignx.cn/img/blog/deeplearning/imagemap.jpg">
 
     
-    <link rel="alternative" href="/atom.xml" title="Heiming Xu" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="Heiming&#39;s Blog" type="application/atom+xml">
     
     
     <link rel="icon" href="/img/titanicCats.ico">
@@ -60,7 +60,7 @@
 <div>
 		
 			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="Heiming Xu">Heiming Xu</a></h1>
+				<h1 class="site-name"><a href="/" title="Heiming&#39;s Blog">Heiming&#39;s Blog</a></h1>
 				<h2 class="blog-motto">Optimize Life</h2>
 			</div>
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
@@ -73,17 +73,15 @@
 					
 						<li><a href="/archives">Archives</a></li>
 					
-						<li><a href="/reference">Reference</a></li>
-					
-						<li><a href="/about">About</a></li>
+						<li><a href="/about">Me</a></li>
 					
 					<li>
  					
-					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+					<!--<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
 						<label>Search</label>
-						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="search..." />
 						<input type="hidden" name="q" value="site:heimignx.cn">
-					</form>
+					</form>-->
 					
 					</li>
 				</ul>
@@ -99,23 +97,18 @@
     
       <a href="/2016/08/15/cs231n-linear-classification/" title="CS231n:Linear classification: Support Vector Machine, Softmax" itemprop="url">CS231n:Linear classification: Support Vector Machine, Softmax</a>
   </h1>
-  <p class="article-author">By
+  <!--<p class="article-author">By
        
 		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
-		
+		 -->
   <p class="article-time">
     <time datetime="2016-08-15T12:20:45.000Z" itemprop="datePublished"> 发表于 2016-08-15</time>
-    
+    <span id="busuanzi_container_page_pv">
+    总阅读<span id="busuanzi_value_page_pv"></span>次
+</span>
   </p>
 </header>
 	<div class="article-content">
-		
-		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目录</strong>
-		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#对线性分类器的解释"><span class="toc-number">1.</span> <span class="toc-text">对线性分类器的解释</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#结果向量-f-x-i-W-b-中值的大小"><span class="toc-number">1.1.</span> <span class="toc-text">结果向量 $f(x_i;W,b)$ 中值的大小</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#权重矩阵-W-的每一行都是一个template"><span class="toc-number">1.2.</span> <span class="toc-text">权重矩阵$W$的每一行都是一个template</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#损失函数"><span class="toc-number">2.</span> <span class="toc-text">损失函数</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#多类分类SVM"><span class="toc-number">2.1.</span> <span class="toc-text">多类分类SVM</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Softmax-分类器"><span class="toc-number">2.2.</span> <span class="toc-text">Softmax 分类器</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Logistic-Regression"><span class="toc-number">3.</span> <span class="toc-text">Logistic Regression</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#references"><span class="toc-number">4.</span> <span class="toc-text">references</span></a></li></ol>
-		
-		</div>
 		
 		<p>在第一节的课程中主要介绍了KNN方法，由于knn是lazy Learning，主要有两个缺点：要记住所有的训练点；将测试点与所有训练点进行比较，为了克服这些缺点，通常会选择其他的分类方法，本节介绍了SVM和softmax classifier.</p>
 <h1 id="对线性分类器的解释"><a href="#对线性分类器的解释" class="headerlink" title="对线性分类器的解释"></a>对线性分类器的解释</h1><p>线性分类器的形式：<br>$$f(x_i;W,b)=Wx_i + b$$</p>
@@ -176,7 +169,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://heimignx.cn/2016/08/15/cs231n-linear-classification/" data-title="CS231n:Linear classification: Support Vector Machine, Softmax | Heiming Xu" data-tsina="null" class="share clearfix">
+	  <div data-url="http://heimignx.cn/2016/08/15/cs231n-linear-classification/" data-title="CS231n:Linear classification: Support Vector Machine, Softmax | Heiming&#39;s Blog" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -199,9 +192,9 @@
 
 
 <div class="next">
-<a href="/2016/06/28/Goldstein-Armijo-Rule-and-backtracking-line-search/"  title="Goldstein-Armijo Rule and backtracking line search">
+<a href="/2016/06/28/use-LibSVM-in-MATLAB/"  title="LibSVM在MATLAB中应用及一些问题">
  <strong>下一篇：</strong><br/> 
- <span>Goldstein-Armijo Rule and backtracking line search
+ <span>LibSVM在MATLAB中应用及一些问题
 </span>
 </a>
 </div>
@@ -217,20 +210,13 @@
 </div>  
       <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 
-  <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目录</strong>
- 
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#对线性分类器的解释"><span class="toc-number">1.</span> <span class="toc-text">对线性分类器的解释</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#结果向量-f-x-i-W-b-中值的大小"><span class="toc-number">1.1.</span> <span class="toc-text">结果向量 $f(x_i;W,b)$ 中值的大小</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#权重矩阵-W-的每一行都是一个template"><span class="toc-number">1.2.</span> <span class="toc-text">权重矩阵$W$的每一行都是一个template</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#损失函数"><span class="toc-number">2.</span> <span class="toc-text">损失函数</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#多类分类SVM"><span class="toc-number">2.1.</span> <span class="toc-text">多类分类SVM</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Softmax-分类器"><span class="toc-number">2.2.</span> <span class="toc-text">Softmax 分类器</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Logistic-Regression"><span class="toc-number">3.</span> <span class="toc-text">Logistic Regression</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#references"><span class="toc-number">4.</span> <span class="toc-text">references</span></a></li></ol>
- 
-  </div>
-
 <div id="asidepart">
 <div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
 <aside class="clearfix">
 
   
 <div class="categorieslist">
-	<p class="asidetitle">分类</p>
+	<p class="asidetitle">Categories</p>
 		<ul>
 		
 		  
@@ -275,7 +261,7 @@
 
   
 <div class="tagslist">
-	<p class="asidetitle">标签</p>
+	<p class="asidetitle">Tags</p>
 		<ul class="clearfix">
 		
 			
@@ -315,11 +301,11 @@
 			
 		
 			
-				<li><a href="/tags/tattle/" title="tattle">tattle<sup>3</sup></a></li>
+				<li><a href="/tags/Optimization/" title="Optimization">Optimization<sup>3</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Optimization/" title="Optimization">Optimization<sup>3</sup></a></li>
+				<li><a href="/tags/tattle/" title="tattle">tattle<sup>3</sup></a></li>
 			
 		
 			
@@ -327,11 +313,11 @@
 			
 		
 			
-				<li><a href="/tags/Tattle/" title="Tattle">Tattle<sup>1</sup></a></li>
+				<li><a href="/tags/code-optimize/" title="code optimize">code optimize<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/code-optimize/" title="code optimize">code optimize<sup>1</sup></a></li>
+				<li><a href="/tags/Tattle/" title="Tattle">Tattle<sup>1</sup></a></li>
 			
 		
 			
@@ -343,8 +329,14 @@
 
 
   <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
+  <p class="asidetitle">Links</p>
     <ul>
+        
+          <li>
+            
+            	<a href="http://palm.seu.edu.cn/" target="_blank" title="PALM主页">PALM主页</a>
+            
+          </li>
         
           <li>
             
@@ -393,13 +385,21 @@
 		
 
 		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2017 
 		
 		<a href="/about" target="_blank" title="heimingx">heimingx</a>
 		
-		
+		<br>
+		<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+		</script>
+		<span id="busuanzi_container_site_pv">
+    	&nbsp;&nbsp;Total visits:&nbsp;<span id="busuanzi_value_site_pv" style="color:orange"></span>
+		</span>
+		<span id="busuanzi_container_site_uv">
+  		&nbsp;&nbsp;You are Visiter No.<span id="busuanzi_value_site_uv" style="color:orange"></span>
+		</span>
 		</p>
-</div>
+</div>	
 </footer>
     <script src="/js/jquery-2.0.3.min.js"></script>
 <script src="/js/jquery.imagesloaded.min.js"></script>
@@ -450,8 +450,6 @@ $(document).ready(function(){
       m.removeClass('moveMain');
       a.css('display', 'block').removeClass('fadeOut');
       o.css('display', 'none');
-      
-      $('#toc.toc-aside').css('display', 'none');
         
     }
   });

@@ -14,7 +14,7 @@
     })();
   </script>
 
-    <title>Heiming Xu</title>
+    <title>Heiming&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="heimingx">
@@ -23,16 +23,16 @@
     
     <meta name="description" content="Optimize Life">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Heiming Xu">
+<meta property="og:title" content="Heiming's Blog">
 <meta property="og:url" content="http://heimignx.cn/page/5/index.html">
-<meta property="og:site_name" content="Heiming Xu">
+<meta property="og:site_name" content="Heiming's Blog">
 <meta property="og:description" content="Optimize Life">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Heiming Xu">
+<meta name="twitter:title" content="Heiming's Blog">
 <meta name="twitter:description" content="Optimize Life">
 
     
-    <link rel="alternative" href="/atom.xml" title="Heiming Xu" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="Heiming&#39;s Blog" type="application/atom+xml">
     
     
     <link rel="icon" href="/img/titanicCats.ico">
@@ -47,7 +47,7 @@
 <div>
 		
 			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="Heiming Xu">Heiming Xu</a></h1>
+				<h1 class="site-name"><a href="/" title="Heiming&#39;s Blog">Heiming&#39;s Blog</a></h1>
 				<h2 class="blog-motto">Optimize Life</h2>
 			</div>
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
@@ -60,17 +60,15 @@
 					
 						<li><a href="/archives">Archives</a></li>
 					
-						<li><a href="/reference">Reference</a></li>
-					
-						<li><a href="/about">About</a></li>
+						<li><a href="/about">Me</a></li>
 					
 					<li>
  					
-					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+					<!--<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
 						<label>Search</label>
-						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="search..." />
 						<input type="hidden" name="q" value="site:heimignx.cn">
-					</form>
+					</form>-->
 					
 					</li>
 				</ul>
@@ -81,66 +79,19 @@
       <div id="main">
 
    
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/04/03/lintcode4-ugly-number/" title="lintcode[4] 丑数" itemprop="url">lintcode[4] 丑数</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
-		
-  <p class="article-time">
-    <time datetime="2016-04-03T12:43:35.000Z" itemprop="datePublished"> 发表于 2016-04-03</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><p>设计一个算法，找出只含素因子2，3，5 的第 n 大的数。符合条件的数如：</p>
-<blockquote>
-<p>1, 2, 3, 4, 5, 6, 8, 9, 10, 12…<br>如果n = 9， 返回 10</p>
-</blockquote>
-<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>这题最开始的想法就是遍历所有的数，判断该数书不是丑数，但是为超时，所以就要考虑其他方法。<br>这题在<strong><a href="http://zhedahht.blog.163.com/blog/static/2541117420094245366965/" target="_blank" rel="external">剑指offer</a></strong>上有，参考了他的解法<br>思路：只考虑丑数，而丑数的形成是由2,3,5的倍数组合而成，那就是由这三个数交替生成，产生一个丑数数组，典型的空间换时间</p>
-<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">class</span> Solution &#123;</div><div class="line"><span class="keyword">private</span>:</div><div class="line">    <span class="function"><span class="keyword">int</span> <span class="title">min</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b, <span class="keyword">int</span> c)</span></span>&#123;</div><div class="line">        <span class="keyword">int</span> minNum = (a &lt; b) ? a : b;</div><div class="line">        minNum = (minNum &lt; c) ? minNum : c;</div><div class="line">        <span class="keyword">return</span> minNum;</div><div class="line">    &#125;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="comment">/*</span></div><div class="line">     * @param n an integer</div><div class="line">     * @return the nth prime number as description.</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">int</span> <span class="title">nthUglyNumber</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</div><div class="line">        <span class="comment">// write your code here</span></div><div class="line">        <span class="keyword">if</span>(n &lt; <span class="number">1</span>)&#123;</div><div class="line">            <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">int</span> *uglyNumbers = <span class="keyword">new</span> <span class="keyword">int</span>[n];</div><div class="line">        uglyNumbers[<span class="number">0</span>] = <span class="number">1</span>;</div><div class="line">        <span class="keyword">int</span> nextUglyNumIdx = <span class="number">1</span>;</div><div class="line">		</div><div class="line">        <span class="keyword">int</span> *multiply2 = uglyNumbers;</div><div class="line">        <span class="keyword">int</span> *multiply3 = uglyNumbers;</div><div class="line">        <span class="keyword">int</span> *multiply5 = uglyNumbers;</div><div class="line">		</div><div class="line">        <span class="keyword">while</span>(nextUglyNumIdx &lt; n)&#123;</div><div class="line">            <span class="keyword">int</span> minUgly = min(*multiply2 * <span class="number">2</span>, *multiply3 * <span class="number">3</span>, *multiply5 * <span class="number">5</span>);</div><div class="line">            uglyNumbers[nextUglyNumIdx] = minUgly;</div><div class="line">			</div><div class="line">            <span class="keyword">if</span>(minUgly &gt;= *multiply2 * <span class="number">2</span>) multiply2++;</div><div class="line">            <span class="keyword">if</span>(minUgly &gt;= *multiply3 * <span class="number">3</span>) multiply3++;</div><div class="line">            <span class="keyword">if</span>(minUgly &gt;= *multiply5 * <span class="number">5</span>) multiply5++;</div><div class="line">			</div><div class="line">            nextUglyNumIdx ++;	</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">int</span> ugly = uglyNumbers[n - <span class="number">1</span>];</div><div class="line">        <span class="keyword">delete</span>[] uglyNumbers;</div><div class="line">		</div><div class="line">        <span class="keyword">return</span> ugly; </div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Lintcode/">Lintcode</a>
-</div>
-
-
-  <div class="article-tags">
+<section class="post" itemscope itemprop="blogitem">
   
-  <span></span> <a href="/tags/lintcode/">lintcode</a><a href="/tags/c/">c++</a><a href="/tags/algorithm/">algorithm</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/04/03/lintcode4-ugly-number/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/03/lintcode4-ugly-number/" data-count-type="comments">&nbsp;Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
+    <a href="/2016/04/03/lintcode4-ugly-number/" title="lintcode[4] 丑数" itemprop="url">
+  
+    <h1 itemprop="name">lintcode[4] 丑数</h1>
+    
+     
+      <p itemprop="description" >如题~</p>
+      
+    
+    <time datetime="2016-04-03T12:43:35.000Z" itemprop="datePublished">2016-04-03</time>
+  </a>
+</section>
 
 
 
@@ -148,66 +99,19 @@
 
 
    
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/04/02/lintcode3-count-numbers/" title="lintcode[3] 统计数字" itemprop="url">lintcode[3] 统计数字</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
-		
-  <p class="article-time">
-    <time datetime="2016-04-02T12:39:55.000Z" itemprop="datePublished"> 发表于 2016-04-02</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><p>计算数字k在0到n中的出现的次数，k可能是0~9的一个值</p>
-<blockquote>
-<p>例如n=12，k=1，在 [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]，我们发现1出现了5次 (1, 10, 11, 12)</p>
-</blockquote>
-<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>暴力破解，遍历每个数的每一位，但是要考虑到是从0开始的，所以单独考虑k=0的特殊情况</p>
-<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">class</span> Solution &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="comment">/*</span></div><div class="line">     * param k : As description.</div><div class="line">     * param n : As description.</div><div class="line">     * return: How many k's between 0 and n.</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">int</span> <span class="title">digitCounts</span><span class="params">(<span class="keyword">int</span> k, <span class="keyword">int</span> n)</span> </span>&#123;</div><div class="line">        <span class="comment">// write your code here</span></div><div class="line">        <span class="keyword">int</span> res = <span class="number">0</span>;</div><div class="line">        <span class="keyword">if</span>(k == <span class="number">0</span>)&#123;</div><div class="line">    	    res += <span class="number">1</span>;</div><div class="line">    	&#125;</div><div class="line">        <span class="keyword">while</span>(n)&#123;</div><div class="line">            <span class="keyword">int</span> tmp = n;</div><div class="line">            <span class="keyword">while</span>(tmp)&#123;	</div><div class="line">                <span class="keyword">int</span> digital = tmp % <span class="number">10</span>;</div><div class="line">                <span class="keyword">if</span>(digital == k)&#123;</div><div class="line">                    res += <span class="number">1</span>;</div><div class="line">                &#125;</div><div class="line">                tmp /= <span class="number">10</span>;</div><div class="line">            &#125;</div><div class="line">            n--;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> res;</div><div class="line">    &#125; </div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Lintcode/">Lintcode</a>
-</div>
-
-
-  <div class="article-tags">
+<section class="post" itemscope itemprop="blogitem">
   
-  <span></span> <a href="/tags/lintcode/">lintcode</a><a href="/tags/c/">c++</a><a href="/tags/algorithm/">algorithm</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/04/02/lintcode3-count-numbers/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/02/lintcode3-count-numbers/" data-count-type="comments">&nbsp;Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
+    <a href="/2016/04/02/lintcode3-count-numbers/" title="lintcode[3] 统计数字" itemprop="url">
+  
+    <h1 itemprop="name">lintcode[3] 统计数字</h1>
+    
+     
+      <p itemprop="description" >如题~</p>
+      
+    
+    <time datetime="2016-04-02T12:39:55.000Z" itemprop="datePublished">2016-04-02</time>
+  </a>
+</section>
 
 
 
@@ -215,80 +119,19 @@
 
 
    
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/04/01/lintcode2-wei-bu-de-ling/" title="lintcode[2] 尾部的零" itemprop="url">lintcode[2] 尾部的零</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
-		
-  <p class="article-time">
-    <time datetime="2016-04-01T04:55:32.000Z" itemprop="datePublished"> 发表于 2016-04-01</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><p>设计一个算法，计算出n阶乘中尾部零的个数</p>
-<blockquote>
-<p>11! = 39916800，因此应该返回 2</p>
-</blockquote>
-<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>主要思路就是看10的组成2和5，然后含有5的数远远小于含有2的数的数量，于是我们只要统计出含有5的数的数量，同时，对于不同的数，对于5的贡献不一样，5,15,20均只贡献1个5，而25会贡献2个5，所以要计算两次，递归找下去</p>
-<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><pre><code class="c++"><span class="keyword">class</span> Solution {
- <span class="keyword">public</span>:
-    <span class="comment">// param n : description of n</span>
-    <span class="comment">// return: description of return </span>
-    <span class="function"><span class="keyword">long</span> <span class="keyword">long</span> <span class="title">trailingZeros</span><span class="params">(<span class="keyword">long</span> <span class="keyword">long</span> n)</span> </span>{
-        <span class="keyword">long</span> <span class="keyword">long</span> num = <span class="number">0</span>;
-        <span class="keyword">while</span>(n){
-            num += n / <span class="number">5</span>;
-            n /= <span class="number">5</span>;  
-        }
-        <span class="keyword">return</span> num;
-    }
-};
-</code></pre>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Lintcode/">Lintcode</a>
-</div>
-
-
-  <div class="article-tags">
+<section class="post" itemscope itemprop="blogitem">
   
-  <span></span> <a href="/tags/lintcode/">lintcode</a><a href="/tags/c/">c++</a><a href="/tags/algorithm/">algorithm</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/04/01/lintcode2-wei-bu-de-ling/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/01/lintcode2-wei-bu-de-ling/" data-count-type="comments">&nbsp;Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
+    <a href="/2016/04/01/lintcode2-wei-bu-de-ling/" title="lintcode[2] 尾部的零" itemprop="url">
+  
+    <h1 itemprop="name">lintcode[2] 尾部的零</h1>
+    
+     
+      <p itemprop="description" >如题~</p>
+      
+    
+    <time datetime="2016-04-01T04:55:32.000Z" itemprop="datePublished">2016-04-01</time>
+  </a>
+</section>
 
 
 
@@ -296,64 +139,19 @@
 
 
    
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/04/01/lintcode1-aplusb/" title="lintcode[1] a + b" itemprop="url">lintcode[1] a + b</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
-		
-  <p class="article-time">
-    <time datetime="2016-04-01T04:50:21.000Z" itemprop="datePublished"> 发表于 2016-04-01</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><p>给出两个整数a和b, 求他们的和, 但不能使用 + 等数学运算符。</p>
-<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>这题其实考察了加法的本质：两数相加和进位操作 用异或表示两数相加，用与和左移来表示进位</p>
-<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">class</span> Solution &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="comment">/*</span></div><div class="line">     * @param a: The first integer</div><div class="line">     * @param b: The second integer</div><div class="line">     * @return: The sum of a and b</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">int</span> <span class="title">aplusb</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</div><div class="line">        <span class="comment">// write your code here, try to do it without arithmetic operators.</span></div><div class="line">        <span class="keyword">if</span>(b == <span class="number">0</span>)&#123;</div><div class="line">            <span class="keyword">return</span> a;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">int</span> sum = a ^ b;</div><div class="line">        <span class="keyword">int</span> carry = (a &amp; b) &lt;&lt; <span class="number">1</span>;</div><div class="line">        <span class="keyword">return</span> aplusb(sum, carry);</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Lintcode/">Lintcode</a>
-</div>
-
-
-  <div class="article-tags">
+<section class="post" itemscope itemprop="blogitem">
   
-  <span></span> <a href="/tags/lintcode/">lintcode</a><a href="/tags/c/">c++</a><a href="/tags/algorithm/">algorithm</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/04/01/lintcode1-aplusb/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/01/lintcode1-aplusb/" data-count-type="comments">&nbsp;Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
+    <a href="/2016/04/01/lintcode1-aplusb/" title="lintcode[1] a + b" itemprop="url">
+  
+    <h1 itemprop="name">lintcode[1] a + b</h1>
+    
+     
+      <p itemprop="description" >如题~</p>
+      
+    
+    <time datetime="2016-04-01T04:50:21.000Z" itemprop="datePublished">2016-04-01</time>
+  </a>
+</section>
 
 
 
@@ -361,69 +159,19 @@
 
 
    
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/03/11/use-Mosek-in-cvx/" title="在CVX中使用Mosek" itemprop="url">在CVX中使用Mosek</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
-		
-  <p class="article-time">
-    <time datetime="2016-03-11T15:21:47.000Z" itemprop="datePublished"> 发表于 2016-03-11</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>在cvx中默认的<a href="http://cvxr.com/cvx/doc/solver.html" target="_blank" rel="external">solver</a>是SDT3，解决一般的问题没有问题，但是发现涉及到高维向量（e.p. 求解1000+维向量）的求解时，会很慢，所以尝试换一个solver，以改善性能。目前尝试了Mosek，感觉是比SDT3快点的。搞了一个晚上，总结一下。</p>
-<h1 id="申请academic-license"><a href="#申请academic-license" class="headerlink" title="申请academic license"></a>申请academic license</h1><p>因为非professional版本的cvx不包含Mosek，所以需要购买，但是对于科研用途，cvx会提供一个license，期限好像是一年。需要填个<a href="http://cvxr.com/cvx/academic/" target="_blank" rel="external">表格</a>就ok了。</p>
-<h1 id="Mosek安装"><a href="#Mosek安装" class="headerlink" title="Mosek安装"></a>Mosek安装</h1><p>在收到cvx发的邮件后，按照Mosek安装教程<a href="http://cvxr.com/cvx/mosek/" target="_blank" rel="external">MOSEK and CVX</a>上的步骤执行就好了。<br>在安装好后，可以通过mosekopt语句来验证是否已经安装成功</p>
-<h1 id="Mosek使用"><a href="#Mosek使用" class="headerlink" title="Mosek使用"></a>Mosek使用</h1><p>在确定安装成功后，可以按照<a href="http://cvxr.com/cvx/doc/mosek.html#mosek" target="_blank" rel="external">Using MOSEK with CVX¶</a>来设置使用Mosek就可以了。</p>
-<blockquote>
-<p><strong><em>note:</em></strong><br>不过这里需要注意的是，我们在使用Mosek的时候，并不需要按照Mosek官网提供的user’s guide来写优化代码，还是按照cvx的guide来写就可以了;另外，我是将Mosek设置成default的，不知道什么原因，由于之前是使用的SDT3，即使选择了Mosek作为当前的solver，都没用，所以所幸将Mosek设置成了default。</p>
-</blockquote>
-<p>对了，这里还有个资源<a href="http://ask.cvxr.com/t/how-to-use-mosek-in-cvx/28" target="_blank" rel="external">How to use MOSEK in CVX?</a></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/MATLAB/">MATLAB</a>
-</div>
-
-
-  <div class="article-tags">
+<section class="post" itemscope itemprop="blogitem">
   
-  <span></span> <a href="/tags/matlab/">matlab</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/03/11/use-Mosek-in-cvx/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/03/11/use-Mosek-in-cvx/" data-count-type="comments">&nbsp;Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
+    <a href="/2016/03/11/use-Mosek-in-cvx/" title="在CVX中使用Mosek" itemprop="url">
+  
+    <h1 itemprop="name">在CVX中使用Mosek</h1>
+    
+     
+      <p itemprop="description" >如题~</p>
+      
+    
+    <time datetime="2016-03-11T15:21:47.000Z" itemprop="datePublished">2016-03-11</time>
+  </a>
+</section>
 
 
 
@@ -431,105 +179,19 @@
 
 
    
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/03/10/parallel-compute-in-matlab/" title="matlab并行编程" itemprop="url">matlab并行编程</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
-		
-  <p class="article-time">
-    <time datetime="2016-03-10T15:23:59.000Z" itemprop="datePublished"> 发表于 2016-03-10</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>前几天研究了MATLAB的代码优化，今天来研究一下MATLAB的并行编程（Parallel Programming）。</p>
-<h1 id="一些概念"><a href="#一些概念" class="headerlink" title="一些概念"></a>一些概念</h1><ol>
-<li>概念：<strong>client</strong> &amp; <strong>workers</strong><br>Start up MATLAB in the regular way. This copy of MATLAB that you start with is called the “client” copy; the copies of MATLAB that will be created to assist in the computation are known as “workers”.</li>
-</ol>
-<h1 id="一些函数"><a href="#一些函数" class="headerlink" title="一些函数"></a>一些函数</h1><ol>
-<li><p><strong>matlabpool</strong></p>
- <figure class="highlight matlab"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;matlabpool open local <span class="number">4</span></div><div class="line">&gt;&gt;your_code.m</div><div class="line">&gt;&gt;matlabpool close</div></pre></td></tr></table></figure>
-<p> 上面的4表示机器的核数，而不是线程数；这里的数字可以&lt;=Num(内核)</p>
-</li>
-<li><p><strong>pctRunOnAll</strong></p>
- <figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">%Clear all loaded functions on all labs</div><div class="line">&gt;&gt; pctRunOnAll clear functions</div><div class="line"></div><div class="line">% Change the directory on all workers to the project directory:</div><div class="line">&gt;&gt; pctRunOnAll cd /opt/projects/new_scheme</div><div class="line"></div><div class="line">%Add some directories to the paths of all the labs:</div><div class="line">&gt;&gt; pctRunOnAll (‘addpath /usr/share/path1’);</div></pre></td></tr></table></figure>
-</li>
-<li><p><strong>parfor</strong><br>这是对for-loop的一种并行化改进，有一些限制</p>
-<ul>
-<li><p><strong><em>Nested spmd Statements</em></strong><br>The body of a parfor-loop cannot contain an spmd statement, and an spmd statement cannot contain a parfor-loop.</p>
-</li>
-<li><p><strong><em>Break and Return Statements</em></strong><br>The body of a parfor-loop cannot contain break or return statements.</p>
-</li>
-<li><p><strong><em>Global and Persistent Variables</em></strong><br>The body of a parfor-loop cannot contain global or persistent variable declarations.</p>
-</li>
-<li><p><strong><em>Handle Classes</em></strong><br>Changes made to handle classes on the workers during loop iterations are not automatically propagated to the client.</p>
-</li>
-<li><p><strong><em>P-Code Scripts</em></strong><br>You can call P-code script files from within a parfor-loop, but P-code script cannot contain a parfor-loop.</p>
-<p>举个栗子</p>
-<figure class="highlight matlab"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">clear all;</div><div class="line"></div><div class="line">matlabpool open local <span class="number">2</span>;</div><div class="line">ms.UseParallel = <span class="string">'always'</span>;</div><div class="line"></div><div class="line">N = <span class="number">100</span>;</div><div class="line">tic</div><div class="line"><span class="keyword">parfor</span> <span class="built_in">i</span> = <span class="number">1</span> : N</div><div class="line">	fprintf(<span class="string">'============================\n'</span>);</div><div class="line">	fprintf(<span class="string">'============================\n'</span>);</div><div class="line">    fprintf(<span class="string">'Iteration Order no = %2d\n'</span>, <span class="built_in">i</span>);</div><div class="line">    fprintf(<span class="string">'============================\n'</span>);</div><div class="line">    fprintf(<span class="string">'============================\n'</span>);</div><div class="line"><span class="keyword">end</span></div><div class="line">t_parallel = toc;</div><div class="line">matlabpool close</div></pre></td></tr></table></figure>
-<p>但是，这里可能由于for循环中操作比较简单，并没有比直接用for循环节约时间</p>
-</li>
-</ul>
-</li>
-<li><p>spmd：single program multiple data</p>
-<ul>
-<li><p>The <strong><em>“single program”</em></strong> aspect of spmd means that the identical code runs on multiple labs. When the spmd block is complete, your program continues running in the client.</p>
-</li>
-<li><p>The <strong><em>“multiple data”</em></strong> aspect means that even though the spmd statement runs identical code on all labs, each lab can have different, unique data for that code. So multiple data sets can be accommodated by multiple labs.</p>
-</li>
-</ul>
-</li>
-</ol>
-<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ol>
-<li><p><a href="http://www.lsta.upmc.fr/documentation/distcomp.pdf" target="_blank" rel="external">Parallel Programming Toolbox User’s Guide</a></p>
-</li>
-<li><p><a href="http://hpc.kfupm.edu.sa/Documentation/MATLAB%20PARALLEL.pdf" target="_blank" rel="external">parallel computing with matlab</a></p>
-</li>
-</ol>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/MATLAB/">MATLAB</a>
-</div>
-
-
-  <div class="article-tags">
+<section class="post" itemscope itemprop="blogitem">
   
-  <span></span> <a href="/tags/matlab/">matlab</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/03/10/parallel-compute-in-matlab/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/03/10/parallel-compute-in-matlab/" data-count-type="comments">&nbsp;Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
+    <a href="/2016/03/10/parallel-compute-in-matlab/" title="matlab并行编程" itemprop="url">
+  
+    <h1 itemprop="name">matlab并行编程</h1>
+    
+     
+      <p itemprop="description" >MATLAB并行编程的方法总结</p>
+      
+    
+    <time datetime="2016-03-10T15:23:59.000Z" itemprop="datePublished">2016-03-10</time>
+  </a>
+</section>
 
 
 
@@ -537,162 +199,19 @@
 
 
    
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/03/08/code-optimize-in-matlab/" title="matlab代码优化" itemprop="url">matlab代码优化</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
-		
-  <p class="article-time">
-    <time datetime="2016-03-08T15:27:02.000Z" itemprop="datePublished"> 发表于 2016-03-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>最近做实验发现跑的时间实在太漫长了，其实主要原因是迭代次数比较大的原因，需要进一步读些paper，找到好的解决方法，但是也感觉对于MATLAB的代码优化还是需要好好掌握一下的，因为之前在做图像处理实验时就发现for循环和向量化之后的性能差异简直一天一地，所以今天google一下，感觉发现新大陆一样<a href="http://freemind.pluskid.org" target="_blank" rel="external">FreeMind</a>的<a href="http://freemind.pluskid.org/programming/recipes-for-faster-matlab-code/" target="_blank" rel="external">Recipes for Faster Matlab Code</a>的对k-medoids的一段代码的解释，收获颇丰，要好好的掌握下。原文就不贴了（主要是博主搞的太精致了，实在不忍心粘成txt格式的……），自己来总结一下吧。</p>
-<h1 id="一个栗子"><a href="#一个栗子" class="headerlink" title="一个栗子"></a>一个栗子</h1><figure class="highlight matlab"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="params">[label, energy, index]</span> = <span class="title">kmedoids</span><span class="params">(X,k)</span></span></div><div class="line"><span class="comment">% X: d x n data matrix</span></div><div class="line"><span class="comment">% k: number of cluster</span></div><div class="line"><span class="comment">% Written by Mo Chen (sth4nth@gamil.com)</span></div><div class="line">v = <span class="built_in">dot</span>(X,X,<span class="number">1</span>);</div><div class="line">D = <span class="built_in">bsxfun</span>(@plus,v,v')<span class="number">-2</span>*(X'*X);</div><div class="line">n = <span class="built_in">size</span>(X,<span class="number">2</span>);</div><div class="line">[~, label] = min(D(randsample(n,k),:));</div><div class="line">last = <span class="number">0</span>;</div><div class="line"><span class="keyword">while</span> any(label ~= last)</div><div class="line">    [~, index] = min(D*sparse(<span class="number">1</span>:n,label,<span class="number">1</span>,n,k,n));</div><div class="line">    last = label;</div><div class="line">    [val, label] = min(D(index,:),[],<span class="number">1</span>);</div><div class="line"><span class="keyword">end</span></div><div class="line">energy = sum(val);</div></pre></td></tr></table></figure>
-<ol>
-<li><p>dot(A, B, dim)函数，实际完成的是对两个矩阵对应元素相乘，然后在dim维上求和。主要可以在求两个点之间的距离时用得上。</p>
-</li>
-<li><p>bsxfun(FUNC,A,B)函数，实际上就是要对两个矩阵进行+，-，*，/等等的操作，只是有一个较强大的功能，当输入的A或B中某个dim是1，则会自动在这一维度上进行复制，形成两个大小一样的矩阵，再进行操作，这个功能类似于repmat，不过在freemind的blog中已经实验证明bsxfun 的性能略优于repmat。感觉还是很好用的！<br>还有个类似的meshgrid，help里面举得栗子</p>
- <figure class="highlight matlab"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[X,Y] = <span class="built_in">meshgrid</span>(<span class="number">-2</span>:<span class="number">.2</span>:<span class="number">2</span>, <span class="number">-4</span>:<span class="number">.4</span>:<span class="number">4</span>);</div></pre></td></tr></table></figure>
-<p> 得到的X和Y分别对-2:.2:2和-4:.4:4在行和列上进行了扩展。</p>
-</li>
-<li><p>randsample(n, k)函数，故名思议，从1：n个数中随机采用k个数（还有几个功能，遇到再整理吧）</p>
-</li>
-<li><p>S = sparse(i,j,s,m,n,nzmax)函数，产生一个稀疏矩阵，使用i,j,s来产生一个m X n的稀疏矩阵，其中S(i(k),j(k)) = s(k),共有nzmax个非零值。</p>
-<ul>
-<li><p>建议使用A = logical(sparse(m,n))，不建议使用 A = sparse(false(m,n))，两者结果一样，但是后者生成m×n的临时矩阵，浪费空间，且当m、n很大时，后者不一定能申请成功</p>
-</li>
-<li><p>由于matlab按照“先行后列”的方式读取数据（即先把第一列所有行读取完以后再读取第二列的各行），因此定义稀疏矩阵时，最好“行数&gt;列数”， 这样有利于寻址和空间的节省</p>
-</li>
-</ul>
-</li>
-<li><p>最后freemind那篇blog还提到了<a href="http://cn.mathworks.com/help/matlab/ref/profile.html" target="_blank" rel="external">profile</a>，主要是用来监测代码性能的工具，需要好好研究研究</p>
-</li>
-</ol>
-<h1 id="综述（总结）"><a href="#综述（总结）" class="headerlink" title="综述（总结）"></a>综述（总结）</h1><h2 id="编码技巧"><a href="#编码技巧" class="headerlink" title="编码技巧"></a>编码技巧</h2><ol>
-<li><p><strong>程序语法分析，消除warning项</strong></p>
-<ul>
-<li><p>没有分号结束符，输出会耗时</p>
-</li>
-<li><p>未初始化变量</p>
-</li>
-</ul>
-</li>
-<li><p><strong>内存预分配</strong>(循环内大数组预先定义)</p>
-</li>
-<li><p><strong>减少临时变量</strong>的使用</p>
-</li>
-<li><p>在迫不得已要使用较多循环而每一步都很耗时的时候，可以<strong>将每一步的结果保存成mat文件</strong>，然后<strong>在循环的开头用if语句与exist函数进行判断</strong>， 如果该文件存在的话，就直接进入下一次循环。这样做的好处是不会因为断电、电脑死机或误操作等原因而重头从第一个循环再次运行。（这个没试过）</p>
-</li>
-<li><p>有多层循环时，将<strong>循环次数多的放到内层</strong>，且有<strong>LOAD函数</strong>时尽量<strong>往外层放</strong></p>
-</li>
-<li><p>在for循环中，清零操作用赋值语句 A = B，其中B是在for循环外的一个同A大小一样的全0阵，不要使用A(:) = 0；但这样会大大影响后面的逐点运算速度。这个问题要请教高手，那就是<strong><em>“个别语句的改动会引起其他语句的执行速度”</em></strong>。</p>
-</li>
-<li><p>在必须使用循环时，可以考虑<strong>转换为C-MEX</strong><br>当必须使用耗时的循环时，可以考虑将循环体中的语句转换为C-MEX。C-MEX是将M文件通过MATLAB的编译器转换为可执行文件，是按照 MEX 技术要求的格式编写相应的程序，通过编译连接，生成扩展名为.dll的动态链接库文件，可以在MATLAB环境下直接执行。这样，循环体中的语句在执行时不必每次都解释(interpret)。一般来说，C-MEX 文件的执行速度是相同功能的M文件执行速率的20~40倍。编写C-MEX不同于M文件，需要了解MATLAB C-MEX规范。幸运的是MATLAB提供了将M文件转换为C-MEX的工具。</p>
-</li>
-<li><p>在可能的情况下，<strong>使用numeric array或者struct array</strong>，它们的效率大幅度高于cell array（几十倍甚至更多）。对于struct，尽可能使用普通的域（字段，field）访问方式，在非效率关键，执行次数较少，而灵活性要求较高的代码中，可以考虑使用动态名称的域访问。</p>
-</li>
-</ol>
-<h2 id="函数：内建函数，-m函数，匿名函数，句柄函数"><a href="#函数：内建函数，-m函数，匿名函数，句柄函数" class="headerlink" title="函数：内建函数，.m函数，匿名函数，句柄函数"></a>函数：内建函数，.m函数，匿名函数，句柄函数</h2><ol>
-<li><p><strong>尽量使用MATLAB的内部函数</strong></p>
-</li>
-<li><p><strong>利用内置函数自动记录运行结果</strong><br>matlab生成的结果变量只贮存在内存空间中，一旦matlab关闭则会丢失，很多时候需要手工将这些结果存储到我们需要的文件中。事实上，matlab提供 了很多函数可以自动记录结果，如fprintf可以将数据写入txt文件，xlswrite可以将数据写入excel文件等等。这样自动化的命令可以缩减大量时间， 从而提高效率。</p>
-</li>
-<li><p><strong>用函数代替脚本文件</strong><br>调用多次的计算代码写成函数形式，而不是写在脚本程序中，因为Matlab中，函数是被翻译成微码的，执行效率更高。</p>
-</li>
-<li><p><strong>二维矩阵转置</strong>操作可以用以下三种方法进行，三者的效率基本一样（时空），如果遇到三维以上的矩阵要转置，用permute命令较为方便：<br>a) A = A’;<br>b) A = permute(A,[2,1]);<br>c) A = shiftdim(A,1);</p>
-</li>
-<li><p>“使用<strong>eval方式</strong>动态存储多个一维数组”比“使用二维数组动态存储多个一维数组”要快，这个没有看太懂，help eval，看到如下代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">expression = input(&apos;Enter the name of a matrix: &apos;,&apos;s&apos;);</div><div class="line">if (exist(expression,&apos;var&apos;))</div><div class="line">	plot(eval(expression))</div><div class="line">end</div></pre></td></tr></table></figure>
-<p>大概能理解就是判断用户输入的变量是否存在于当前变量空间中。</p>
-</li>
-<li><p><strong>corrcoef函数</strong>，求整个矩阵所有列的相关系数，因为我只需要求出某一列跟其他各列的相关 系数，所以参照corrcoef函数自己写了一个</p>
-</li>
-<li><p><strong>内存管理函数和命令</strong><br>（1）Clear variablename：从内存中删除名称为variablename的变量。<br>（2）Clear all：从内存中删除所有的变量。<br>（3）Save：将指令的变量存入磁盘。<br>（4）Load：将save命令存入的变量载入内存。<br>（5）Quit：退出MATLAB，并释放所有分配的内存。<br>（6）Pack：把内存中的变量存入磁盘，再用内存中的连续空间载回这些变量。考虑到执行效率问题，不能在循环中使用。</p>
-</li>
-<li><p>最常用的使用<strong>vectorizing技术</strong>的函数有：All、diff、ipermute、permute、reshape、ueeze、y、find、logical、prod、shiftdim、sub2ind、cumsum、ind2sub、ndgrid、repmat、sort、sum 等。</p>
-</li>
-<li><p>用一个循环建立一个向量，其元素依赖于前一个元素使用的工具：<strong>FILTER, CUMSUM, CUMPROD</strong></p>
-<ul>
-<li><p>filter<br>   优化前： </p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">A = 1; </div><div class="line">L = 1000; </div><div class="line">for i = 1:L </div><div class="line">  A(i+1) = 2*A(i)+1; </div><div class="line">end</div></pre></td></tr></table></figure>
-<p>  优化后： </p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">L = 1000; </div><div class="line">A = filter([1],[1 -2],ones(1,L+1));</div></pre></td></tr></table></figure>
-</li>
-<li><p>cumsum或cumprod函数：如果向量构造只使用加法或乘法<br>  优化前： </p>
-  <figure class="highlight matlab"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">n=<span class="number">10000</span>; </div><div class="line">V_B=<span class="number">100</span>*<span class="built_in">ones</span>(<span class="number">1</span>,n); </div><div class="line">V_B2=<span class="number">100</span>*<span class="built_in">ones</span>(<span class="number">1</span>,n); </div><div class="line">ScaleFactor=<span class="built_in">rand</span>(<span class="number">1</span>,n<span class="number">-1</span>); </div><div class="line"><span class="keyword">for</span> <span class="built_in">i</span> = <span class="number">2</span>:n </div><div class="line">   V_B(<span class="built_in">i</span>) = V_B(<span class="built_in">i</span><span class="number">-1</span>)*(<span class="number">1</span>+ScaleFactor(<span class="built_in">i</span><span class="number">-1</span>)); </div><div class="line"><span class="keyword">end</span> </div><div class="line"><span class="keyword">for</span> <span class="built_in">i</span>=<span class="number">2</span>:n </div><div class="line">   V_B2(<span class="built_in">i</span>) = V_B2(<span class="built_in">i</span><span class="number">-1</span>)+<span class="number">3</span>; </div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
-<p>  优化后： </p>
-  <figure class="highlight matlab"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">n=<span class="number">10000</span>; </div><div class="line">V_A=<span class="number">100</span>*<span class="built_in">ones</span>(<span class="number">1</span>,n); </div><div class="line">V_A2 = <span class="number">100</span>*<span class="built_in">ones</span>(<span class="number">1</span>,n); </div><div class="line">ScaleFactor=<span class="built_in">rand</span>(<span class="number">1</span>,n<span class="number">-1</span>); </div><div class="line">V_A=cumprod([<span class="number">100</span> <span class="number">1</span>+ScaleFactor]); </div><div class="line">V_A2=cumsum([<span class="number">100</span> <span class="number">3</span>*ones(<span class="number">1</span>,n<span class="number">-1</span>)]);</div></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-<li><p>MATLAB的函数调用过程（非built-in function）有显著开销，因此，在效率要求较高的代码中，应该尽可能采用<strong>扁平的调用结构</strong>，也就是在保持代码清晰和可维护的情况下，<strong>尽量直接写表达式和利用built-in function</strong>，避免不必要的自定义函数调用过程。在次数很多的循环体内（包括在cellfun, arrayfun等实际上蕴含循环的函数）形成长调用链，会带来很大的开销。</p>
-<blockquote>
-<p>注：感觉这里好像和上面第三条矛盾了，不过我想应该尽量使用内建函数来实现需求吧，这样既可以减少使用自己建的函数，也可以提升脚本代码的效率。</p>
-</blockquote>
-</li>
-<li><p>在调用函数时，<strong>首选built-in function，然后是普通的m-file函数，然后才是function handle或者anonymous function</strong>。在使用function handle或者anonymous function作为参数传递时，如果该函数被调用多次，最好先用一个变量接住，再传入该变量。这样，可以有效避免重复的解析过程。（其实这条在<a href="http://m.blog.csdn.net/article/details?id=29408981" target="_blank" rel="external">matlab代码优化</a>中有举了一个栗子来验证得到的结果）</p>
-</li>
-</ol>
-<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ul>
-<li><p><a href="http://freemind.pluskid.org" target="_blank" rel="external">FreeMind</a></p>
-</li>
-<li><p><a href="http://blog.csdn.net/linj_m/article/details/9730717" target="_blank" rel="external"> Matlab高性能编程——代码优化和并行计算</a></p>
-</li>
-<li><p><a href="http://ibillxia.github.io/blog/2012/04/25/matlab-code-optimization/" target="_blank" rel="external">Matlab代码优化方法几则</a></p>
-</li>
-<li><p><a href="http://www.cnblogs.com/emanlee/archive/2012/02/27/2370504.html" target="_blank" rel="external">matlab程序性能优化与混合编程技术介绍</a></p>
-</li>
-<li><p><a href="http://www.zhizhihu.com/html/y2010/1670.html" target="_blank" rel="external">优化Matlab语言，提高运行速度</a>，这篇blog里面讲了很多很细致的点，需要好好消化</p>
-</li>
-<li><p><a href="http://m.blog.csdn.net/article/details?id=29408981" target="_blank" rel="external">matlab代码优化</a>，这篇被转了多次好像找不到源主了，有点杂</p>
-</li>
-</ul>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/MATLAB/">MATLAB</a>
-</div>
-
-
-  <div class="article-tags">
+<section class="post" itemscope itemprop="blogitem">
   
-  <span></span> <a href="/tags/matlab/">matlab</a><a href="/tags/code-optimize/">code optimize</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/03/08/code-optimize-in-matlab/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/03/08/code-optimize-in-matlab/" data-count-type="comments">&nbsp;Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
+    <a href="/2016/03/08/code-optimize-in-matlab/" title="matlab代码优化" itemprop="url">
+  
+    <h1 itemprop="name">matlab代码优化</h1>
+    
+     
+      <p itemprop="description" >各种MATLAB代码优化的奇技淫巧</p>
+      
+    
+    <time datetime="2016-03-08T15:27:02.000Z" itemprop="datePublished">2016-03-08</time>
+  </a>
+</section>
 
 
 
@@ -700,89 +219,19 @@
 
 
    
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/03/02/machine-lerning-reference/" title="机器学习推荐资源" itemprop="url">机器学习推荐资源</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
-		
-  <p class="article-time">
-    <time datetime="2016-03-02T15:00:40.000Z" itemprop="datePublished"> 发表于 2016-03-02</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="各种机器学习相关的网络资源"><a href="#各种机器学习相关的网络资源" class="headerlink" title="各种机器学习相关的网络资源~"></a>各种机器学习相关的网络资源~</h1><h2 id="blog"><a href="#blog" class="headerlink" title="blog"></a><strong>blog</strong></h2><ul>
-<li><p><a href="http://www.cnblogs.com/maybe2030" target="_blank" rel="external">Poll的笔记</a> (ML算法,python,Hadoop,计算广告学…)</p>
-</li>
-<li><p><a href="http://blog.csdn.net/yaoqiang2011/article/" target="_blank" rel="external">寒小阳</a>(ML学分计划)</p>
-</li>
-<li><p><a href="http://blog.csdn.net/v_july_v" target="_blank" rel="external">July的博客</a>(面试、算法、机器学习)</p>
-</li>
-<li><p><a href="http://www.52nlp.cn/" target="_blank" rel="external">我爱自然语言处理</a>(prml读书会)</p>
-</li>
-<li><p><a href="http://blog.csdn.net/zouxy09" target="_blank" rel="external">zouxy09的专栏</a>(deeplearning, ml算法Python实践)</p>
-</li>
-<li><p><a href="http://www.autonlab.org/tutorials/" target="_blank" rel="external">Statistical Data Mining Tutorials</a></p>
-</li>
-<li><p><a href="http://www.cnblogs.com/tornadomeet/archive/2012/06/24/2560261.html" target="_blank" rel="external">tornadomeet</a>(dl学习笔记)</p>
-</li>
-<li><p><a href="http://www.ruanyifeng.com/blog/algorithm/" target="_blank" rel="external">阮一峰的网络日志</a>(算法和数学)</p>
-</li>
-<li><p><a href="http://www.cnblogs.com/murongxixi/category/539782.html" target="_blank" rel="external">慕容熙熙的博客</a>(优化方法)</p>
-</li>
-<li><p><a href="http://freemind.pluskid.org/" target="_blank" rel="external">Free Mind</a>(精致，太精致了！)</p>
-</li>
-</ul>
-<h2 id="book"><a href="#book" class="headerlink" title="book"></a><strong>book</strong></h2><ul>
-<li><a href="http://neuralnetworksanddeeplearning.com/" target="_blank" rel="external">Neural Networks and Deep Learning</a>(Python代码实践)</li>
-</ul>
-<h2 id="平台"><a href="#平台" class="headerlink" title="平台"></a><strong>平台</strong></h2><ul>
-<li><a href="http://hyperverge.co/" target="_blank" rel="external">hyperverge</a>(一个deeplearning的应用平台，里面的technology部分有很多很好的链接资源)</li>
-</ul>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Machine-Learning/">Machine Learning</a>
-</div>
-
-
-  <div class="article-tags">
+<section class="post" itemscope itemprop="blogitem">
   
-  <span></span> <a href="/tags/machine-learning/">machine learning</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/03/02/machine-lerning-reference/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/03/02/machine-lerning-reference/" data-count-type="comments">&nbsp;Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
+    <a href="/2016/03/02/machine-lerning-reference/" title="机器学习推荐资源" itemprop="url">
+  
+    <h1 itemprop="name">机器学习推荐资源</h1>
+    
+     
+      <p itemprop="description" >各种机器学习相关的网络资源</p>
+      
+    
+    <time datetime="2016-03-02T15:00:40.000Z" itemprop="datePublished">2016-03-02</time>
+  </a>
+</section>
 
 
 
@@ -790,63 +239,19 @@
 
 
    
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/02/24/logical-type-in-matlab/" title="logical type in matlab" itemprop="url">logical type in matlab</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
-		
-  <p class="article-time">
-    <time datetime="2016-02-24T15:30:47.000Z" itemprop="datePublished"> 发表于 2016-02-24</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>logical类型数据并不经常用到，今天在学习Ng课程的collaborative filter时，示例代码中有用到，故做个总结<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2016/02/24/logical-type-in-matlab/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/MATLAB/">MATLAB</a>
-</div>
-
-
-  <div class="article-tags">
+<section class="post" itemscope itemprop="blogitem">
   
-  <span></span> <a href="/tags/matlab/">matlab</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/02/24/logical-type-in-matlab/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/02/24/logical-type-in-matlab/" data-count-type="comments">&nbsp;Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
+    <a href="/2016/02/24/logical-type-in-matlab/" title="logical type in matlab" itemprop="url">
+  
+    <h1 itemprop="name">logical type in matlab</h1>
+    
+     
+       <p itemprop="description" >logical类型数据并不经常用到，今天在学习Ng课程的collaborative filter时，示例代码中有用到，故做个总结</p>
+      
+    
+    <time datetime="2016-02-24T15:30:47.000Z" itemprop="datePublished">2016-02-24</time>
+  </a>
+</section>
 
 
 
@@ -854,63 +259,19 @@
 
 
    
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/02/24/duplicate-matrix-from-vector-in-matlab/" title="matlab中将向量复制成矩阵" itemprop="url">matlab中将向量复制成矩阵</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
-		
-  <p class="article-time">
-    <time datetime="2016-02-24T15:29:23.000Z" itemprop="datePublished"> 发表于 2016-02-24</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="向量复制成矩阵常用方法是repmat"><a href="#向量复制成矩阵常用方法是repmat" class="headerlink" title="向量复制成矩阵常用方法是repmat"></a>向量复制成矩阵常用方法是repmat</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&gt;&gt; a = [2 3 4];</div><div class="line">&gt;&gt; b = repmat(a, 3, 1)</div><div class="line"></div><div class="line">b =</div><div class="line"></div><div class="line">     2     3     4</div><div class="line">     2     3     4</div><div class="line">     2     3     4</div></pre></td></tr></table></figure>
-<h1 id="今天还发现了一种复制的方法"><a href="#今天还发现了一种复制的方法" class="headerlink" title="今天还发现了一种复制的方法"></a>今天还发现了一种复制的方法</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">&gt;&gt; c = a(ones(3, 1), :)</div><div class="line"></div><div class="line">c =</div><div class="line"></div><div class="line">     2     3     4</div><div class="line">     2     3     4</div><div class="line">     2     3     4</div><div class="line">&gt;&gt; d = [2 3 4]&apos;;</div><div class="line">&gt;&gt; e = d(:, ones(3, 1))</div><div class="line"></div><div class="line">e =</div><div class="line"></div><div class="line">     2     2     2</div><div class="line">     3     3     3</div><div class="line">     4     4     4</div></pre></td></tr></table></figure>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/MATLAB/">MATLAB</a>
-</div>
-
-
-  <div class="article-tags">
+<section class="post" itemscope itemprop="blogitem">
   
-  <span></span> <a href="/tags/matlab/">matlab</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/02/24/duplicate-matrix-from-vector-in-matlab/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/02/24/duplicate-matrix-from-vector-in-matlab/" data-count-type="comments">&nbsp;Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
+    <a href="/2016/02/24/duplicate-matrix-from-vector-in-matlab/" title="matlab中将向量复制成矩阵" itemprop="url">
+  
+    <h1 itemprop="name">matlab中将向量复制成矩阵</h1>
+    
+     
+      <p itemprop="description" >如题~</p>
+      
+    
+    <time datetime="2016-02-24T15:29:23.000Z" itemprop="datePublished">2016-02-24</time>
+  </a>
+</section>
 
 
 
@@ -918,7 +279,7 @@
 
 
 
-  <nav id="page-nav" class="clearfix">
+  <nav id="page-nav" class="clearfix unexpand">
     <a class="extend prev" rel="prev" href="/page/4/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/6/">Next<span></span></a>
   </nav>
 
@@ -931,7 +292,7 @@
 
   
 <div class="categorieslist">
-	<p class="asidetitle">分类</p>
+	<p class="asidetitle">Categories</p>
 		<ul>
 		
 		  
@@ -976,7 +337,7 @@
 
   
 <div class="tagslist">
-	<p class="asidetitle">标签</p>
+	<p class="asidetitle">Tags</p>
 		<ul class="clearfix">
 		
 			
@@ -1016,11 +377,11 @@
 			
 		
 			
-				<li><a href="/tags/tattle/" title="tattle">tattle<sup>3</sup></a></li>
+				<li><a href="/tags/Optimization/" title="Optimization">Optimization<sup>3</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Optimization/" title="Optimization">Optimization<sup>3</sup></a></li>
+				<li><a href="/tags/tattle/" title="tattle">tattle<sup>3</sup></a></li>
 			
 		
 			
@@ -1028,11 +389,11 @@
 			
 		
 			
-				<li><a href="/tags/Tattle/" title="Tattle">Tattle<sup>1</sup></a></li>
+				<li><a href="/tags/code-optimize/" title="code optimize">code optimize<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/code-optimize/" title="code optimize">code optimize<sup>1</sup></a></li>
+				<li><a href="/tags/Tattle/" title="Tattle">Tattle<sup>1</sup></a></li>
 			
 		
 			
@@ -1044,8 +405,14 @@
 
 
   <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
+  <p class="asidetitle">Links</p>
     <ul>
+        
+          <li>
+            
+            	<a href="http://palm.seu.edu.cn/" target="_blank" title="PALM主页">PALM主页</a>
+            
+          </li>
         
           <li>
             
@@ -1094,13 +461,21 @@
 		
 
 		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2017 
 		
 		<a href="/about" target="_blank" title="heimingx">heimingx</a>
 		
-		
+		<br>
+		<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+		</script>
+		<span id="busuanzi_container_site_pv">
+    	&nbsp;&nbsp;Total visits:&nbsp;<span id="busuanzi_value_site_pv" style="color:orange"></span>
+		</span>
+		<span id="busuanzi_container_site_uv">
+  		&nbsp;&nbsp;You are Visiter No.<span id="busuanzi_value_site_uv" style="color:orange"></span>
+		</span>
 		</p>
-</div>
+</div>	
 </footer>
     <script src="/js/jquery-2.0.3.min.js"></script>
 <script src="/js/jquery.imagesloaded.min.js"></script>

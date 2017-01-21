@@ -14,7 +14,7 @@
     })();
   </script>
 
-    <title>CS231n:Optimization: Stochastic Gradient Descent | Heiming Xu</title>
+    <title>CS231n:Optimization: Stochastic Gradient Descent | Heiming&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="heimingx">
@@ -27,7 +27,7 @@ OptimizationStrategy 1: Random">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CS231n:Optimization: Stochastic Gradient Descent">
 <meta property="og:url" content="http://heimignx.cn/2016/08/15/cs231n-optimization-sgd/index.html">
-<meta property="og:site_name" content="Heiming Xu">
+<meta property="og:site_name" content="Heiming's Blog">
 <meta property="og:description" content="这一节主要介绍一种优化方法，随机梯度下降，用于求解前面章节提到的目标函数中的权重矩阵$W$.
 Visualizing the loss function这里主要通过一些简单的例子来表明，我们所要求解的目标函数是一个凸问题，通过形象化的图形来体会优化的过程。同时，课程中也提到如果在神经网络中，目标函数就不再是凸的了，所以需要新的求解方法。
 OptimizationStrategy 1: Random">
@@ -39,7 +39,7 @@ Visualizing the loss function这里主要通过一些简单的例子来表明，
 OptimizationStrategy 1: Random">
 
     
-    <link rel="alternative" href="/atom.xml" title="Heiming Xu" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="Heiming&#39;s Blog" type="application/atom+xml">
     
     
     <link rel="icon" href="/img/titanicCats.ico">
@@ -54,7 +54,7 @@ OptimizationStrategy 1: Random">
 <div>
 		
 			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="Heiming Xu">Heiming Xu</a></h1>
+				<h1 class="site-name"><a href="/" title="Heiming&#39;s Blog">Heiming&#39;s Blog</a></h1>
 				<h2 class="blog-motto">Optimize Life</h2>
 			</div>
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
@@ -67,17 +67,15 @@ OptimizationStrategy 1: Random">
 					
 						<li><a href="/archives">Archives</a></li>
 					
-						<li><a href="/reference">Reference</a></li>
-					
-						<li><a href="/about">About</a></li>
+						<li><a href="/about">Me</a></li>
 					
 					<li>
  					
-					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+					<!--<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
 						<label>Search</label>
-						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="search..." />
 						<input type="hidden" name="q" value="site:heimignx.cn">
-					</form>
+					</form>-->
 					
 					</li>
 				</ul>
@@ -93,23 +91,18 @@ OptimizationStrategy 1: Random">
     
       <a href="/2016/08/15/cs231n-optimization-sgd/" title="CS231n:Optimization: Stochastic Gradient Descent" itemprop="url">CS231n:Optimization: Stochastic Gradient Descent</a>
   </h1>
-  <p class="article-author">By
+  <!--<p class="article-author">By
        
 		<a href="/about" title="heimingx" target="_blank" itemprop="author">heimingx</a>
-		
+		 -->
   <p class="article-time">
     <time datetime="2016-08-15T12:20:45.000Z" itemprop="datePublished"> 发表于 2016-08-15</time>
-    
+    <span id="busuanzi_container_page_pv">
+    总阅读<span id="busuanzi_value_page_pv"></span>次
+</span>
   </p>
 </header>
 	<div class="article-content">
-		
-		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目录</strong>
-		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Visualizing-the-loss-function"><span class="toc-number">1.</span> <span class="toc-text">Visualizing the loss function</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Optimization"><span class="toc-number">2.</span> <span class="toc-text">Optimization</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Strategy-1-Random-Search"><span class="toc-number">2.1.</span> <span class="toc-text">Strategy 1: Random Search</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Strategy-2-Random-Local-Search"><span class="toc-number">2.2.</span> <span class="toc-text">Strategy 2: Random Local Search</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Strategy-3-Following-the-gradient"><span class="toc-number">2.3.</span> <span class="toc-text">Strategy 3: Following the gradient</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Computing-the-gradient"><span class="toc-number">3.</span> <span class="toc-text">Computing the gradient</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Numerically-with-finite-differences"><span class="toc-number">3.1.</span> <span class="toc-text">Numerically with finite differences</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Analytically-with-calculus"><span class="toc-number">3.2.</span> <span class="toc-text">Analytically with calculus</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Gradient-Descent"><span class="toc-number">4.</span> <span class="toc-text">Gradient Descent</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#reference"><span class="toc-number">5.</span> <span class="toc-text">reference</span></a></li></ol>
-		
-		</div>
 		
 		<p>这一节主要介绍一种优化方法，随机梯度下降，用于求解前面章节提到的目标函数中的权重矩阵$W$.</p>
 <h1 id="Visualizing-the-loss-function"><a href="#Visualizing-the-loss-function" class="headerlink" title="Visualizing the loss function"></a>Visualizing the loss function</h1><p>这里主要通过一些简单的例子来表明，我们所要求解的目标函数是一个凸问题，通过形象化的图形来体会优化的过程。同时，课程中也提到如果在神经网络中，目标函数就不再是凸的了，所以需要新的求解方法。</p>
@@ -155,7 +148,7 @@ OptimizationStrategy 1: Random">
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://heimignx.cn/2016/08/15/cs231n-optimization-sgd/" data-title="CS231n:Optimization: Stochastic Gradient Descent | Heiming Xu" data-tsina="null" class="share clearfix">
+	  <div data-url="http://heimignx.cn/2016/08/15/cs231n-optimization-sgd/" data-title="CS231n:Optimization: Stochastic Gradient Descent | Heiming&#39;s Blog" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -196,20 +189,13 @@ OptimizationStrategy 1: Random">
 </div>  
       <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 
-  <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目录</strong>
- 
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Visualizing-the-loss-function"><span class="toc-number">1.</span> <span class="toc-text">Visualizing the loss function</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Optimization"><span class="toc-number">2.</span> <span class="toc-text">Optimization</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Strategy-1-Random-Search"><span class="toc-number">2.1.</span> <span class="toc-text">Strategy 1: Random Search</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Strategy-2-Random-Local-Search"><span class="toc-number">2.2.</span> <span class="toc-text">Strategy 2: Random Local Search</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Strategy-3-Following-the-gradient"><span class="toc-number">2.3.</span> <span class="toc-text">Strategy 3: Following the gradient</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Computing-the-gradient"><span class="toc-number">3.</span> <span class="toc-text">Computing the gradient</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Numerically-with-finite-differences"><span class="toc-number">3.1.</span> <span class="toc-text">Numerically with finite differences</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Analytically-with-calculus"><span class="toc-number">3.2.</span> <span class="toc-text">Analytically with calculus</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Gradient-Descent"><span class="toc-number">4.</span> <span class="toc-text">Gradient Descent</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#reference"><span class="toc-number">5.</span> <span class="toc-text">reference</span></a></li></ol>
- 
-  </div>
-
 <div id="asidepart">
 <div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
 <aside class="clearfix">
 
   
 <div class="categorieslist">
-	<p class="asidetitle">分类</p>
+	<p class="asidetitle">Categories</p>
 		<ul>
 		
 		  
@@ -254,7 +240,7 @@ OptimizationStrategy 1: Random">
 
   
 <div class="tagslist">
-	<p class="asidetitle">标签</p>
+	<p class="asidetitle">Tags</p>
 		<ul class="clearfix">
 		
 			
@@ -294,11 +280,11 @@ OptimizationStrategy 1: Random">
 			
 		
 			
-				<li><a href="/tags/tattle/" title="tattle">tattle<sup>3</sup></a></li>
+				<li><a href="/tags/Optimization/" title="Optimization">Optimization<sup>3</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Optimization/" title="Optimization">Optimization<sup>3</sup></a></li>
+				<li><a href="/tags/tattle/" title="tattle">tattle<sup>3</sup></a></li>
 			
 		
 			
@@ -306,11 +292,11 @@ OptimizationStrategy 1: Random">
 			
 		
 			
-				<li><a href="/tags/Tattle/" title="Tattle">Tattle<sup>1</sup></a></li>
+				<li><a href="/tags/code-optimize/" title="code optimize">code optimize<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/code-optimize/" title="code optimize">code optimize<sup>1</sup></a></li>
+				<li><a href="/tags/Tattle/" title="Tattle">Tattle<sup>1</sup></a></li>
 			
 		
 			
@@ -322,8 +308,14 @@ OptimizationStrategy 1: Random">
 
 
   <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
+  <p class="asidetitle">Links</p>
     <ul>
+        
+          <li>
+            
+            	<a href="http://palm.seu.edu.cn/" target="_blank" title="PALM主页">PALM主页</a>
+            
+          </li>
         
           <li>
             
@@ -372,13 +364,21 @@ OptimizationStrategy 1: Random">
 		
 
 		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2017 
 		
 		<a href="/about" target="_blank" title="heimingx">heimingx</a>
 		
-		
+		<br>
+		<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+		</script>
+		<span id="busuanzi_container_site_pv">
+    	&nbsp;&nbsp;Total visits:&nbsp;<span id="busuanzi_value_site_pv" style="color:orange"></span>
+		</span>
+		<span id="busuanzi_container_site_uv">
+  		&nbsp;&nbsp;You are Visiter No.<span id="busuanzi_value_site_uv" style="color:orange"></span>
+		</span>
 		</p>
-</div>
+</div>	
 </footer>
     <script src="/js/jquery-2.0.3.min.js"></script>
 <script src="/js/jquery.imagesloaded.min.js"></script>
@@ -429,8 +429,6 @@ $(document).ready(function(){
       m.removeClass('moveMain');
       a.css('display', 'block').removeClass('fadeOut');
       o.css('display', 'none');
-      
-      $('#toc.toc-aside').css('display', 'none');
         
     }
   });
