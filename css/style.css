@@ -443,12 +443,13 @@ body >header a {
 /*text-align center*/
 /*width 75%*/
 /*margin auto*/
-  margin-left: 15em;
-  width: 15em;
+  margin-left: 10em;
+  width: 20em;
 }
 #textlogo h1.site-name {
   width: 86%;
-  font-family: "Helvetica Neue", "Helvetica", "Microsoft YaHei", "WenQuanYi Micro Hei", Arial, sans-serif;
+/*font-family font-default*/
+  font-family: Cursive, serif;
   font-size: 160%;
   line-height: 1.9;
   font-weight: bold;
@@ -522,7 +523,7 @@ header nav {
     float: right;
     width: auto;
     margin-top: -3.5em;
-    margin-right: 15em;
+    margin-right: 7em;
     max-height: none;
   }
 }
