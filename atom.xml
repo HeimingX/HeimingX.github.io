@@ -1067,6 +1067,55 @@
   </entry>
   
   <entry>
+    <title>Goldstein-Armijo Rule and backtracking line search</title>
+    <link href="http://heimignx.cn/2016/06/28/Goldstein-Armijo-Rule-and-backtracking-line-search/"/>
+    <id>http://heimignx.cn/2016/06/28/Goldstein-Armijo-Rule-and-backtracking-line-search/</id>
+    <published>2016-06-28T15:21:47.000Z</published>
+    <updated>2016-10-15T14:06:53.918Z</updated>
+    
+    <content type="html"><![CDATA[<p>在迭代型算法的优化问题中，我们经常会看到用Armijo Rule来更新步长，找到一个可行点进入下一次迭代。下面将我对Armijo的理解整理下来。</p>
+<h1 id="Goldstein-Armijo-Rule"><a href="#Goldstein-Armijo-Rule" class="headerlink" title="Goldstein-Armijo Rule"></a>Goldstein-Armijo Rule</h1><p>我们这里以梯度方法为例：</p>
+<blockquote>
+<p>初始点 $x_0 \in R^n$<br>迭代 ： $ x_{k+1} = x_k - h_k f’(x_k), k=0,1,… $</p>
+</blockquote>
+<p>这里$h_k$表示步长（大于0），$f’(x_k)$表示函数$f(x)$在$x_k$这一点的梯度方向。前面为负表示负梯度方向为函数下降最快的方向，至于为什么在这一点会下降最快，其实是有很好的理论证明的，后面有时间整理出来。<br>那么，对于步长的确定可以有很多方法，最简单的一种便是提前预定义好：<br>$$h_k = h &gt; 0$$<br>$$h_k = \frac{h}{\sqrt{k+1}}$$<br>这种方法在凸优化的框架下使用较多，主要由于凸优化函数的变化趋势是可预测的。<br>另外还有一种非常理想化的方法：<br>$$h_k = arg \min_{h\geq0}f(x_k - h f’(x_k))$$<br>显然，这种方法在实际的运用中属于空中楼阁，并没有可操作性。<br>下面最最常用的便是Armijo Rule了：</p>
+<blockquote>
+<p>Find $x_{k+1} = x_k - h f’(x_k)$ such that</p>
+<p>$$\alpha &lt;f’(x_k), x_k - x_{k+1}&gt; \quad \leq \quad f(x_k) - f(x_{k+1}) \tag 1$$</p>
+<p>$$\beta &lt;f’(x_k), x_k - x_{k+1}&gt; \quad \geq \quad f(x_k) - f(x_{k+1}) \tag 2$$<br>where $0 &lt; \alpha &lt; \beta &lt; 1$ are some fixed parameters</p>
+</blockquote>
+<p>对于这个规则，可能咋看并不能理解他的意图，下面通过一段证明来看一下这个规则的作用。</p>
+<h1 id="证明"><a href="#证明" class="headerlink" title="证明"></a>证明</h1><p>假设有如下问题<br>$$\min_{x\in R^n} f(x)$$<br>其中$f\in C^{1,1}_L(R^n)$。并且，我们这里假设函数有下界。</p>
+<blockquote>
+<p>这里$f\in C^{1,1}_L(R^n)$表示函数$f(x)$在$R^n$上是一阶连续可微的，并且其一阶导满足Lipschitz 连续性，参数为L,具体的公式如下<br>$$|f(y)-f(x)-&lt;f’(x), y-x&gt;| \quad \leq \quad \frac{L}{2} ||y-x||^2$$</p>
+</blockquote>
+<p>对于一个gradient step，我们有</p>
+<p>\begin{align}<br>f(y) &amp; \leq  f(x) + &lt;f’(x), y-x&gt; + \frac{L}{2}|y-x|^2 \\<br>&amp; = f(x) - h|f’(x)|^2 + \frac{h^2}{2}L|f’(x)|^2 \\<br>&amp; = f(x) - h(1-\frac{h}{2}L)|f’(x)|^2 \tag 3<br>\end{align}</p>
+<p>所以，为了使得我们的目标函数值有尽大程度的减小，我们需要求解下面的一维问题：<br>$$\Delta(h) = -h(1-\frac{h}{2}L) \to \min_h$$<br>对上式求导，得到$\Delta’(h)=hL-1=0$,所以$h^* = \frac{1}{L}$,由于$\Delta’’(h)=L \gt 0$,所以此时取得最小值。这样，将其代入上式，我们就能够得到单步梯度下降，目标函数值至少下降多少的形式：<br>$$f(y)\leq f(x)-\frac{1}{2L}|f’(x)|^2 \tag 4$$</p>
+<p>下面，我们来看一下Armijo Rule规定的两个式子与这目标函数值最小下降之间的关系。<br>首先，令$x_{k+1} = x_k - h_k f’(x_k)$,对于固定步长策略$h_k = h$,我们有<br>$$f(x_k) - f(x_{k+1}) \geq h(1-\frac{h}{2}L)|f’(x)|^2$$<br>所以当我们选择$h_k = \frac{2\alpha}{L}, \alpha \in (0, 1)$时，有</p>
+<p>$$f(x_k) - f(x_{k+1}) \geq \frac{2}{L}\alpha (1-\alpha)|f’(x)|^2 \tag 5$$</p>
+<p>显然，当$\alpha = \frac{1}{2}$时，取得最大值，即为前面(4)式等价。<br>接着，我们考虑Armijo Rule提到的两个式子：<br>首先，我们考虑公式（2），有<br>$$f(x_k)-f(x_{k+1}) \quad \leq \quad \beta &lt;f’(x_k), x_k-x_{k+1}&gt;\quad = \quad\beta h_k |f’(x)|^2$$<br>结合公式（3），我们有<br>$$h_k \geq \frac{2}{L}(1-\beta) \tag 6$$<br>接着，我们考虑公式（1），有</p>
+<p>$$f(x_k)-f(x_{k+1}) \quad \geq \quad \alpha &lt;f’(x_k), x_k-x_{k+1}&gt;\quad = \quad\alpha h_k |f’(x)|^2$$</p>
+<p>结合不等式（6），我们有</p>
+<p>$$f(x_k)-f(x_{k+1}) \quad \geq \quad \frac{2}{L}\alpha(1-\beta)|f’(x_k)|^2 \tag 7$$</p>
+<p>结合公式（4）（5）（7），容易得到<br>$$\frac{2}{L}\alpha(1-\beta) \leq \frac{2}{L}\alpha(1-\alpha) \leq \frac{1}{2L}, 0\leq \alpha \leq \beta \leq 1$$<br>所以，这表明对于给定的$\alpha,\beta$，只要满足公式（1）（2），就至少有公式（7）的下降程度，也就更趋近于最大下降（相当于满足了我们期望的下降）。</p>
+<h1 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h1><p>[1] : introductory lectures on convex optimization: a basic course(26页), Yurii Nesterov</p>
+]]></content>
+    
+    <summary type="html">
+    
+      Goldstein-Armijo规则以及回溯线性搜索
+    
+    </summary>
+    
+      <category term="Optimization" scheme="http://heimignx.cn/categories/Optimization/"/>
+    
+    
+      <category term="Optimization" scheme="http://heimignx.cn/tags/Optimization/"/>
+    
+  </entry>
+  
+  <entry>
     <title>LibSVM在MATLAB中应用及一些问题</title>
     <link href="http://heimignx.cn/2016/06/28/use-LibSVM-in-MATLAB/"/>
     <id>http://heimignx.cn/2016/06/28/use-LibSVM-in-MATLAB/</id>
@@ -1265,55 +1314,6 @@
     
     
       <category term="Latex" scheme="http://heimignx.cn/tags/Latex/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Goldstein-Armijo Rule and backtracking line search</title>
-    <link href="http://heimignx.cn/2016/06/28/Goldstein-Armijo-Rule-and-backtracking-line-search/"/>
-    <id>http://heimignx.cn/2016/06/28/Goldstein-Armijo-Rule-and-backtracking-line-search/</id>
-    <published>2016-06-28T15:21:47.000Z</published>
-    <updated>2016-10-15T14:06:53.918Z</updated>
-    
-    <content type="html"><![CDATA[<p>在迭代型算法的优化问题中，我们经常会看到用Armijo Rule来更新步长，找到一个可行点进入下一次迭代。下面将我对Armijo的理解整理下来。</p>
-<h1 id="Goldstein-Armijo-Rule"><a href="#Goldstein-Armijo-Rule" class="headerlink" title="Goldstein-Armijo Rule"></a>Goldstein-Armijo Rule</h1><p>我们这里以梯度方法为例：</p>
-<blockquote>
-<p>初始点 $x_0 \in R^n$<br>迭代 ： $ x_{k+1} = x_k - h_k f’(x_k), k=0,1,… $</p>
-</blockquote>
-<p>这里$h_k$表示步长（大于0），$f’(x_k)$表示函数$f(x)$在$x_k$这一点的梯度方向。前面为负表示负梯度方向为函数下降最快的方向，至于为什么在这一点会下降最快，其实是有很好的理论证明的，后面有时间整理出来。<br>那么，对于步长的确定可以有很多方法，最简单的一种便是提前预定义好：<br>$$h_k = h &gt; 0$$<br>$$h_k = \frac{h}{\sqrt{k+1}}$$<br>这种方法在凸优化的框架下使用较多，主要由于凸优化函数的变化趋势是可预测的。<br>另外还有一种非常理想化的方法：<br>$$h_k = arg \min_{h\geq0}f(x_k - h f’(x_k))$$<br>显然，这种方法在实际的运用中属于空中楼阁，并没有可操作性。<br>下面最最常用的便是Armijo Rule了：</p>
-<blockquote>
-<p>Find $x_{k+1} = x_k - h f’(x_k)$ such that</p>
-<p>$$\alpha &lt;f’(x_k), x_k - x_{k+1}&gt; \quad \leq \quad f(x_k) - f(x_{k+1}) \tag 1$$</p>
-<p>$$\beta &lt;f’(x_k), x_k - x_{k+1}&gt; \quad \geq \quad f(x_k) - f(x_{k+1}) \tag 2$$<br>where $0 &lt; \alpha &lt; \beta &lt; 1$ are some fixed parameters</p>
-</blockquote>
-<p>对于这个规则，可能咋看并不能理解他的意图，下面通过一段证明来看一下这个规则的作用。</p>
-<h1 id="证明"><a href="#证明" class="headerlink" title="证明"></a>证明</h1><p>假设有如下问题<br>$$\min_{x\in R^n} f(x)$$<br>其中$f\in C^{1,1}_L(R^n)$。并且，我们这里假设函数有下界。</p>
-<blockquote>
-<p>这里$f\in C^{1,1}_L(R^n)$表示函数$f(x)$在$R^n$上是一阶连续可微的，并且其一阶导满足Lipschitz 连续性，参数为L,具体的公式如下<br>$$|f(y)-f(x)-&lt;f’(x), y-x&gt;| \quad \leq \quad \frac{L}{2} ||y-x||^2$$</p>
-</blockquote>
-<p>对于一个gradient step，我们有</p>
-<p>\begin{align}<br>f(y) &amp; \leq  f(x) + &lt;f’(x), y-x&gt; + \frac{L}{2}|y-x|^2 \\<br>&amp; = f(x) - h|f’(x)|^2 + \frac{h^2}{2}L|f’(x)|^2 \\<br>&amp; = f(x) - h(1-\frac{h}{2}L)|f’(x)|^2 \tag 3<br>\end{align}</p>
-<p>所以，为了使得我们的目标函数值有尽大程度的减小，我们需要求解下面的一维问题：<br>$$\Delta(h) = -h(1-\frac{h}{2}L) \to \min_h$$<br>对上式求导，得到$\Delta’(h)=hL-1=0$,所以$h^* = \frac{1}{L}$,由于$\Delta’’(h)=L \gt 0$,所以此时取得最小值。这样，将其代入上式，我们就能够得到单步梯度下降，目标函数值至少下降多少的形式：<br>$$f(y)\leq f(x)-\frac{1}{2L}|f’(x)|^2 \tag 4$$</p>
-<p>下面，我们来看一下Armijo Rule规定的两个式子与这目标函数值最小下降之间的关系。<br>首先，令$x_{k+1} = x_k - h_k f’(x_k)$,对于固定步长策略$h_k = h$,我们有<br>$$f(x_k) - f(x_{k+1}) \geq h(1-\frac{h}{2}L)|f’(x)|^2$$<br>所以当我们选择$h_k = \frac{2\alpha}{L}, \alpha \in (0, 1)$时，有</p>
-<p>$$f(x_k) - f(x_{k+1}) \geq \frac{2}{L}\alpha (1-\alpha)|f’(x)|^2 \tag 5$$</p>
-<p>显然，当$\alpha = \frac{1}{2}$时，取得最大值，即为前面(4)式等价。<br>接着，我们考虑Armijo Rule提到的两个式子：<br>首先，我们考虑公式（2），有<br>$$f(x_k)-f(x_{k+1}) \quad \leq \quad \beta &lt;f’(x_k), x_k-x_{k+1}&gt;\quad = \quad\beta h_k |f’(x)|^2$$<br>结合公式（3），我们有<br>$$h_k \geq \frac{2}{L}(1-\beta) \tag 6$$<br>接着，我们考虑公式（1），有</p>
-<p>$$f(x_k)-f(x_{k+1}) \quad \geq \quad \alpha &lt;f’(x_k), x_k-x_{k+1}&gt;\quad = \quad\alpha h_k |f’(x)|^2$$</p>
-<p>结合不等式（6），我们有</p>
-<p>$$f(x_k)-f(x_{k+1}) \quad \geq \quad \frac{2}{L}\alpha(1-\beta)|f’(x_k)|^2 \tag 7$$</p>
-<p>结合公式（4）（5）（7），容易得到<br>$$\frac{2}{L}\alpha(1-\beta) \leq \frac{2}{L}\alpha(1-\alpha) \leq \frac{1}{2L}, 0\leq \alpha \leq \beta \leq 1$$<br>所以，这表明对于给定的$\alpha,\beta$，只要满足公式（1）（2），就至少有公式（7）的下降程度，也就更趋近于最大下降（相当于满足了我们期望的下降）。</p>
-<h1 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h1><p>[1] : introductory lectures on convex optimization: a basic course(26页), Yurii Nesterov</p>
-]]></content>
-    
-    <summary type="html">
-    
-      Goldstein-Armijo规则以及回溯线性搜索
-    
-    </summary>
-    
-      <category term="Optimization" scheme="http://heimignx.cn/categories/Optimization/"/>
-    
-    
-      <category term="Optimization" scheme="http://heimignx.cn/tags/Optimization/"/>
     
   </entry>
   
