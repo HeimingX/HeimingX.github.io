@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://heimignx.cn/"/>
-  <updated>2017-01-23T06:38:32.523Z</updated>
+  <updated>2017-01-23T08:37:41.855Z</updated>
   <id>http://heimignx.cn/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://heimignx.cn/2017/01/23/blog-style-update/"/>
     <id>http://heimignx.cn/2017/01/23/blog-style-update/</id>
     <published>2017-01-23T05:00:36.000Z</published>
-    <updated>2017-01-23T06:38:32.523Z</updated>
+    <updated>2017-01-23T08:37:41.855Z</updated>
     
     <content type="html"><![CDATA[<p>本Blog采用的是jacman主题，喜欢他简洁的风格，在刚开始使用的时候有做过一些微小的改动，使用一段时间后，发现有不少地方还有些小问题，趁着寒假在家这几天对博客进行简单的装修，以迎接新的一年的到来！</p>
 <h1 id="title部分"><a href="#title部分" class="headerlink" title="title部分"></a>title部分</h1><ul>
@@ -33,7 +33,7 @@
 <li>添加阅读次数计数功能。这个功能可以看到不同blog被阅读的次数，以了解哪些内容是读者们感兴趣的。（当然这首先嘚要有读者！于是这个计数统计也就有了激励自己涂更多有价值的鸦的功能！）</li>
 </ul>
 <h1 id="widget部分"><a href="#widget部分" class="headerlink" title="widget部分"></a>widget部分</h1><ul>
-<li>将tag改成了tag cloud。原tag功能虽有个数统计，但有点与上面的categoy重复，改成tag cloud通过大小来展示tag使用频次，比较醒目，也更科技感（虽然只是改了一个config Orz…）</li>
+<li>将tag改成了tag cloud。原tag功能虽有个数统计，但有点与上面的category重复，改成tag cloud通过大小来展示tag使用频次，比较醒目，也更科技感（虽然只是改了一个config Orz…）</li>
 </ul>
 <h1 id="footer部分"><a href="#footer部分" class="headerlink" title="footer部分"></a>footer部分</h1><ul>
 <li>添加<a href="http://baike.baidu.com/item/creative%20commons" target="_blank" rel="external">CC</a>声明。</li>
