@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://heimignx.cn/"/>
-  <updated>2017-01-23T08:37:41.855Z</updated>
+  <updated>2017-02-14T13:01:24.418Z</updated>
   <id>http://heimignx.cn/</id>
   
   <author>
@@ -14,6 +14,81 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>AAAI&#39;17三番行</title>
+    <link href="http://heimignx.cn/2017/02/13/aaai17-sfo/"/>
+    <id>http://heimignx.cn/2017/02/13/aaai17-sfo/</id>
+    <published>2017-02-13T13:01:36.000Z</published>
+    <updated>2017-02-14T13:01:24.418Z</updated>
+    
+    <content type="html"><![CDATA[<p>今年的AAAI‘17在著名的大都会城市<a href="https://zh.wikipedia.org/wiki/%E6%97%A7%E9%87%91%E5%B1%B1" target="_blank" rel="external">旧金山</a>举行，时间在17年2月4日-2月9日（正月初八-十五），其实关于开会时间还有个小插曲，原本时间是提前一周的，而这正好与中国春节假期重合，于是由国内机器学习界男神周志华老师发起的关于期望开会时间的投票，成功让AAAI组织者决定延期一周举行AAAI’17，这足见国人在AI领域内的影响力已经不可忽视了。会议的具体举办地点在北部湾区的市中心的Hilton酒店，会议的日程安排还是相当的满的，从4，5号就开始有各种活动，6号开始各种invited report + oral talk &amp; spotlight，一个时间段里并行着多个session，然后，晚上还有poster session，大概一直到8:30左右，这之后，还有game club之类的活动，所以，开完会每天都会感觉，啊，好累！下面，就每天的一些经历和心得做个简单的流水账~</p>
+<h1 id="2月5号"><a href="#2月5号" class="headerlink" title="2月5号"></a>2月5号</h1><p>北京时间5号2:30PM从上海飞旧金山，大概飞了10小时左右，旧金山时间5号10:00AM抵达，人生中第一次坐飞机，便是长途！但很幸运的是座位靠窗，可以欣赏飞机沿途的美丽的风景，天空真的很美！在漫长困顿的旅途中，也有一些解乏的娱乐，就是给前座一个很cute的little girl捡枕头，囧，她麻麻看着过意不去就和我们寒暄了一下，几句之后，顿时大惊，她麻麻居然是一名googler，在Google已经呆了11年了，主要从事的工作与page crawling有关，然后了解了一下早有耳闻的Google culture，更是各种羡慕啊！可以自由支配的工作时间，同事之间的关系始终是以合作的形式开展，而不是那种恶劣残酷的竞争关系，她们每个月都有一次写感谢信的机会，感谢某个人帮助你解决了一个遇到的问题，然后被感谢的那个人就会得到对应的现金奖励，而且公司也很人性化，你可以选择过很悠闲的生活，你也可以有自己的抱负，将生活push得很紧（当然前提都是要完成好本职工作的）。或许，国内真的应该借鉴借鉴国外这些优秀的公司文化了，不要让人提到IT公司，第一印象不是这个公司做了什么伟大的产品，而是这个公司加班出了名！</p>
+<p>下了飞机，我们坐<a href="https://zh.wikipedia.org/wiki/%E8%88%8A%E9%87%91%E5%B1%B1%E7%81%A3%E5%8D%80%E6%8D%B7%E9%81%8B%E7%B3%BB%E7%B5%B1" target="_blank" rel="external">BART</a>到Powell station,然后用Google Map找到住的酒店Bereford，坑爹的被告知下午3点才能check in，于是，寄存了行李先去了hilton进行AAAI会议的注册。完了，我们用<a href="https://www.yelp.com/sf" target="_blank" rel="external">Yelp</a>上找了一家中餐馆M.Y. China吃了一顿，回想起来，这是我们在旧金山吃唯一的一顿大餐了（自己点的），因为后面吃的全是快餐了~关于吃饭，基本上每顿都得\$13-\$15左右，跟国内相比还是很贵的，大概因为米国人力成本比较高吧！</p>
+<p>晚上有会议安排的Opening reception，类似于酒会吧，给每个参会的人一个熟悉交流的机会。一进会场，第一感觉华人真的好多！然后，整个会场内聚类还是挺明显的，华人总是一撮，English speaker总是一撮（或许是因为我英语菜鸟，只能混迹于华人圈的一己愚见吧Orz）。在酒会上，最大的收获就是认识了很多华人，简单的了解了他们各自从事的研究以及生活的环境（很多在国外深造的华人），大家都挺主动热情的，分享各自的见闻，当然，最后一步往往是，来，我们加个微信吧，哈哈！于是，一个会议下来，竟发现自己的盆友圈一下子变得更丰富了。</p>
+<h1 id="2月6号"><a href="#2月6号" class="headerlink" title="2月6号"></a>2月6号</h1><p>今天是会议正式开始的第一天，奈何我夜里1:30就醒了，结果到了早上眼睛根本睁不开啊（由于时差的原因，在旧金山这个时间点正好是国内午睡的时间，所以午睡自然是很短暂的！）</p>
+<p>每天的会议日程都被安排到了<a href="https://guidebook.com/" target="_blank" rel="external">Guide Book</a>上了,参会人员可以根据自己的喜好选择性参加，非常的方便，一个很赞的APP！</p>
+<p>下面是我参加的一些session的一些收获记录</p>
+<p>9:00-9:50 invited talk<br>一个MIT的人讲情感智能技术，讲了几个他们的work，大概只记得一个work：根据视频学出人微笑的程度。</p>
+<p>10:00-11:00 ML1：Optimization session<br>基本上都与scalable有关，针对大数据背景下不同的问题来给出解决方案。其中两个oral talk都与分布式学习有关，其中张志华老师的分布式凸优化可以着重看一下，做的是分布式+特征选择。</p>
+<p>11:00-12：30 ML3：Big Data/Scalability<br>如题，感觉和上一个session差不多，不过Big data的痕迹更明显。在这个session里面，很幸运的遇到了前一天晚上在Opening Reception上认识的LAMDA的同学，进行了深入的交流，才博一（硕博连读，相当于研三），已经连续三届AAAI，最近两年更是2篇/年！膜拜呀！了解到其本科是数学专业的，便顺手讨论了一个近期遇到的问题，果然专业选手一眼就看出了问题所在！</p>
+<p>午饭，和LAMDA的几个小伙伴一起去了Westfield地下一楼吃了饭（开启了为期一周的快餐生活~），我吃的东南亚餐馆，不禁感叹这饭真是太实在了，详情见那天的微博状态~</p>
+<p>下午会酒店准备休息一会再去听session的，结果直接一睁眼已经快5点了，于是直接去吃晚饭了，晚上吃的韩国BBQ，马蛋，甜，甜到腻啊！来，想象一下牛排是红烧肉的味道</p>
+<p>7:00-9:00 poster session<br>做poster和看poster的人都超多，机智的我选择从最后一排往前看（后来发现自己想多了，最后一排人也很多Orz）</p>
+<p>晚上吸取昨晚的教训，坚持到了12点才睡觉，一觉到天明，爽！</p>
+<h1 id="2月7号"><a href="#2月7号" class="headerlink" title="2月7号"></a>2月7号</h1><p>据当天日记记载：整整开了一天的会，so tired！</p>
+<p>8:50-9:50 invited talk  然鹅内容已经完全不记得了~~~</p>
+<p>10:00-11:00  ML9:Optimization<br>这个session里正好有前两天认识的LAMDA的同学做oral talk，其中赵申宜的<a href="http://cs.nju.edu.cn/lwj/paper/AAAI17_LFnonConvex.pdf" target="_blank" rel="external">工作</a>是针对大规模的非凸问题，对lock-free strategy based parallel SGD的收敛性进行了分析，给出收敛到一个局部最小的结论。然后，在Q&amp;A环节，有人提出对这样的结果不是很满意，直接说这个local optima是没有价值的，期望得到一个global的optima，囧，这样的提问还是挺难回答的，针对非凸问题，大家都指导global optima是很难保障的呀！<br>然后，胡毅奇的<a href="http://www.aaai.org/Conferences/AAAI/2017/PreliminaryPapers/12-Hu-Y-14929.pdf" target="_blank" rel="external">工作</a>是采用policy search的方法来求解non-convex的问题，主要应用于reinforcement learning。</p>
+<p>11:30-12:30 ML10:reinforcement learning<br>这个session实在太火了，堪比deeplearning相关的session了，人多到，有些老外怕站着会影响后面人的视线，直接跪着听了！为了学术也是拼了，可敬！站着听了40min左右就离开了，实在是太热了！出来很巧合碰到一个投资人过来套瓷，据他介绍，他所在基金是全球最大的，木有之一！他们97年就投资了阿里，孙正义也是由他们介绍引进的！大惊！</p>
+<p>午餐，继续westfield~</p>
+<p>14:00-15:30  HSO1：Optimization<br>中午还是很困的啊，并木有听进去多少，这个session结束，倒是很幸运的蹭了一波LAMDA的合影，啦啦啦~</p>
+<p>16:00-17:00  ML17：Classification &amp; Clustering<br>这个session相对比较传统，里面有不少工作与SVM相关。去这个session的一个主要原因是其session chair是 Y.-H. Guo老师，之前有看过她的一篇AAAI’12（当年的best paper）的文章，session结束后，主动和郭老师套了瓷，郭老师人还是很nice的，聊了很多。</p>
+<p>晚餐，westfield里面的pandas快餐，吃完回酒店眯了一会就去看poster了。感觉poster session里面的论文主题真是太广了，不愧是AI的盛会，感觉自己并不能完全切入到重点去提问，只能就周边的表面问题做一些简单的提问，所以真是感觉自己需要扩大知识面了。</p>
+<p>看完poster，在等博士一起回去的间隙，碰到了一群Chinese，于是蹭到他们的话题里唠了一会，虽然大家都是Chinese，但是都是来自不同的学校的，大家交流的着各自的工作和经历，甚欢！</p>
+<h1 id="2月8号"><a href="#2月8号" class="headerlink" title="2月8号"></a>2月8号</h1><p>内容充实的一天！听report+闲逛+spotlight+poster~</p>
+<p>8:50-9:50 invited talk 主要内容与Google做的无人车相关，很有趣！</p>
+<p>10:00-11:00 ML18:Deeplearning/neuralnetworks<br>果然，这个session火爆到门口都挤满了人，于是，果断选择在外面准备自己的spotlight了</p>
+<p>11:30-12:30 ML20:classification<br>session chair是电子科大的徐增林老师(之前在MLA上有听过徐老师的报告)，我和闻芳师兄都在这个session里面，闻芳师兄在做oral之前发现借的博士的电脑罢工了，于是蛋疼的四处借电脑Orz，后面我的spotlight，自我感觉良好~</p>
+<p>午餐，继续westfield里面的东南亚餐馆，选了个peppery的炒饭，吃的时候发现居然是甜椒，也是醉了~</p>
+<p>吃完饭，和两师兄在回hotel的路上看到了一个非常陡峭的高坡，想着爬上去看看最顶端是什么样子的，于是三人就决定爬了看看，结果爬着爬着就看到了海！于是就一鼓作气的走到了最近的海边，看到了通往berkeley地区的大桥（后来查了名字，叫Oakland Bay Bridge），在广阔的海湾上，大桥横空而过，海湾上海不时驶过游艇和大轮船，真是美极了！第一次体会到了什么叫做流连忘返！拍了很多皂片，就急着往回赶了，因为中午约定了3点拍PALM的合影，囧！</p>
+<p>拍完合影，我就回酒店睡了一会，睡醒直接拿上poster去hilton了，挂好poster，就去会场找了点吃的，吃完赶紧返回poster旁边，到最后一个poster session了，人还是很多，一开始，就是和海报展位周围的几个author互相介绍了一下自己的工作，右侧是一个印度的小姑娘（并不知道年级~）人很nice，穿的也非常的正式，只是说English的口音太重，听着有点费力Orz，然后，关于我的poster，一开始觉着比较偏理论，可能会很少人来交流，结果却来了很多问询的人，不过外国人比较少，多是华人，记得一个在澳洲读phd的French过来让我给他讲讲我们的工作，于是，我用我的poor English艰难的给他讲了我们工作的整个思路，他还非常仔细的问了很多细节，感觉老外好认真！然后，最早过来的华人居然是昨天成功套瓷的郭老师，于是我直接用中文给她介绍了我们的工作，老师很耐心的听完，还夸赞了一番，哈哈，nice！其他华人多是学生，有LAMDA周老师的学生，西工大聂老师的学生以及南理工的，神奇的发现他们都是phd！为了效率，我们直接用中文交流了很多关于发paper的经验，读phd的经历，他们各种推荐如果要读phd尽量出来读，国外phd都是全奖+工资，实话说诱惑还是不小的，然鹅英语这关还是有心理障碍的，还有读phd真是一个小长征啊！So，感觉今晚获得的信息量快要爆炸了，于是，导致我晚上直接就失眠了！！！</p>
+<h1 id="2月9号"><a href="#2月9号" class="headerlink" title="2月9号"></a>2月9号</h1><p>早上一睁眼都9点+了，今天早上有博士的oral，需要人去给他拍照，奈何我刚起还闹肚子，于是闻芳师兄直接洗个脸就跑去hilton了。我收拾了一会也去了。到了一看guidebook才发现，今天上午已经是整个大会的最后半天了，然鹅还是有不少人在。</p>
+<p>去了博士做oral的session，巧了，发现郭老师也有一个oral talk，并且是整个大会的最后一talk（可能有并行的session），郭老师以唯一作者发的<a href="http://www.aaai.org/Conferences/AAAI/2017/PreliminaryPapers/12-Guo-Y-14286.pdf" target="_blank" rel="external">paper</a>，感觉这样的更像学术一点吧，不像很多paper，author栏都快挤不下了Orz</p>
+<p>下午去了最近的outlets，奈何最近的都坐bart坐了2个多小时！地广人稀的米国木有汽车真是可怕！在快到outlets的时候，遇到了一个中科院的老师，他昨天已经来过一趟了，没买够，今天又来了，于是在他的指导下一起shopping了一波。</p>
+<h1 id="2月10号"><a href="#2月10号" class="headerlink" title="2月10号"></a>2月10号</h1><p>早起返程，坐了13+小时的飞机，到上海，立马做机场大巴从浦东赶往虹桥，买高铁回南京，打的回学校，中间连吃个晚饭的时间都木有啊！回来幸运的还有澡洗，躺床上已经12点多了~</p>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>至此，AAAI‘17三番行就圆满结束了，虽然很累，但是收获颇丰，对得起自己付出的努力，期待未来的某一天能再次来到这座美丽的城市！最后的最后再曝几张皂片吧~</p>
+<ul>
+<li>吃喝：</li>
+</ul>
+<p><img src="/img/blog/aaai/breakfast.jpg" alt="breakfast in Hotel Beresford"></p>
+<p><img src="/img/blog/aaai/bbq.jpg" alt="BBQ for lunch"></p>
+<p><img src="/img/blog/aaai/fried_rice.jpg" alt="fried rice for lunch"></p>
+<p><img src="/img/blog/aaai/bar.jpg" alt="bar in Hotel Beresford"></p>
+<ul>
+<li>玩乐：</li>
+</ul>
+<p><img src="/img/blog/aaai/bay.jpg" alt="bay view"></p>
+<p><img src="/img/blog/aaai/sea_gull.jpg" alt="sea gulls"></p>
+<p><img src="/img/blog/aaai/bart.jpg" alt="BART"></p>
+<p><img src="/img/blog/aaai/hungry_club.jpg" alt="hungry club"></p>
+<p><img src="/img/blog/aaai/road.jpg" alt="road near bay"></p>
+<p><img src="/img/blog/aaai/steep_street.jpg" alt="steep streat"></p>
+<p><img src="/img/blog/aaai/buildings_along_bay.jpg" alt="buildings along the bay"></p>
+<p><img src="/img/blog/aaai/three_of_us.jpg" alt="three of us"></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;今年的AAAI‘17在著名的大都会城市&lt;a href=&quot;https://zh.wikipedia.org/wiki/%E6%97%A7%E9%87%91%E5%B1%B1&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;旧金山&lt;/a&gt;举行，时间在17年2月4
+    
+    </summary>
+    
+      <category term="Tattle" scheme="http://heimignx.cn/categories/Tattle/"/>
+    
+    
+      <category term="Tattle" scheme="http://heimignx.cn/tags/Tattle/"/>
+    
+  </entry>
   
   <entry>
     <title>Blog微装修</title>
@@ -1002,53 +1077,6 @@
   </entry>
   
   <entry>
-    <title>CS231n:Optimization: Stochastic Gradient Descent</title>
-    <link href="http://heimignx.cn/2016/08/15/cs231n-optimization-sgd/"/>
-    <id>http://heimignx.cn/2016/08/15/cs231n-optimization-sgd/</id>
-    <published>2016-08-15T12:20:45.000Z</published>
-    <updated>2016-10-15T14:06:53.921Z</updated>
-    
-    <content type="html"><![CDATA[<p>这一节主要介绍一种优化方法，随机梯度下降，用于求解前面章节提到的目标函数中的权重矩阵$W$.</p>
-<h1 id="Visualizing-the-loss-function"><a href="#Visualizing-the-loss-function" class="headerlink" title="Visualizing the loss function"></a>Visualizing the loss function</h1><p>这里主要通过一些简单的例子来表明，我们所要求解的目标函数是一个凸问题，通过形象化的图形来体会优化的过程。同时，课程中也提到如果在神经网络中，目标函数就不再是凸的了，所以需要新的求解方法。</p>
-<h1 id="Optimization"><a href="#Optimization" class="headerlink" title="Optimization"></a>Optimization</h1><h2 id="Strategy-1-Random-Search"><a href="#Strategy-1-Random-Search" class="headerlink" title="Strategy 1: Random Search"></a>Strategy 1: Random Search</h2><p>首先限定一个最大迭代步数，然后在每一次迭代中都将随机的$W$值代入求得目标函数值，并记录下使得目标函数值取得当前最小的$W$作为最终的输出</p>
-<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> num <span class="keyword">in</span> xrange(<span class="number">1000</span>):</div><div class="line">    W = np.random.randn(<span class="number">10</span>, <span class="number">3073</span>) * <span class="number">0.0001</span> <span class="comment"># generate random parameters</span></div><div class="line">    loss = L(X_train, Y_train, W) <span class="comment"># get the loss over the entire training set</span></div><div class="line">    <span class="keyword">if</span> loss &lt; bestloss: <span class="comment"># keep track of the best solution</span></div><div class="line">        bestloss = loss</div><div class="line">        bestW = W</div><div class="line">    <span class="keyword">print</span> <span class="string">'in attempt %d the loss was %f, best %f'</span> % (num, loss, bestloss)</div></pre></td></tr></table></figure></p>
-<h2 id="Strategy-2-Random-Local-Search"><a href="#Strategy-2-Random-Local-Search" class="headerlink" title="Strategy 2: Random Local Search"></a>Strategy 2: Random Local Search</h2><p>对上面方法的一个改进，就是不是在每次的迭代中都给$W$赋随机值，而是根据初始赋随机值进行微调，如果能够使得目标函数值下降，则记录下该微调之后的$W$，直到迭代步数达到设定的值。</p>
-<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">W = np.random.randn(<span class="number">10</span>, <span class="number">3073</span>) * <span class="number">0.001</span> <span class="comment"># generate random starting W</span></div><div class="line">bestloss = float(<span class="string">"inf"</span>)</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="number">1000</span>):</div><div class="line">    step_size = <span class="number">0.0001</span></div><div class="line">    Wtry = W + np.random.randn(<span class="number">10</span>, <span class="number">3073</span>) * step_size</div><div class="line">    loss = L(Xtr_cols, Ytr, Wtry)</div><div class="line">    <span class="keyword">if</span> loss &lt; bestloss:</div><div class="line">        W = Wtry</div><div class="line">        bestloss = loss</div><div class="line">    <span class="keyword">print</span> <span class="string">'iter %d loss is %f'</span> % (i, bestloss)</div></pre></td></tr></table></figure></p>
-<h2 id="Strategy-3-Following-the-gradient"><a href="#Strategy-3-Following-the-gradient" class="headerlink" title="Strategy 3: Following the gradient"></a>Strategy 3: Following the gradient</h2><p>显然，策略2已经很接近通用的梯度下降方法了，唯一的区别是，我们在每一步迭代中都是取使目标函数下降最大的方向进行优化的，而要想能够找到使得目标函数下降最大的方向，就需要用到梯度了。</p>
-<h1 id="Computing-the-gradient"><a href="#Computing-the-gradient" class="headerlink" title="Computing the gradient"></a>Computing the gradient</h1><p>对于梯度的计算，课程中提供了两种方法</p>
-<h2 id="Numerically-with-finite-differences"><a href="#Numerically-with-finite-differences" class="headerlink" title="Numerically with finite differences"></a>Numerically with finite differences</h2><p>标签：a slow, approximate，but easy way</p>
-<p>公式：<br>$$\frac{d f(x)}{d x}=\lim_{x\to 0} \frac{f(x+h)-f(x)}{h}$$</p>
-<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">fx = f(x) <span class="comment"># evaluate function value at original point</span></div><div class="line">grad = np.zeros(x.shape)</div><div class="line">h = <span class="number">0.00001</span></div><div class="line"></div><div class="line"><span class="comment"># iterate over all indexes in x</span></div><div class="line">it = np.nditer(x, flags=[<span class="string">'multi_index'</span>], op_flags=[<span class="string">'readwrite'</span>])</div><div class="line"><span class="keyword">while</span> <span class="keyword">not</span> it.finished:</div><div class="line"></div><div class="line">    <span class="comment"># evaluate function at x+h</span></div><div class="line">    ix = it.multi_index</div><div class="line">    old_value = x[ix]</div><div class="line">    x[ix] = old_value + h <span class="comment"># increment by h</span></div><div class="line">    fxh = f(x) <span class="comment"># evalute f(x + h)</span></div><div class="line">    x[ix] = old_value <span class="comment"># restore to previous value (very important!)</span></div><div class="line"></div><div class="line">    <span class="comment"># compute the partial derivative</span></div><div class="line">    grad[ix] = (fxh - fx) / h <span class="comment"># the slope</span></div><div class="line">    it.iternext() <span class="comment"># step to next dimension</span></div></pre></td></tr></table></figure></p>
-<h2 id="Analytically-with-calculus"><a href="#Analytically-with-calculus" class="headerlink" title="Analytically with calculus"></a>Analytically with calculus</h2><p>标签： a fast, exact but more error-prone way</p>
-<p>以SVM损失函数在某个样本下的形式为例：<br>$$L_i = \sum_{j\neq y_i} \left [\max(0, w_j^T x_i - w_{y_i}^T x_i + \Delta) \right ]$$<br>计算上式对 $w_{y_i}$ 的梯度：<br>$$\nabla_{w_{y_i}}L_i = -\left (\sum_{j\neq y_i} \mathbb{I} (w_j^T x_i - w_{y_i}^T x_i + \Delta &gt; 0)\right )x_i$$<br>计算上式对 $j\neq y_i$ 的 $W_j$ 的梯度：<br>$$\nabla_{w_j}L_i = \mathbb{I} (w_j^T x_i - w_{y_i}^T x_i + \Delta &gt; 0)x_i$$</p>
-<h1 id="Gradient-Descent"><a href="#Gradient-Descent" class="headerlink" title="Gradient Descent"></a>Gradient Descent</h1><p>梯度下降方法的主要思路是，在梯度方向上，进行某一步长的移动以使得目标函数呈不增的趋势。</p>
-<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">  weights_grad = evaluate_gradient(loss_fun, data, weights)</div><div class="line">  weights += - step_size * weights_grad <span class="comment"># perform parameter updat</span></div></pre></td></tr></table></figure></p>
-<p><strong>Mini-batch gradient descent</strong><br>当数据集非常的大时，机器资源可能不能一次性的加载进所有的数据，所以可以每次只选择其中的一小部分进行处理。</p>
-<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">  data_batch = sample_training_data(data, <span class="number">256</span>) <span class="comment"># sample 256 examples</span></div><div class="line">  weights_grad = evaluate_gradient(loss_fun, data_batch, weights)</div><div class="line">  weights += - step_size * weights_grad <span class="comment"># perform parameter update</span></div></pre></td></tr></table></figure></p>
-<p>对于Mini-batch的大小，通常不用交叉验证的方式来选择，通常是根据经验提前设定的（根据计算资源而定）：$[32, 64, 128,…]$,通常选择的是2的倍数，因为这符合计算机的二进制计数原理。</p>
-<p><strong>Stochastic Gradient Descent (SGD)</strong><br>当Mini-batch gradient descent取极限时，即每次只取所有样本中的一个样例用于训练。但是由于在实践中发现，计算100个样本的梯度往往要优于计算某一个样本100次所得到的权重矩阵，所以Mini-batch gradient descent较为常用，而SGD有时也指Mini-batch gradient descent。</p>
-<h1 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h1><ol>
-<li><a href="http://cs231n.github.io/optimization-1" target="_blank" rel="external">CS231n: Optimization: Stochastic Gradient Descent</a></li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;这一节主要介绍一种优化方法，随机梯度下降，用于求解前面章节提到的目标函数中的权重矩阵$W$.&lt;/p&gt;
-&lt;h1 id=&quot;Visualizing-the-loss-function&quot;&gt;&lt;a href=&quot;#Visualizing-the-loss-function&quot; class=
-    
-    </summary>
-    
-      <category term="Machine Learning" scheme="http://heimignx.cn/categories/Machine-Learning/"/>
-    
-    
-      <category term="Machine Learning" scheme="http://heimignx.cn/tags/Machine-Learning/"/>
-    
-      <category term="CS231n笔记" scheme="http://heimignx.cn/tags/CS231n%E7%AC%94%E8%AE%B0/"/>
-    
-  </entry>
-  
-  <entry>
     <title>CS231n:Linear classification: Support Vector Machine, Softmax</title>
     <link href="http://heimignx.cn/2016/08/15/cs231n-linear-classification/"/>
     <id>http://heimignx.cn/2016/08/15/cs231n-linear-classification/</id>
@@ -1111,29 +1139,49 @@
   </entry>
   
   <entry>
-    <title>LaTex中空格的用法</title>
-    <link href="http://heimignx.cn/2016/06/28/use-space-in-Latex/"/>
-    <id>http://heimignx.cn/2016/06/28/use-space-in-Latex/</id>
-    <published>2016-06-28T15:21:47.000Z</published>
-    <updated>2016-10-15T14:06:53.930Z</updated>
+    <title>CS231n:Optimization: Stochastic Gradient Descent</title>
+    <link href="http://heimignx.cn/2016/08/15/cs231n-optimization-sgd/"/>
+    <id>http://heimignx.cn/2016/08/15/cs231n-optimization-sgd/</id>
+    <published>2016-08-15T12:20:45.000Z</published>
+    <updated>2016-10-15T14:06:53.921Z</updated>
     
-    <content type="html"><![CDATA[<p>两个quad空格&ensp;<code>a \qquad b</code>&ensp;$a \qquad b$&ensp;两个m的宽度<br>quad空格&ensp;&ensp;&ensp;&ensp;&ensp;<code>a \quad b</code>&ensp;$a \quad b$&ensp;一个m的宽度<br>大空格&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;<code>a\ b</code>&ensp;$a\ b$&ensp;1/3m宽度<br>中等空格&ensp;&ensp;&ensp;&ensp;&ensp;<code>a\;b</code>&ensp;$a\;b$&ensp;2/7m宽度<br>小空格&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;<code>a\,b</code>&ensp;$a\,b$&ensp;1/6m宽度<br>没有空格&ensp;&ensp;&ensp;&ensp;&ensp;<code>ab</code>&ensp;$ab\,$<br>紧贴&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;<code>a\!b</code>&ensp;$a\!b$&ensp;缩进1/6m宽度(在hexo中需要写成<code>a\\!b</code>)</p>
-<blockquote>
-<p>approximately the width of an “M” in the current font</p>
-</blockquote>
-<p><code>m</code> 代表当前字体下接近字符‘M’的宽度</p>
+    <content type="html"><![CDATA[<p>这一节主要介绍一种优化方法，随机梯度下降，用于求解前面章节提到的目标函数中的权重矩阵$W$.</p>
+<h1 id="Visualizing-the-loss-function"><a href="#Visualizing-the-loss-function" class="headerlink" title="Visualizing the loss function"></a>Visualizing the loss function</h1><p>这里主要通过一些简单的例子来表明，我们所要求解的目标函数是一个凸问题，通过形象化的图形来体会优化的过程。同时，课程中也提到如果在神经网络中，目标函数就不再是凸的了，所以需要新的求解方法。</p>
+<h1 id="Optimization"><a href="#Optimization" class="headerlink" title="Optimization"></a>Optimization</h1><h2 id="Strategy-1-Random-Search"><a href="#Strategy-1-Random-Search" class="headerlink" title="Strategy 1: Random Search"></a>Strategy 1: Random Search</h2><p>首先限定一个最大迭代步数，然后在每一次迭代中都将随机的$W$值代入求得目标函数值，并记录下使得目标函数值取得当前最小的$W$作为最终的输出</p>
+<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> num <span class="keyword">in</span> xrange(<span class="number">1000</span>):</div><div class="line">    W = np.random.randn(<span class="number">10</span>, <span class="number">3073</span>) * <span class="number">0.0001</span> <span class="comment"># generate random parameters</span></div><div class="line">    loss = L(X_train, Y_train, W) <span class="comment"># get the loss over the entire training set</span></div><div class="line">    <span class="keyword">if</span> loss &lt; bestloss: <span class="comment"># keep track of the best solution</span></div><div class="line">        bestloss = loss</div><div class="line">        bestW = W</div><div class="line">    <span class="keyword">print</span> <span class="string">'in attempt %d the loss was %f, best %f'</span> % (num, loss, bestloss)</div></pre></td></tr></table></figure></p>
+<h2 id="Strategy-2-Random-Local-Search"><a href="#Strategy-2-Random-Local-Search" class="headerlink" title="Strategy 2: Random Local Search"></a>Strategy 2: Random Local Search</h2><p>对上面方法的一个改进，就是不是在每次的迭代中都给$W$赋随机值，而是根据初始赋随机值进行微调，如果能够使得目标函数值下降，则记录下该微调之后的$W$，直到迭代步数达到设定的值。</p>
+<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">W = np.random.randn(<span class="number">10</span>, <span class="number">3073</span>) * <span class="number">0.001</span> <span class="comment"># generate random starting W</span></div><div class="line">bestloss = float(<span class="string">"inf"</span>)</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="number">1000</span>):</div><div class="line">    step_size = <span class="number">0.0001</span></div><div class="line">    Wtry = W + np.random.randn(<span class="number">10</span>, <span class="number">3073</span>) * step_size</div><div class="line">    loss = L(Xtr_cols, Ytr, Wtry)</div><div class="line">    <span class="keyword">if</span> loss &lt; bestloss:</div><div class="line">        W = Wtry</div><div class="line">        bestloss = loss</div><div class="line">    <span class="keyword">print</span> <span class="string">'iter %d loss is %f'</span> % (i, bestloss)</div></pre></td></tr></table></figure></p>
+<h2 id="Strategy-3-Following-the-gradient"><a href="#Strategy-3-Following-the-gradient" class="headerlink" title="Strategy 3: Following the gradient"></a>Strategy 3: Following the gradient</h2><p>显然，策略2已经很接近通用的梯度下降方法了，唯一的区别是，我们在每一步迭代中都是取使目标函数下降最大的方向进行优化的，而要想能够找到使得目标函数下降最大的方向，就需要用到梯度了。</p>
+<h1 id="Computing-the-gradient"><a href="#Computing-the-gradient" class="headerlink" title="Computing the gradient"></a>Computing the gradient</h1><p>对于梯度的计算，课程中提供了两种方法</p>
+<h2 id="Numerically-with-finite-differences"><a href="#Numerically-with-finite-differences" class="headerlink" title="Numerically with finite differences"></a>Numerically with finite differences</h2><p>标签：a slow, approximate，but easy way</p>
+<p>公式：<br>$$\frac{d f(x)}{d x}=\lim_{x\to 0} \frac{f(x+h)-f(x)}{h}$$</p>
+<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">fx = f(x) <span class="comment"># evaluate function value at original point</span></div><div class="line">grad = np.zeros(x.shape)</div><div class="line">h = <span class="number">0.00001</span></div><div class="line"></div><div class="line"><span class="comment"># iterate over all indexes in x</span></div><div class="line">it = np.nditer(x, flags=[<span class="string">'multi_index'</span>], op_flags=[<span class="string">'readwrite'</span>])</div><div class="line"><span class="keyword">while</span> <span class="keyword">not</span> it.finished:</div><div class="line"></div><div class="line">    <span class="comment"># evaluate function at x+h</span></div><div class="line">    ix = it.multi_index</div><div class="line">    old_value = x[ix]</div><div class="line">    x[ix] = old_value + h <span class="comment"># increment by h</span></div><div class="line">    fxh = f(x) <span class="comment"># evalute f(x + h)</span></div><div class="line">    x[ix] = old_value <span class="comment"># restore to previous value (very important!)</span></div><div class="line"></div><div class="line">    <span class="comment"># compute the partial derivative</span></div><div class="line">    grad[ix] = (fxh - fx) / h <span class="comment"># the slope</span></div><div class="line">    it.iternext() <span class="comment"># step to next dimension</span></div></pre></td></tr></table></figure></p>
+<h2 id="Analytically-with-calculus"><a href="#Analytically-with-calculus" class="headerlink" title="Analytically with calculus"></a>Analytically with calculus</h2><p>标签： a fast, exact but more error-prone way</p>
+<p>以SVM损失函数在某个样本下的形式为例：<br>$$L_i = \sum_{j\neq y_i} \left [\max(0, w_j^T x_i - w_{y_i}^T x_i + \Delta) \right ]$$<br>计算上式对 $w_{y_i}$ 的梯度：<br>$$\nabla_{w_{y_i}}L_i = -\left (\sum_{j\neq y_i} \mathbb{I} (w_j^T x_i - w_{y_i}^T x_i + \Delta &gt; 0)\right )x_i$$<br>计算上式对 $j\neq y_i$ 的 $W_j$ 的梯度：<br>$$\nabla_{w_j}L_i = \mathbb{I} (w_j^T x_i - w_{y_i}^T x_i + \Delta &gt; 0)x_i$$</p>
+<h1 id="Gradient-Descent"><a href="#Gradient-Descent" class="headerlink" title="Gradient Descent"></a>Gradient Descent</h1><p>梯度下降方法的主要思路是，在梯度方向上，进行某一步长的移动以使得目标函数呈不增的趋势。</p>
+<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">  weights_grad = evaluate_gradient(loss_fun, data, weights)</div><div class="line">  weights += - step_size * weights_grad <span class="comment"># perform parameter updat</span></div></pre></td></tr></table></figure></p>
+<p><strong>Mini-batch gradient descent</strong><br>当数据集非常的大时，机器资源可能不能一次性的加载进所有的数据，所以可以每次只选择其中的一小部分进行处理。</p>
+<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">  data_batch = sample_training_data(data, <span class="number">256</span>) <span class="comment"># sample 256 examples</span></div><div class="line">  weights_grad = evaluate_gradient(loss_fun, data_batch, weights)</div><div class="line">  weights += - step_size * weights_grad <span class="comment"># perform parameter update</span></div></pre></td></tr></table></figure></p>
+<p>对于Mini-batch的大小，通常不用交叉验证的方式来选择，通常是根据经验提前设定的（根据计算资源而定）：$[32, 64, 128,…]$,通常选择的是2的倍数，因为这符合计算机的二进制计数原理。</p>
+<p><strong>Stochastic Gradient Descent (SGD)</strong><br>当Mini-batch gradient descent取极限时，即每次只取所有样本中的一个样例用于训练。但是由于在实践中发现，计算100个样本的梯度往往要优于计算某一个样本100次所得到的权重矩阵，所以Mini-batch gradient descent较为常用，而SGD有时也指Mini-batch gradient descent。</p>
+<h1 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h1><ol>
+<li><a href="http://cs231n.github.io/optimization-1" target="_blank" rel="external">CS231n: Optimization: Stochastic Gradient Descent</a></li>
+</ol>
 ]]></content>
     
     <summary type="html">
     
-      Letex中空格的用法
+      &lt;p&gt;这一节主要介绍一种优化方法，随机梯度下降，用于求解前面章节提到的目标函数中的权重矩阵$W$.&lt;/p&gt;
+&lt;h1 id=&quot;Visualizing-the-loss-function&quot;&gt;&lt;a href=&quot;#Visualizing-the-loss-function&quot; class=
     
     </summary>
     
-      <category term="Latex" scheme="http://heimignx.cn/categories/Latex/"/>
+      <category term="Machine Learning" scheme="http://heimignx.cn/categories/Machine-Learning/"/>
     
     
-      <category term="Latex" scheme="http://heimignx.cn/tags/Latex/"/>
+      <category term="Machine Learning" scheme="http://heimignx.cn/tags/Machine-Learning/"/>
+    
+      <category term="CS231n笔记" scheme="http://heimignx.cn/tags/CS231n%E7%AC%94%E8%AE%B0/"/>
     
   </entry>
   
@@ -1362,32 +1410,29 @@
   </entry>
   
   <entry>
-    <title>Hexo中一些蛋疼的数学公式编辑</title>
-    <link href="http://heimignx.cn/2016/06/09/markdown-mathjax/"/>
-    <id>http://heimignx.cn/2016/06/09/markdown-mathjax/</id>
-    <published>2016-06-09T03:24:40.000Z</published>
-    <updated>2016-11-03T03:40:58.332Z</updated>
+    <title>LaTex中空格的用法</title>
+    <link href="http://heimignx.cn/2016/06/28/use-space-in-Latex/"/>
+    <id>http://heimignx.cn/2016/06/28/use-space-in-Latex/</id>
+    <published>2016-06-28T15:21:47.000Z</published>
+    <updated>2016-10-15T14:06:53.930Z</updated>
     
-    <content type="html"><![CDATA[<p>由于写的博客中有很多公式，在线下编辑的时候都能正常显示，可是发布了之后出现了各种蛋疼的效果，折腾了好久，总结下来以备忘。</p>
-<h1 id="多行公式显示"><a href="#多行公式显示" class="headerlink" title="多行公式显示"></a>多行公式显示</h1><p>\begin{align} \\<br>\max_{w,b} \quad &amp; \gamma \\<br>s.t. \quad &amp;y_i(\frac{w}{||w||}x_i+\frac{b}{||w||})\geq \gamma, i=1,2,…,N<br>\end{align}</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">code:</div><div class="line">\begin&#123;align&#125; \\\\</div><div class="line">\max_&#123;w,b&#125; \quad &amp; \gamma \\\\</div><div class="line">s.t. \quad &amp;y_i(\frac&#123;w&#125;&#123;||w||&#125;x_i+\frac&#123;b&#125;&#123;||w||&#125;)\geq \gamma, i=1,2,...,N</div><div class="line">\end&#123;align&#125;</div></pre></td></tr></table></figure>
-<p>注意，这里在最后不能加 <code>$</code> ，加上之后会显示不正常，然后每一行公式的最后要加四个 <code>\</code> ,我想原因是hexo中对于 <code>\</code> 是需要通过 <code>\</code> 转义的,所以两个 <code>\\</code>经过转义后等于一个 <code>\</code><br>另外，对于绝对值的写法在这里也失效了，只能简单粗暴的用四个 <code>|</code> 来解决了</p>
-<h1 id="对于下标的转义"><a href="#对于下标的转义" class="headerlink" title="对于下标的转义"></a>对于下标的转义</h1><p>$$L(w,b,\alpha) = \frac{1}{2}||w||^2 - \sum_{i=1}^N\alpha_i y_i (w \cdot x_i + b) + \sum_{i=1}^N\alpha_i$$</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">code:</div><div class="line">$$L(w,b,\alpha) = \frac&#123;1&#125;&#123;2&#125;||w||^2 - \sum\_&#123;i=1&#125;^N\alpha\_i y\_i (w \cdot x\_i + b) + \sum\_&#123;i=1&#125;^N\alpha\_i$$</div></pre></td></tr></table></figure>
-<p>这里出现了两个<code>\sum\_{i=1}^N</code>如果不对下标进行转义，写成<code>\sum_{i=1}^N</code>，就不能正常显示，不知道原因。只能先加上解决问题了</p>
-<h1 id="对于-上标的转义"><a href="#对于-上标的转义" class="headerlink" title="对于$*$上标的转义"></a>对于$*$上标的转义</h1><p>$$\lambda^*$$</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">code:</div><div class="line">$$\lambda^\*$$</div></pre></td></tr></table></figure>]]></content>
+    <content type="html"><![CDATA[<p>两个quad空格&ensp;<code>a \qquad b</code>&ensp;$a \qquad b$&ensp;两个m的宽度<br>quad空格&ensp;&ensp;&ensp;&ensp;&ensp;<code>a \quad b</code>&ensp;$a \quad b$&ensp;一个m的宽度<br>大空格&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;<code>a\ b</code>&ensp;$a\ b$&ensp;1/3m宽度<br>中等空格&ensp;&ensp;&ensp;&ensp;&ensp;<code>a\;b</code>&ensp;$a\;b$&ensp;2/7m宽度<br>小空格&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;<code>a\,b</code>&ensp;$a\,b$&ensp;1/6m宽度<br>没有空格&ensp;&ensp;&ensp;&ensp;&ensp;<code>ab</code>&ensp;$ab\,$<br>紧贴&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;<code>a\!b</code>&ensp;$a\!b$&ensp;缩进1/6m宽度(在hexo中需要写成<code>a\\!b</code>)</p>
+<blockquote>
+<p>approximately the width of an “M” in the current font</p>
+</blockquote>
+<p><code>m</code> 代表当前字体下接近字符‘M’的宽度</p>
+]]></content>
     
     <summary type="html">
     
-      如题~
+      Letex中空格的用法
     
     </summary>
     
-      <category term="Hexo" scheme="http://heimignx.cn/categories/Hexo/"/>
+      <category term="Latex" scheme="http://heimignx.cn/categories/Latex/"/>
     
     
-      <category term="Hexo" scheme="http://heimignx.cn/tags/Hexo/"/>
+      <category term="Latex" scheme="http://heimignx.cn/tags/Latex/"/>
     
   </entry>
   
