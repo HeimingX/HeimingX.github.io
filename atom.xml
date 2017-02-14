@@ -1077,6 +1077,53 @@
   </entry>
   
   <entry>
+    <title>CS231n:Optimization: Stochastic Gradient Descent</title>
+    <link href="http://heimignx.cn/2016/08/15/cs231n-optimization-sgd/"/>
+    <id>http://heimignx.cn/2016/08/15/cs231n-optimization-sgd/</id>
+    <published>2016-08-15T12:20:45.000Z</published>
+    <updated>2016-10-15T14:06:53.921Z</updated>
+    
+    <content type="html"><![CDATA[<p>这一节主要介绍一种优化方法，随机梯度下降，用于求解前面章节提到的目标函数中的权重矩阵$W$.</p>
+<h1 id="Visualizing-the-loss-function"><a href="#Visualizing-the-loss-function" class="headerlink" title="Visualizing the loss function"></a>Visualizing the loss function</h1><p>这里主要通过一些简单的例子来表明，我们所要求解的目标函数是一个凸问题，通过形象化的图形来体会优化的过程。同时，课程中也提到如果在神经网络中，目标函数就不再是凸的了，所以需要新的求解方法。</p>
+<h1 id="Optimization"><a href="#Optimization" class="headerlink" title="Optimization"></a>Optimization</h1><h2 id="Strategy-1-Random-Search"><a href="#Strategy-1-Random-Search" class="headerlink" title="Strategy 1: Random Search"></a>Strategy 1: Random Search</h2><p>首先限定一个最大迭代步数，然后在每一次迭代中都将随机的$W$值代入求得目标函数值，并记录下使得目标函数值取得当前最小的$W$作为最终的输出</p>
+<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> num <span class="keyword">in</span> xrange(<span class="number">1000</span>):</div><div class="line">    W = np.random.randn(<span class="number">10</span>, <span class="number">3073</span>) * <span class="number">0.0001</span> <span class="comment"># generate random parameters</span></div><div class="line">    loss = L(X_train, Y_train, W) <span class="comment"># get the loss over the entire training set</span></div><div class="line">    <span class="keyword">if</span> loss &lt; bestloss: <span class="comment"># keep track of the best solution</span></div><div class="line">        bestloss = loss</div><div class="line">        bestW = W</div><div class="line">    <span class="keyword">print</span> <span class="string">'in attempt %d the loss was %f, best %f'</span> % (num, loss, bestloss)</div></pre></td></tr></table></figure></p>
+<h2 id="Strategy-2-Random-Local-Search"><a href="#Strategy-2-Random-Local-Search" class="headerlink" title="Strategy 2: Random Local Search"></a>Strategy 2: Random Local Search</h2><p>对上面方法的一个改进，就是不是在每次的迭代中都给$W$赋随机值，而是根据初始赋随机值进行微调，如果能够使得目标函数值下降，则记录下该微调之后的$W$，直到迭代步数达到设定的值。</p>
+<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">W = np.random.randn(<span class="number">10</span>, <span class="number">3073</span>) * <span class="number">0.001</span> <span class="comment"># generate random starting W</span></div><div class="line">bestloss = float(<span class="string">"inf"</span>)</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="number">1000</span>):</div><div class="line">    step_size = <span class="number">0.0001</span></div><div class="line">    Wtry = W + np.random.randn(<span class="number">10</span>, <span class="number">3073</span>) * step_size</div><div class="line">    loss = L(Xtr_cols, Ytr, Wtry)</div><div class="line">    <span class="keyword">if</span> loss &lt; bestloss:</div><div class="line">        W = Wtry</div><div class="line">        bestloss = loss</div><div class="line">    <span class="keyword">print</span> <span class="string">'iter %d loss is %f'</span> % (i, bestloss)</div></pre></td></tr></table></figure></p>
+<h2 id="Strategy-3-Following-the-gradient"><a href="#Strategy-3-Following-the-gradient" class="headerlink" title="Strategy 3: Following the gradient"></a>Strategy 3: Following the gradient</h2><p>显然，策略2已经很接近通用的梯度下降方法了，唯一的区别是，我们在每一步迭代中都是取使目标函数下降最大的方向进行优化的，而要想能够找到使得目标函数下降最大的方向，就需要用到梯度了。</p>
+<h1 id="Computing-the-gradient"><a href="#Computing-the-gradient" class="headerlink" title="Computing the gradient"></a>Computing the gradient</h1><p>对于梯度的计算，课程中提供了两种方法</p>
+<h2 id="Numerically-with-finite-differences"><a href="#Numerically-with-finite-differences" class="headerlink" title="Numerically with finite differences"></a>Numerically with finite differences</h2><p>标签：a slow, approximate，but easy way</p>
+<p>公式：<br>$$\frac{d f(x)}{d x}=\lim_{x\to 0} \frac{f(x+h)-f(x)}{h}$$</p>
+<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">fx = f(x) <span class="comment"># evaluate function value at original point</span></div><div class="line">grad = np.zeros(x.shape)</div><div class="line">h = <span class="number">0.00001</span></div><div class="line"></div><div class="line"><span class="comment"># iterate over all indexes in x</span></div><div class="line">it = np.nditer(x, flags=[<span class="string">'multi_index'</span>], op_flags=[<span class="string">'readwrite'</span>])</div><div class="line"><span class="keyword">while</span> <span class="keyword">not</span> it.finished:</div><div class="line"></div><div class="line">    <span class="comment"># evaluate function at x+h</span></div><div class="line">    ix = it.multi_index</div><div class="line">    old_value = x[ix]</div><div class="line">    x[ix] = old_value + h <span class="comment"># increment by h</span></div><div class="line">    fxh = f(x) <span class="comment"># evalute f(x + h)</span></div><div class="line">    x[ix] = old_value <span class="comment"># restore to previous value (very important!)</span></div><div class="line"></div><div class="line">    <span class="comment"># compute the partial derivative</span></div><div class="line">    grad[ix] = (fxh - fx) / h <span class="comment"># the slope</span></div><div class="line">    it.iternext() <span class="comment"># step to next dimension</span></div></pre></td></tr></table></figure></p>
+<h2 id="Analytically-with-calculus"><a href="#Analytically-with-calculus" class="headerlink" title="Analytically with calculus"></a>Analytically with calculus</h2><p>标签： a fast, exact but more error-prone way</p>
+<p>以SVM损失函数在某个样本下的形式为例：<br>$$L_i = \sum_{j\neq y_i} \left [\max(0, w_j^T x_i - w_{y_i}^T x_i + \Delta) \right ]$$<br>计算上式对 $w_{y_i}$ 的梯度：<br>$$\nabla_{w_{y_i}}L_i = -\left (\sum_{j\neq y_i} \mathbb{I} (w_j^T x_i - w_{y_i}^T x_i + \Delta &gt; 0)\right )x_i$$<br>计算上式对 $j\neq y_i$ 的 $W_j$ 的梯度：<br>$$\nabla_{w_j}L_i = \mathbb{I} (w_j^T x_i - w_{y_i}^T x_i + \Delta &gt; 0)x_i$$</p>
+<h1 id="Gradient-Descent"><a href="#Gradient-Descent" class="headerlink" title="Gradient Descent"></a>Gradient Descent</h1><p>梯度下降方法的主要思路是，在梯度方向上，进行某一步长的移动以使得目标函数呈不增的趋势。</p>
+<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">  weights_grad = evaluate_gradient(loss_fun, data, weights)</div><div class="line">  weights += - step_size * weights_grad <span class="comment"># perform parameter updat</span></div></pre></td></tr></table></figure></p>
+<p><strong>Mini-batch gradient descent</strong><br>当数据集非常的大时，机器资源可能不能一次性的加载进所有的数据，所以可以每次只选择其中的一小部分进行处理。</p>
+<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">  data_batch = sample_training_data(data, <span class="number">256</span>) <span class="comment"># sample 256 examples</span></div><div class="line">  weights_grad = evaluate_gradient(loss_fun, data_batch, weights)</div><div class="line">  weights += - step_size * weights_grad <span class="comment"># perform parameter update</span></div></pre></td></tr></table></figure></p>
+<p>对于Mini-batch的大小，通常不用交叉验证的方式来选择，通常是根据经验提前设定的（根据计算资源而定）：$[32, 64, 128,…]$,通常选择的是2的倍数，因为这符合计算机的二进制计数原理。</p>
+<p><strong>Stochastic Gradient Descent (SGD)</strong><br>当Mini-batch gradient descent取极限时，即每次只取所有样本中的一个样例用于训练。但是由于在实践中发现，计算100个样本的梯度往往要优于计算某一个样本100次所得到的权重矩阵，所以Mini-batch gradient descent较为常用，而SGD有时也指Mini-batch gradient descent。</p>
+<h1 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h1><ol>
+<li><a href="http://cs231n.github.io/optimization-1" target="_blank" rel="external">CS231n: Optimization: Stochastic Gradient Descent</a></li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;这一节主要介绍一种优化方法，随机梯度下降，用于求解前面章节提到的目标函数中的权重矩阵$W$.&lt;/p&gt;
+&lt;h1 id=&quot;Visualizing-the-loss-function&quot;&gt;&lt;a href=&quot;#Visualizing-the-loss-function&quot; class=
+    
+    </summary>
+    
+      <category term="Machine Learning" scheme="http://heimignx.cn/categories/Machine-Learning/"/>
+    
+    
+      <category term="Machine Learning" scheme="http://heimignx.cn/tags/Machine-Learning/"/>
+    
+      <category term="CS231n笔记" scheme="http://heimignx.cn/tags/CS231n%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
+  
+  <entry>
     <title>CS231n:Linear classification: Support Vector Machine, Softmax</title>
     <link href="http://heimignx.cn/2016/08/15/cs231n-linear-classification/"/>
     <id>http://heimignx.cn/2016/08/15/cs231n-linear-classification/</id>
@@ -1126,53 +1173,6 @@
     
       &lt;p&gt;在第一节的课程中主要介绍了KNN方法，由于knn是lazy Learning，主要有两个缺点：要记住所有的训练点；将测试点与所有训练点进行比较，为了克服这些缺点，通常会选择其他的分类方法，本节介绍了SVM和softmax classifier.&lt;/p&gt;
 &lt;h1 id=&quot;对线
-    
-    </summary>
-    
-      <category term="Machine Learning" scheme="http://heimignx.cn/categories/Machine-Learning/"/>
-    
-    
-      <category term="Machine Learning" scheme="http://heimignx.cn/tags/Machine-Learning/"/>
-    
-      <category term="CS231n笔记" scheme="http://heimignx.cn/tags/CS231n%E7%AC%94%E8%AE%B0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>CS231n:Optimization: Stochastic Gradient Descent</title>
-    <link href="http://heimignx.cn/2016/08/15/cs231n-optimization-sgd/"/>
-    <id>http://heimignx.cn/2016/08/15/cs231n-optimization-sgd/</id>
-    <published>2016-08-15T12:20:45.000Z</published>
-    <updated>2016-10-15T14:06:53.921Z</updated>
-    
-    <content type="html"><![CDATA[<p>这一节主要介绍一种优化方法，随机梯度下降，用于求解前面章节提到的目标函数中的权重矩阵$W$.</p>
-<h1 id="Visualizing-the-loss-function"><a href="#Visualizing-the-loss-function" class="headerlink" title="Visualizing the loss function"></a>Visualizing the loss function</h1><p>这里主要通过一些简单的例子来表明，我们所要求解的目标函数是一个凸问题，通过形象化的图形来体会优化的过程。同时，课程中也提到如果在神经网络中，目标函数就不再是凸的了，所以需要新的求解方法。</p>
-<h1 id="Optimization"><a href="#Optimization" class="headerlink" title="Optimization"></a>Optimization</h1><h2 id="Strategy-1-Random-Search"><a href="#Strategy-1-Random-Search" class="headerlink" title="Strategy 1: Random Search"></a>Strategy 1: Random Search</h2><p>首先限定一个最大迭代步数，然后在每一次迭代中都将随机的$W$值代入求得目标函数值，并记录下使得目标函数值取得当前最小的$W$作为最终的输出</p>
-<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> num <span class="keyword">in</span> xrange(<span class="number">1000</span>):</div><div class="line">    W = np.random.randn(<span class="number">10</span>, <span class="number">3073</span>) * <span class="number">0.0001</span> <span class="comment"># generate random parameters</span></div><div class="line">    loss = L(X_train, Y_train, W) <span class="comment"># get the loss over the entire training set</span></div><div class="line">    <span class="keyword">if</span> loss &lt; bestloss: <span class="comment"># keep track of the best solution</span></div><div class="line">        bestloss = loss</div><div class="line">        bestW = W</div><div class="line">    <span class="keyword">print</span> <span class="string">'in attempt %d the loss was %f, best %f'</span> % (num, loss, bestloss)</div></pre></td></tr></table></figure></p>
-<h2 id="Strategy-2-Random-Local-Search"><a href="#Strategy-2-Random-Local-Search" class="headerlink" title="Strategy 2: Random Local Search"></a>Strategy 2: Random Local Search</h2><p>对上面方法的一个改进，就是不是在每次的迭代中都给$W$赋随机值，而是根据初始赋随机值进行微调，如果能够使得目标函数值下降，则记录下该微调之后的$W$，直到迭代步数达到设定的值。</p>
-<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">W = np.random.randn(<span class="number">10</span>, <span class="number">3073</span>) * <span class="number">0.001</span> <span class="comment"># generate random starting W</span></div><div class="line">bestloss = float(<span class="string">"inf"</span>)</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="number">1000</span>):</div><div class="line">    step_size = <span class="number">0.0001</span></div><div class="line">    Wtry = W + np.random.randn(<span class="number">10</span>, <span class="number">3073</span>) * step_size</div><div class="line">    loss = L(Xtr_cols, Ytr, Wtry)</div><div class="line">    <span class="keyword">if</span> loss &lt; bestloss:</div><div class="line">        W = Wtry</div><div class="line">        bestloss = loss</div><div class="line">    <span class="keyword">print</span> <span class="string">'iter %d loss is %f'</span> % (i, bestloss)</div></pre></td></tr></table></figure></p>
-<h2 id="Strategy-3-Following-the-gradient"><a href="#Strategy-3-Following-the-gradient" class="headerlink" title="Strategy 3: Following the gradient"></a>Strategy 3: Following the gradient</h2><p>显然，策略2已经很接近通用的梯度下降方法了，唯一的区别是，我们在每一步迭代中都是取使目标函数下降最大的方向进行优化的，而要想能够找到使得目标函数下降最大的方向，就需要用到梯度了。</p>
-<h1 id="Computing-the-gradient"><a href="#Computing-the-gradient" class="headerlink" title="Computing the gradient"></a>Computing the gradient</h1><p>对于梯度的计算，课程中提供了两种方法</p>
-<h2 id="Numerically-with-finite-differences"><a href="#Numerically-with-finite-differences" class="headerlink" title="Numerically with finite differences"></a>Numerically with finite differences</h2><p>标签：a slow, approximate，but easy way</p>
-<p>公式：<br>$$\frac{d f(x)}{d x}=\lim_{x\to 0} \frac{f(x+h)-f(x)}{h}$$</p>
-<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">fx = f(x) <span class="comment"># evaluate function value at original point</span></div><div class="line">grad = np.zeros(x.shape)</div><div class="line">h = <span class="number">0.00001</span></div><div class="line"></div><div class="line"><span class="comment"># iterate over all indexes in x</span></div><div class="line">it = np.nditer(x, flags=[<span class="string">'multi_index'</span>], op_flags=[<span class="string">'readwrite'</span>])</div><div class="line"><span class="keyword">while</span> <span class="keyword">not</span> it.finished:</div><div class="line"></div><div class="line">    <span class="comment"># evaluate function at x+h</span></div><div class="line">    ix = it.multi_index</div><div class="line">    old_value = x[ix]</div><div class="line">    x[ix] = old_value + h <span class="comment"># increment by h</span></div><div class="line">    fxh = f(x) <span class="comment"># evalute f(x + h)</span></div><div class="line">    x[ix] = old_value <span class="comment"># restore to previous value (very important!)</span></div><div class="line"></div><div class="line">    <span class="comment"># compute the partial derivative</span></div><div class="line">    grad[ix] = (fxh - fx) / h <span class="comment"># the slope</span></div><div class="line">    it.iternext() <span class="comment"># step to next dimension</span></div></pre></td></tr></table></figure></p>
-<h2 id="Analytically-with-calculus"><a href="#Analytically-with-calculus" class="headerlink" title="Analytically with calculus"></a>Analytically with calculus</h2><p>标签： a fast, exact but more error-prone way</p>
-<p>以SVM损失函数在某个样本下的形式为例：<br>$$L_i = \sum_{j\neq y_i} \left [\max(0, w_j^T x_i - w_{y_i}^T x_i + \Delta) \right ]$$<br>计算上式对 $w_{y_i}$ 的梯度：<br>$$\nabla_{w_{y_i}}L_i = -\left (\sum_{j\neq y_i} \mathbb{I} (w_j^T x_i - w_{y_i}^T x_i + \Delta &gt; 0)\right )x_i$$<br>计算上式对 $j\neq y_i$ 的 $W_j$ 的梯度：<br>$$\nabla_{w_j}L_i = \mathbb{I} (w_j^T x_i - w_{y_i}^T x_i + \Delta &gt; 0)x_i$$</p>
-<h1 id="Gradient-Descent"><a href="#Gradient-Descent" class="headerlink" title="Gradient Descent"></a>Gradient Descent</h1><p>梯度下降方法的主要思路是，在梯度方向上，进行某一步长的移动以使得目标函数呈不增的趋势。</p>
-<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">  weights_grad = evaluate_gradient(loss_fun, data, weights)</div><div class="line">  weights += - step_size * weights_grad <span class="comment"># perform parameter updat</span></div></pre></td></tr></table></figure></p>
-<p><strong>Mini-batch gradient descent</strong><br>当数据集非常的大时，机器资源可能不能一次性的加载进所有的数据，所以可以每次只选择其中的一小部分进行处理。</p>
-<p>code:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">  data_batch = sample_training_data(data, <span class="number">256</span>) <span class="comment"># sample 256 examples</span></div><div class="line">  weights_grad = evaluate_gradient(loss_fun, data_batch, weights)</div><div class="line">  weights += - step_size * weights_grad <span class="comment"># perform parameter update</span></div></pre></td></tr></table></figure></p>
-<p>对于Mini-batch的大小，通常不用交叉验证的方式来选择，通常是根据经验提前设定的（根据计算资源而定）：$[32, 64, 128,…]$,通常选择的是2的倍数，因为这符合计算机的二进制计数原理。</p>
-<p><strong>Stochastic Gradient Descent (SGD)</strong><br>当Mini-batch gradient descent取极限时，即每次只取所有样本中的一个样例用于训练。但是由于在实践中发现，计算100个样本的梯度往往要优于计算某一个样本100次所得到的权重矩阵，所以Mini-batch gradient descent较为常用，而SGD有时也指Mini-batch gradient descent。</p>
-<h1 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h1><ol>
-<li><a href="http://cs231n.github.io/optimization-1" target="_blank" rel="external">CS231n: Optimization: Stochastic Gradient Descent</a></li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;这一节主要介绍一种优化方法，随机梯度下降，用于求解前面章节提到的目标函数中的权重矩阵$W$.&lt;/p&gt;
-&lt;h1 id=&quot;Visualizing-the-loss-function&quot;&gt;&lt;a href=&quot;#Visualizing-the-loss-function&quot; class=
     
     </summary>
     

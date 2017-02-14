@@ -2,16 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://heimignx.cn/2017/02/13/aaai17-sfo/</loc>
+    <loc>http://heimignx.cn/about/index.html</loc>
     
-    <lastmod>2017-02-14T13:01:24.418Z</lastmod>
+    <lastmod>2017-02-14T13:10:08.608Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://heimignx.cn/about/index.html</loc>
+    <loc>http://heimignx.cn/2017/02/13/aaai17-sfo/</loc>
     
-    <lastmod>2017-01-23T11:54:47.682Z</lastmod>
+    <lastmod>2017-02-14T13:01:24.418Z</lastmod>
     
   </url>
   
@@ -72,7 +72,21 @@
   </url>
   
   <url>
+    <loc>http://heimignx.cn/2016/06/28/use-LibSVM-in-MATLAB/</loc>
+    
+    <lastmod>2016-10-15T14:06:53.930Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://heimignx.cn/2016/06/08/support-vector-machine/</loc>
+    
+    <lastmod>2016-10-15T14:06:53.930Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://heimignx.cn/2016/05/01/smo-algorithm/</loc>
     
     <lastmod>2016-10-15T14:06:53.930Z</lastmod>
     
@@ -93,16 +107,9 @@
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/06/28/use-LibSVM-in-MATLAB/</loc>
+    <loc>http://heimignx.cn/2016/05/24/reproducing-kernel-hilbert-spaces/</loc>
     
-    <lastmod>2016-10-15T14:06:53.930Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://heimignx.cn/2016/05/01/smo-algorithm/</loc>
-    
-    <lastmod>2016-10-15T14:06:53.930Z</lastmod>
+    <lastmod>2016-10-15T14:06:53.929Z</lastmod>
     
   </url>
   
@@ -128,14 +135,7 @@
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/05/24/reproducing-kernel-hilbert-spaces/</loc>
-    
-    <lastmod>2016-10-15T14:06:53.929Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://heimignx.cn/2016/03/10/parallel-compute-in-matlab/</loc>
+    <loc>http://heimignx.cn/2015/11/25/manifold-learning/</loc>
     
     <lastmod>2016-10-15T14:06:53.928Z</lastmod>
     
@@ -149,9 +149,16 @@
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2015/11/25/manifold-learning/</loc>
+    <loc>http://heimignx.cn/2016/03/10/parallel-compute-in-matlab/</loc>
     
     <lastmod>2016-10-15T14:06:53.928Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://heimignx.cn/2016/02/24/logical-type-in-matlab/</loc>
+    
+    <lastmod>2016-10-15T14:06:53.927Z</lastmod>
     
   </url>
   
@@ -170,13 +177,6 @@
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/02/24/logical-type-in-matlab/</loc>
-    
-    <lastmod>2016-10-15T14:06:53.927Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://heimignx.cn/2016/04/08/lintcode9-fizz-buzz/</loc>
     
     <lastmod>2016-10-15T14:06:53.926Z</lastmod>
@@ -185,6 +185,13 @@
   
   <url>
     <loc>http://heimignx.cn/2016/04/07/lintcode8-rotate-string/</loc>
+    
+    <lastmod>2016-10-15T14:06:53.925Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://heimignx.cn/2016/04/06/lintcode7-serialize-and-deserialize/</loc>
     
     <lastmod>2016-10-15T14:06:53.925Z</lastmod>
     
@@ -212,13 +219,6 @@
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/04/06/lintcode7-serialize-and-deserialize/</loc>
-    
-    <lastmod>2016-10-15T14:06:53.925Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://heimignx.cn/2016/04/02/lintcode3-count-numbers/</loc>
     
     <lastmod>2016-10-15T14:06:53.924Z</lastmod>
@@ -240,13 +240,6 @@
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/04/18/lintcode16-permute-unique/</loc>
-    
-    <lastmod>2016-10-15T14:06:53.923Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://heimignx.cn/2016/04/12/lintcode14-binary-search/</loc>
     
     <lastmod>2016-10-15T14:06:53.923Z</lastmod>
@@ -254,7 +247,21 @@
   </url>
   
   <url>
+    <loc>http://heimignx.cn/2016/04/17/lintcode15-permutation/</loc>
+    
+    <lastmod>2016-10-15T14:06:53.923Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://heimignx.cn/2016/04/11/lintcode13-strStr/</loc>
+    
+    <lastmod>2016-10-15T14:06:53.923Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://heimignx.cn/2016/04/18/lintcode16-permute-unique/</loc>
     
     <lastmod>2016-10-15T14:06:53.923Z</lastmod>
     
@@ -275,21 +282,14 @@
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/04/17/lintcode15-permutation/</loc>
-    
-    <lastmod>2016-10-15T14:06:53.923Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://heimignx.cn/2016/04/01/lintcode1-aplusb/</loc>
+    <loc>http://heimignx.cn/2016/09/29/indefinite-kernel-svms/</loc>
     
     <lastmod>2016-10-15T14:06:53.922Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/09/29/indefinite-kernel-svms/</loc>
+    <loc>http://heimignx.cn/2016/04/01/lintcode1-aplusb/</loc>
     
     <lastmod>2016-10-15T14:06:53.922Z</lastmod>
     
@@ -310,6 +310,13 @@
   </url>
   
   <url>
+    <loc>http://heimignx.cn/2016/08/15/cs231n-optimization-sgd/</loc>
+    
+    <lastmod>2016-10-15T14:06:53.921Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://heimignx.cn/2016/02/24/duplicate-matrix-from-vector-in-matlab/</loc>
     
     <lastmod>2016-10-15T14:06:53.921Z</lastmod>
@@ -318,13 +325,6 @@
   
   <url>
     <loc>http://heimignx.cn/2016/08/20/cs231n-reassignment-1-two-layer-net/</loc>
-    
-    <lastmod>2016-10-15T14:06:53.921Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://heimignx.cn/2016/08/15/cs231n-optimization-sgd/</loc>
     
     <lastmod>2016-10-15T14:06:53.921Z</lastmod>
     
@@ -345,14 +345,14 @@
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/08/17/cs231n-neural-networks-part%20-1-setting-up-the-architecture/</loc>
+    <loc>http://heimignx.cn/2016/08/15/cs231n-linear-classification/</loc>
     
     <lastmod>2016-10-15T14:06:53.920Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/08/15/cs231n-linear-classification/</loc>
+    <loc>http://heimignx.cn/2016/08/17/cs231n-neural-networks-part%20-1-setting-up-the-architecture/</loc>
     
     <lastmod>2016-10-15T14:06:53.920Z</lastmod>
     
@@ -366,14 +366,14 @@
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/03/08/code-optimize-in-matlab/</loc>
+    <loc>http://heimignx.cn/2016/08/16/cs231n-backpropagation-intuitions/</loc>
     
     <lastmod>2016-10-15T14:06:53.919Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/08/16/cs231n-backpropagation-intuitions/</loc>
+    <loc>http://heimignx.cn/2016/03/08/code-optimize-in-matlab/</loc>
     
     <lastmod>2016-10-15T14:06:53.919Z</lastmod>
     
