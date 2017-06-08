@@ -4,7 +4,7 @@
   <url>
     <loc>http://heimignx.cn/about/index.html</loc>
     
-    <lastmod>2017-06-08T08:07:38.487Z</lastmod>
+    <lastmod>2017-06-08T08:11:22.349Z</lastmod>
     
   </url>
   
@@ -72,28 +72,7 @@
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/05/01/smo-algorithm/</loc>
-    
-    <lastmod>2016-10-15T14:06:53.930Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://heimignx.cn/2016/06/28/use-LibSVM-in-MATLAB/</loc>
-    
-    <lastmod>2016-10-15T14:06:53.930Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://heimignx.cn/2016/06/28/use-space-in-Latex/</loc>
-    
-    <lastmod>2016-10-15T14:06:53.930Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://heimignx.cn/2016/06/08/support-vector-machine/</loc>
     
     <lastmod>2016-10-15T14:06:53.930Z</lastmod>
     
@@ -107,14 +86,28 @@
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/05/24/reproducing-kernel-hilbert-spaces/</loc>
+    <loc>http://heimignx.cn/2016/05/01/smo-algorithm/</loc>
     
-    <lastmod>2016-10-15T14:06:53.929Z</lastmod>
+    <lastmod>2016-10-15T14:06:53.930Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/04/29/semi-continuity/</loc>
+    <loc>http://heimignx.cn/2016/06/08/support-vector-machine/</loc>
+    
+    <lastmod>2016-10-15T14:06:53.930Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://heimignx.cn/2016/06/28/use-space-in-Latex/</loc>
+    
+    <lastmod>2016-10-15T14:06:53.930Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://heimignx.cn/2016/05/24/reproducing-kernel-hilbert-spaces/</loc>
     
     <lastmod>2016-10-15T14:06:53.929Z</lastmod>
     
@@ -129,6 +122,13 @@
   
   <url>
     <loc>http://heimignx.cn/2016/04/30/python-runtime-error-exp-overflow/</loc>
+    
+    <lastmod>2016-10-15T14:06:53.929Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://heimignx.cn/2016/04/29/semi-continuity/</loc>
     
     <lastmod>2016-10-15T14:06:53.929Z</lastmod>
     
@@ -156,14 +156,14 @@
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/02/24/logical-type-in-matlab/</loc>
+    <loc>http://heimignx.cn/2015/10/28/liu-tieyan-zishu/</loc>
     
     <lastmod>2016-10-15T14:06:53.927Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2015/10/28/liu-tieyan-zishu/</loc>
+    <loc>http://heimignx.cn/2016/02/24/logical-type-in-matlab/</loc>
     
     <lastmod>2016-10-15T14:06:53.927Z</lastmod>
     
@@ -184,6 +184,13 @@
   </url>
   
   <url>
+    <loc>http://heimignx.cn/2016/04/04/lintcode5-kth-large-number/</loc>
+    
+    <lastmod>2016-10-15T14:06:53.925Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://heimignx.cn/2016/04/07/lintcode8-rotate-string/</loc>
     
     <lastmod>2016-10-15T14:06:53.925Z</lastmod>
@@ -191,14 +198,7 @@
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/04/03/lintcode4-ugly-number/</loc>
-    
-    <lastmod>2016-10-15T14:06:53.925Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://heimignx.cn/2016/04/04/lintcode5-kth-large-number/</loc>
+    <loc>http://heimignx.cn/2016/04/06/lintcode7-serialize-and-deserialize/</loc>
     
     <lastmod>2016-10-15T14:06:53.925Z</lastmod>
     
@@ -212,9 +212,16 @@
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/04/06/lintcode7-serialize-and-deserialize/</loc>
+    <loc>http://heimignx.cn/2016/04/03/lintcode4-ugly-number/</loc>
     
     <lastmod>2016-10-15T14:06:53.925Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://heimignx.cn/2016/04/20/lintcode17-subsets/</loc>
+    
+    <lastmod>2016-10-15T14:06:53.924Z</lastmod>
     
   </url>
   
@@ -229,27 +236,6 @@
     <loc>http://heimignx.cn/2016/04/02/lintcode3-count-numbers/</loc>
     
     <lastmod>2016-10-15T14:06:53.924Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://heimignx.cn/2016/04/20/lintcode17-subsets/</loc>
-    
-    <lastmod>2016-10-15T14:06:53.924Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://heimignx.cn/2016/04/18/lintcode16-permute-unique/</loc>
-    
-    <lastmod>2016-10-15T14:06:53.923Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://heimignx.cn/2016/04/12/lintcode14-binary-search/</loc>
-    
-    <lastmod>2016-10-15T14:06:53.923Z</lastmod>
     
   </url>
   
@@ -269,6 +255,20 @@
   
   <url>
     <loc>http://heimignx.cn/2016/04/09/lintcode11-search-range/</loc>
+    
+    <lastmod>2016-10-15T14:06:53.923Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://heimignx.cn/2016/04/18/lintcode16-permute-unique/</loc>
+    
+    <lastmod>2016-10-15T14:06:53.923Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://heimignx.cn/2016/04/12/lintcode14-binary-search/</loc>
     
     <lastmod>2016-10-15T14:06:53.923Z</lastmod>
     
@@ -303,13 +303,6 @@
   </url>
   
   <url>
-    <loc>http://heimignx.cn/2016/04/08/hello-world/</loc>
-    
-    <lastmod>2016-10-15T14:06:53.921Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://heimignx.cn/2016/02/24/duplicate-matrix-from-vector-in-matlab/</loc>
     
     <lastmod>2016-10-15T14:06:53.921Z</lastmod>
@@ -318,6 +311,13 @@
   
   <url>
     <loc>http://heimignx.cn/2016/08/20/cs231n-reassignment-1-two-layer-net/</loc>
+    
+    <lastmod>2016-10-15T14:06:53.921Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://heimignx.cn/2016/04/08/hello-world/</loc>
     
     <lastmod>2016-10-15T14:06:53.921Z</lastmod>
     
@@ -359,6 +359,13 @@
   </url>
   
   <url>
+    <loc>http://heimignx.cn/2016/05/06/adaboost-algorithm/</loc>
+    
+    <lastmod>2016-10-15T14:06:53.919Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://heimignx.cn/2016/08/16/cs231n-backpropagation-intuitions/</loc>
     
     <lastmod>2016-10-15T14:06:53.919Z</lastmod>
@@ -374,13 +381,6 @@
   
   <url>
     <loc>http://heimignx.cn/2016/03/08/code-optimize-in-matlab/</loc>
-    
-    <lastmod>2016-10-15T14:06:53.919Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://heimignx.cn/2016/05/06/adaboost-algorithm/</loc>
     
     <lastmod>2016-10-15T14:06:53.919Z</lastmod>
     
