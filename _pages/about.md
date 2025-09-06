@@ -26,7 +26,7 @@ I am interested in general ML and CV research problems, such as Multimodal Large
 
 # 🔥 News
 - *2025.08*: &nbsp;🎉 One recent research focuses on building knowledge-driven <a href="https://arxiv.org/pdf/2508.01858">Web Agent</a>
-- *2025.06*: &nbsp;🎉 Happy to join TikTok Sydney~
+- *2025.06*: &nbsp;🎉 Happy to move to Sydney and join TikTok~
 - *2024.12*: &nbsp;🎉 The code and OCG benchmark for our <a href="https://github.com/HeimingX/TAG">TAG</a> work (AAAI 2025) are now open-sourced. Feel free to explore and give it a try!
 - *2024.12*: &nbsp;🎉 Our paper is accepted to AAAI 2025. Topic: Vision-based GUI Grounding
 - *2024.10*: &nbsp;🎉 Our paper is accepted to WACV 2025. Topic: Class-agnostic Counting
