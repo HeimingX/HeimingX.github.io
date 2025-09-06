@@ -17,12 +17,16 @@ redirect_from:
 
 <span class='anchor' id='about-me'></span>
 
-I am currently a Postdoctoral Research Fellow at the <a href="https://www.adelaide.edu.au/aiml/">Australian Institute for Machine Learning (AIML)</a> at The University of Adelaide, working under the supervision of <a href="https://lingqiao-adelaide.github.io/lingqiaoliu.github.io/">Prof. Lingqiao Liu</a>. Prior to that, I earned my Ph.D. degree in Computer Science from The University of Adelaide in 2022. Before coming to Adelaide, I completed my M.S. degree in Computer Science in 2018 at the <a href="https://palm.seu.edu.cn/">PAttern Learning and Mining (PALM) Lab</a>, Southeast University, China in 2018, where I was supervised by <a href="https://palm.seu.edu.cn/hxue/">Prof. Hui Xue</a>. My B.S. degree in Computer Science was awarded by China University of Mining and Technology in 2015.
+I am currently a Machine Learning Engineer at TikTok, based in Sydney, where I mainly focus on researching and developing a new-generation Multimodal LLM-based AI moderation system to enhance the data trust and safety for the TikTok platform.
+
+Previously, I was a Postdoctoral Research Fellow at the <a href="https://www.adelaide.edu.au/aiml/">Australian Institute for Machine Learning (AIML)</a>, <a href="https://www.adelaide.edu.au/aiml/car">Centre for Augmented Reasoning (CAR)</a> at The University of Adelaide, working with <a href="https://lingqiao-adelaide.github.io/lingqiaoliu.github.io/">A/Prof. Lingqiao Liu</a>. Prior to that, I earned my Ph.D. degree in Computer Science from The University of Adelaide in 2022. Before coming to Adelaide, I completed my M.S. degree in Computer Science in 2018 at the <a href="https://palm.seu.edu.cn/">PAttern Learning and Mining (PALM) Lab</a>, Southeast University, China in 2018, where I was supervised by <a href="https://palm.seu.edu.cn/hxue/">Prof. Hui Xue</a>. My B.S. degree in Computer Science was awarded by China University of Mining and Technology in 2015.
 
 I am interested in general ML and CV research problems, such as Multimodal Large Language Models (MLLMs), Semi-supervised Learning (SSL) for Multiple Domains (e.g., 2D image/3D point-cloud segmentation and text classification), Pretrained Foundation Models for Various Applications (e.g., few-shot segmentation and class-agnostic counting).
 
 
 # 🔥 News
+- *2025.08*: &nbsp;🎉 One recent research focuses on building knowledge-driven <a href="https://arxiv.org/pdf/2508.01858">Web Agent</a>
+- *2025.06*: &nbsp;🎉 Happy to join TikTok Sydney~
 - *2024.12*: &nbsp;🎉 The code and OCG benchmark for our <a href="https://github.com/HeimingX/TAG">TAG</a> work (AAAI 2025) are now open-sourced. Feel free to explore and give it a try!
 - *2024.12*: &nbsp;🎉 Our paper is accepted to AAAI 2025. Topic: Vision-based GUI Grounding
 - *2024.10*: &nbsp;🎉 Our paper is accepted to WACV 2025. Topic: Class-agnostic Counting
@@ -209,7 +213,8 @@ Annual Conference of the North American Chapter of the Association for Computati
 Contest (Calligraphy)
 
 # 💼 Employment
-- *2023.06 - (now)*: Postdoc at AIML, The University of Adelaide, Australia. Working with Prof. <a href="https://lingqiao-adelaide.github.io/lingqiaoliu.github.io/">Lingqiao Liu</a>.
+- *2025.06 - (now)*: MLE at TikTok
+- *2023.06 - 2025.06*: Postdoc at AIML, The University of Adelaide, Australia. Working with Prof. <a href="https://lingqiao-adelaide.github.io/lingqiaoliu.github.io/">Lingqiao Liu</a>.
 - *2021.03 - 2023.03*, Research intern at Noah’s Ark Lab, Huawei, China. Working with Dr. <a href="https://scholar.google.com.au/citations?user=FaOqRpcAAAAJ&hl=en">Hao Chen</a>
 
 # 📜 Services

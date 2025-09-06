@@ -7,7 +7,7 @@
 
 # Site Settings
 title                    : "Hai-Ming"
-description              : "Postdoc Researcher@AIML"
+description              : "MLE@TikTok"
 repository               : "HeimingX/HeimingX.github.io"
 google_scholar_stats_use_cdn : true
 
@@ -23,8 +23,8 @@ baidu_site_verification  :  # get baidu_site_verification from https://ziyuan.ba
 author:
   name             : "Hai-Ming Xu"
   avatar           : "images/pic_me.jpg"
-  bio              : "University of Adelaide"
-  location         : "Adelaide, SA"
+  # bio              : "TikTok"
+  location         : "Sydney, NSW"
   employer         :
   pubmed           : 
   googlescholar    : "https://scholar.google.com/citations?user=w3OhX40AAAAJ&hl=en"
